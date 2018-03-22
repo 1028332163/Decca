@@ -9,12 +9,18 @@ Step 1: Unzip the plugin-decca.zip to the directory: D:\plugin-decca
 Recommended directory structure:
 
 D:\plugin-decca
-	├
-	├─decca-1.0.jar : decca source code
-	├─decca-1.0.pom : decca’s pom 
-	├─soot-1.0.jar : program static analysis tool
-	├
-	├─ apache-maven-3.2.5: maven source code
+
+├
+
+├─decca-1.0.jar : decca source code
+
+├─decca-1.0.pom : decca’s pom 
+
+├─soot-1.0.jar : program static analysis tool
+
+├
+
+├─ apache-maven-3.2.5: maven source code
 
 Step 2: Install the plugin
 Execute the following cmd command to install soot:
