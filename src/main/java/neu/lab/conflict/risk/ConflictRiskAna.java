@@ -59,7 +59,7 @@ public class ConflictRiskAna {
 	}
 
 	public Element getConflictElement() {
-		Element conflictEle = new DefaultElement("conflict");
+		Element conflictEle = new DefaultElement("conflictJar");
 		conflictEle.addAttribute("groupId-artifactId", nodeConflict.getGroupId() + ":" + nodeConflict.getArtifactId());
 		StringBuilder versions = new StringBuilder();
 		for (String version : nodeConflict.getVersions()) {

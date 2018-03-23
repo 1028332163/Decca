@@ -40,13 +40,18 @@ public class NodeAdapterCollector implements DependencyNodeVisitor {
 				return false;
 			}
 		}
-		if (Conf.DEL_PROVIDED) {
+		if (MavenUtil.i().getMojo().ignoreProvidedScope) {
 			if ("provided".equals(node.getArtifact().getScope())) {
 				return false;
 			}
 		}
-		if (Conf.DEL_TEST) {
+		if (MavenUtil.i().getMojo().ignoreTestScope) {
 			if ("test".equals(node.getArtifact().getScope())) {
+				return false;
+			}
+		}
+		if (MavenUtil.i().getMojo().ignoreRuntimeScope) {
+			if ("runtime".equals(node.getArtifact().getScope())) {
 				return false;
 			}
 		}

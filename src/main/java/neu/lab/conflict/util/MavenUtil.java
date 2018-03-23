@@ -96,4 +96,7 @@ public class MavenUtil {
 	public String getProjectVersion() {
 		return mojo.project.getVersion();
 	}
+	public ConflictMojo getMojo() {
+		return mojo;
+	}
 }

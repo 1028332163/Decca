@@ -56,10 +56,11 @@ public class JarRchedWriter {
 			XMLWriter xmlWriter = new XMLWriter(fileWriter, format);
 			Document document = DocumentHelper.createDocument();
 			Element root = document.addElement("project");
+			root.addAttribute("project", MavenUtil.i().getProjectGroupId()+":"+ MavenUtil.i().getProjectArtifactId());
 			root.addAttribute("projectInfo", MavenUtil.i().getProjectInfo());
 			// add jar conflict
 			Element jarConfs = root.addElement("conflicts");
-			jarConfs.addAttribute("type", "jar");
+//			jarConfs.addAttribute("type", "jar");
 			for (NodeConflict conflict : NodeConflicts.i().getConflicts()) {
 				jarConfs.add(conflict.getRiskAna().getConflictElement());
 			}

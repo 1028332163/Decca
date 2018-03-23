@@ -56,9 +56,18 @@ public abstract class ConflictMojo extends AbstractMojo {
 	@Parameter(defaultValue = "${project.compileSourceRoots}", readonly = true, required = true)
 	public List<String> compileSourceRoots;	
 	
-	@Parameter( property = "append", defaultValue = "false" )
-	protected boolean append;
+	@Parameter( property = "ignoreTestScope", defaultValue = "false" )
+	public boolean ignoreTestScope;
 
+	@Parameter( property = "ignoreProvidedScope", defaultValue = "false" )
+	public boolean ignoreProvidedScope;
+	
+	@Parameter( property = "ignoreRuntimeScope", defaultValue = "false" )
+	public boolean ignoreRuntimeScope;
+	
+	@Parameter( property = "append", defaultValue = "false" )
+	public boolean append;
+	
 	protected void initGlobalVar() {
 		MavenUtil.i().setMojo(this);
 
