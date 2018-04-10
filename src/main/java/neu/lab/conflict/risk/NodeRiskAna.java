@@ -12,6 +12,7 @@ import org.dom4j.tree.DefaultElement;
 
 import neu.lab.conflict.Conf;
 import neu.lab.conflict.graph.MthdPathBook;
+import neu.lab.conflict.graph.BookI;
 import neu.lab.conflict.graph.Dog;
 import neu.lab.conflict.graph.MthdRltGraph;
 import neu.lab.conflict.graph.MthdRltNode;
@@ -35,7 +36,7 @@ public class NodeRiskAna {
 	private DepJarRiskAna jarRiskAna;
 	private MthdRltGraph graph;
 
-	private Map<String, MthdPathBook> books;// reached path of method in risk2Mthds
+	private Map<String, BookI> books;// reached path of method in risk2Mthds
 
 	public Element getRiskPathEle() {
 		Element ele = new DefaultElement("nodeRisk");
@@ -47,7 +48,7 @@ public class NodeRiskAna {
 		Element pathsEle = ele.addElement("paths");
 		List<String> confuseMthds = new ArrayList<String>();
 		for (String risk2Mthd : getRisk2Mthds()) {
-			MthdPathBook book = getBooks().get(risk2Mthd);
+			MthdPathBook book = (MthdPathBook)getBooks().get(risk2Mthd);
 			if (book == null) {
 				confuseMthds.add(risk2Mthd);
 			} else {
@@ -150,7 +151,7 @@ public class NodeRiskAna {
 		return risk2Mthds;
 	}
 
-	public Map<String, MthdPathBook> getBooks() {
+	public Map<String, BookI> getBooks() {
 		if (books == null)
 			books = new Dog(graph).findRlt(getRisk2Mthds());
 		return books;

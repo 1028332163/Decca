@@ -1,7 +1,7 @@
 package neu.lab.conflict.graph;
 
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
 
 
 /**
@@ -12,8 +12,8 @@ import java.util.Set;
 public class Cross {
 	Iterator<String> cross;
 
-	Cross(MthdRltNode node) {
-		Set<String> inMthds = node.getInNds();
+	Cross(NodeI node) {
+		Collection<String> inMthds = node.getNexts();
 		if (null != inMthds) {
 			this.cross = inMthds.iterator();
 		} else {

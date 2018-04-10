@@ -12,7 +12,7 @@ import neu.lab.conflict.graph.filter.FilterInvoker;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.MethodCall;
 
-public class MthdRltGraph {
+public class MthdRltGraph implements GraphI{
 	
 	private Map<String, MthdRltNode> name2node;
 
@@ -100,7 +100,7 @@ public class MthdRltGraph {
 		} while (delNum > 0);
 	}
 
-	public MthdRltNode getNode(String name) {
+	public NodeI getNode(String name) {
 		return name2node.get(name);
 	}
 

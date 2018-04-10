@@ -1,6 +1,6 @@
 package neu.lab.conflict.graph;
 
-public class MthdPathRecord {
+public class MthdPathRecord extends RecordI{
 	private String pathStr;
 	private boolean isFromHost;
 	private int pathLen;

@@ -1,4 +1,4 @@
-package neu.lab.conflict.graph2;
+package neu.lab.conflict.graph;
 
 import java.util.Collection;
 

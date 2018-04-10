@@ -1,45 +1,42 @@
 package neu.lab.conflict.graph;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import neu.lab.conflict.Conf;
 
-public class MthdPathBook {
-	protected MthdRltNode node;
-	private Set<MthdPathRecord> paths;
+public class MthdPathBook extends BookI {
 
 	public MthdPathBook(MthdRltNode node) {
 		this.node = node;
-		paths = new HashSet<MthdPathRecord>();
+		this.records = new ArrayList<RecordI>();
 	}
 
-	public void addChild(MthdPathBook childBook) {
-		Set<MthdPathRecord> childRecords = childBook.getPaths();
-		for (MthdPathRecord path : childRecords) {
-			paths.add(path.clone());
-		}
-	}
-
+	@Override
 	public void addSelf() {
-		if (paths.isEmpty()) {
-			MthdPathRecord path = new MthdPathRecord(node.getName(), node.isHostNode(), 1);
-			paths.add(path);
+		MthdRltNode mthdNode = (MthdRltNode) node;
+		if (records.isEmpty()) {
+			RecordI path = new MthdPathRecord(node.getName(), mthdNode.isHostNode(), 1);
+			records.add(path);
 		} else {
 			addNdToAll(node.getName());
 		}
 	}
 
-	public void addNdToAll(String node) {
-		for (MthdPathRecord path : paths) {
-			path.addTail(node);
+	@Override
+	public void addChild(BookI doneBook) {
+		List<RecordI> childRecords = doneBook.getRecords();
+		for (RecordI recordI : childRecords) {
+			MthdPathRecord mthdPathRecord = (MthdPathRecord) recordI;
+			records.add(mthdPathRecord.clone());
 		}
 	}
 
-	public Set<MthdPathRecord> getPaths() {
-		return paths;
+	public void addNdToAll(String node) {
+		for (RecordI recordI : records) {
+			MthdPathRecord mthdPathRecord = (MthdPathRecord) recordI;
+			mthdPathRecord.addTail(node);
+		}
 	}
 
 	/**
@@ -47,7 +44,8 @@ public class MthdPathBook {
 	 */
 	public List<MthdPathRecord> getRiskPath() {
 		List<MthdPathRecord> riskPaths = new ArrayList<MthdPathRecord>();
-		for (MthdPathRecord path : getPaths()) {
+		for (RecordI recordI : getRecords()) {
+			MthdPathRecord path = (MthdPathRecord)recordI;
 			if (path.isFromHost())
 //				if (path.getPathLen() >= Conf.MIN_PATH_DEP)// path whose depth is 2 is unreasonable.
 				if(path.getPathLen()<=Conf.MAX_PATH_DEP)
@@ -58,7 +56,8 @@ public class MthdPathBook {
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder(node.getName() + "\n");
-		for (MthdPathRecord path : paths) {
+		for (RecordI recordI : getRecords()) {
+			MthdPathRecord path = (MthdPathRecord)recordI;
 			sb.append("-");
 			sb.append(path.getPathStr());
 			sb.append("\n");
