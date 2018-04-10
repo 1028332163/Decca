@@ -14,14 +14,11 @@ import org.dom4j.tree.DefaultElement;
 
 import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.container.NodeAdapters;
-import neu.lab.conflict.risk.DepJarCg;
-import neu.lab.conflict.risk.NodeCg;
-import neu.lab.conflict.soot.SootCg;
+import neu.lab.conflict.risk.DepJarRiskAna;
+import neu.lab.conflict.risk.NodeRiskAna;
 import neu.lab.conflict.util.ClassifierUtil;
 import neu.lab.conflict.util.MavenUtil;
 
-/**
- */
 /**
  * @author asus
  *
@@ -102,7 +99,7 @@ public class NodeAdapter {
 	}
 
 	/**
-	 * used version is select from this node
+	 * used version is select from this node,if version was from mangement ,this node will return false.
 	 * 
 	 * @return
 	 */
@@ -112,27 +109,27 @@ public class NodeAdapter {
 		return node.getState() == DependencyNode.INCLUDED;
 	}
 
-	/**
-	 * used version is select from this node
-	 * 
-	 * @return
-	 */
-	public boolean isVersionSelected() {
-		return getDepJar().isSelected();
-	}
+//	/**
+//	 * used version is select from this node
+//	 * 
+//	 * @return
+//	 */
+//	public boolean isVersionSelected() {
+//		return getDepJar().isSelected();
+//	}
 
 	public String getManagedVersion() {
 		return node.getArtifact().getVersion();
 	}
 
-	public NodeCg getNodeRiskAna(DepJarCg jarRiskAna) {
-		return new NodeCg(this, jarRiskAna);
+	public NodeRiskAna getNodeRiskAna(DepJarRiskAna jarRiskAna) {
+		return new NodeRiskAna(this, jarRiskAna);
 	}
 
 	/**
 	 * @param includeSelf
 	 *            :whether includes self
-	 * @return
+	 * @return ancestors(from down to top) 
 	 */
 	public LinkedList<NodeAdapter> getAncestors(boolean includeSelf) {
 		LinkedList<NodeAdapter> ancestors = new LinkedList<NodeAdapter>();

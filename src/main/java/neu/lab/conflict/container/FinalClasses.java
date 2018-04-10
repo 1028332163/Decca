@@ -32,7 +32,7 @@ public class FinalClasses {
 
 	private Map<String, ClassVO> loadClses;// key:classname,value:class object
 
-	private List<ClassVO> throwClses;
+	private List<ClassVO> throwClses;//class was thrown because duplicate. 
 
 	public Map<String, ClassVO> getClsTb() {
 		return loadClses;

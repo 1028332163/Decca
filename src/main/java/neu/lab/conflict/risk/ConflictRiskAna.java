@@ -16,13 +16,13 @@ import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.util.SootUtil;
 import neu.lab.conflict.vo.ClassVO;
 import neu.lab.conflict.vo.DepJar;
-import neu.lab.conflict.vo.NodeConflict;
+import neu.lab.conflict.vo.Conflict;
 
 public class ConflictRiskAna {
 	private final double T_LOW = 0.98;
 	private final double T_HIGH = 1;
-	private List<DepJarCg> jarRiskAnas;
-	private NodeConflict nodeConflict;
+	private List<DepJarRiskAna> jarRiskAnas;
+	private Conflict nodeConflict;
 
 	private Set<String> rchedMthds;// reached method in call-graph computed(entry class is host class)
 	private Set<String> rchedMthdNames;
@@ -33,32 +33,20 @@ public class ConflictRiskAna {
 	private Set<String> risk1Mthds;// reached and thrown
 	private Set<String> risk2Mthds;// reached and thrown and called by method in other jar.
 
-
-	private double getT_HIGH() {
-		return T_HIGH;
-	}
-	
-	private double getT_LOW() {
-		if (useOldAl()) {
-			return 0;
-		} else {
-			return T_LOW;
+	public Element getRiskPathEle() {
+		Element ele = new DefaultElement("conflictRisk");
+		ele.addAttribute("id", nodeConflict.toString());
+		ele.addAttribute("reached_size", "" + getRchedMthds().size());
+		ele.addAttribute("reached_thrown_size", ""+getRisk1Mthds().size());
+		ele.addAttribute("reached_thrown_service",""+getRisk2Mthds().size());
+		for (DepJarRiskAna jarRiskAna : getJarRiskAnas()) {
+			ele.add(jarRiskAna.getRiskPathEle());
 		}
-	}
-	
-	private ConflictRiskAna(NodeConflict nodeConflict) {
-		this.nodeConflict = nodeConflict;
+		return ele;
 	}
 
-	public List<DepJarCg> getJarRiskAnas() {
-		return jarRiskAnas;
-	}
 
-	private void setJarRiskAnas(List<DepJarCg> jarRiskAnas) {
-		this.jarRiskAnas = jarRiskAnas;
-	}
-
-	public Element getConflictElement() {
+	public Element getRchNumEle() {
 		Element conflictEle = new DefaultElement("conflictJar");
 		conflictEle.addAttribute("groupId-artifactId", nodeConflict.getGroupId() + ":" + nodeConflict.getArtifactId());
 		StringBuilder versions = new StringBuilder();
@@ -70,7 +58,7 @@ public class ConflictRiskAna {
 		conflictEle.addAttribute("riskLevel", "" + riskLevel);
 		Element versionsEle = conflictEle.addElement("versions");
 		for (DepJar depJar : nodeConflict.getDepJars()) {
-			versionsEle.add(depJar.geJarConflictEle());
+			versionsEle.add(depJar.getRchNumEle());
 		}
 
 		Element risksEle = conflictEle.addElement("RiskMethods");
@@ -86,18 +74,6 @@ public class ConflictRiskAna {
 
 		}
 		return conflictEle;
-	}
-
-	public String getRiskString() {
-		StringBuilder sb = new StringBuilder("risk for conflict:");
-		sb.append(nodeConflict.toString() + "\n");
-		sb.append("reached size: " + getRchedMthds().size() + " reached_thrown size:" + getRisk1Mthds().size()
-				+ " reached_thrown_service:" + getRisk2Mthds().size() + "\n");
-		for (DepJarCg jarRiskAna : getJarRiskAnas()) {
-			sb.append(jarRiskAna.getRiskString());
-			sb.append("\n");
-		}
-		return sb.toString();
 	}
 
 	public int getRiskLevel() {
@@ -204,18 +180,18 @@ public class ConflictRiskAna {
 		return record;
 	}
 
-	public static ConflictRiskAna getConflictRiskAna(NodeConflict nodeConflict) {
-		MavenUtil.i().getLog().info("risk ana for:" + nodeConflict.toString());
+	public static ConflictRiskAna getConflictRiskAna(Conflict nodeConflict) {
+		MavenUtil.i().getLog().info("conflict risk ana for:" + nodeConflict.toString());
 		ConflictRiskAna riskAna = new ConflictRiskAna(nodeConflict);
-		List<DepJarCg> jarRiskAnas = new ArrayList<DepJarCg>();
+		List<DepJarRiskAna> jarRiskAnas = new ArrayList<DepJarRiskAna>();
 		for (DepJar depJar : nodeConflict.getDepJars()) {
-			jarRiskAnas.add(depJar.getJarRiskAna(getClsTb(nodeConflict)));
+			jarRiskAnas.add(depJar.getJarRiskAna(riskAna));
 		}
 		riskAna.setJarRiskAnas(jarRiskAnas);
 		return riskAna;
 	}
 
-	private static Map<String, ClassVO> getClsTb(NodeConflict nodeConflict) {
+	private static Map<String, ClassVO> getClsTb(Conflict nodeConflict) {
 		if (Conf.CLASS_DUP)
 			return FinalClasses.i().getClsTb();
 		else
@@ -225,7 +201,7 @@ public class ConflictRiskAna {
 	public Set<String> getRchedMthds() {
 		if (rchedMthds == null) {
 			rchedMthds = new HashSet<String>();
-			for (DepJarCg jarRiskAna : getJarRiskAnas()) {
+			for (DepJarRiskAna jarRiskAna : getJarRiskAnas()) {
 				rchedMthds.addAll(jarRiskAna.getRchedMthds());
 			}
 		}
@@ -235,7 +211,7 @@ public class ConflictRiskAna {
 	public Set<String> getRchedServices() {
 		if (rchedServices == null) {
 			rchedServices = new HashSet<String>();
-			for (DepJarCg jarRiskAna : getJarRiskAnas()) {
+			for (DepJarRiskAna jarRiskAna : getJarRiskAnas()) {
 				rchedServices.addAll(jarRiskAna.getRchedServices());
 			}
 		}
@@ -245,6 +221,9 @@ public class ConflictRiskAna {
 	public Set<String> getRisk1Mthds() {
 		if (risk1Mthds == null) {
 			risk1Mthds = new HashSet<String>();
+			for (DepJarRiskAna jarAna : getJarRiskAnas()) {
+				risk1Mthds.addAll(jarAna.getRisk1Mthds());
+			}
 		}
 		return risk1Mthds;
 	}
@@ -252,6 +231,9 @@ public class ConflictRiskAna {
 	public Set<String> getRisk2Mthds() {
 		if (risk2Mthds == null) {
 			risk2Mthds = new HashSet<String>();
+			for (DepJarRiskAna jarAna : getJarRiskAnas()) {
+				risk2Mthds.addAll(jarAna.getRisk2Mthds());
+			}
 		}
 		return risk2Mthds;
 	}
@@ -281,6 +263,32 @@ public class ConflictRiskAna {
 				&& MavenUtil.i().getProjectArtifactId().equals("MetaModel-elasticsearch-rest");
 	}
 
+	private double getT_HIGH() {
+		return T_HIGH;
+	}
 
+	private double getT_LOW() {
+		if (useOldAl()) {
+			return 0;
+		} else {
+			return T_LOW;
+		}
+	}
+
+	public DepJar getUsedDepJar() {
+		return nodeConflict.getUsedDepJar();
+	}
+
+	private ConflictRiskAna(Conflict nodeConflict) {
+		this.nodeConflict = nodeConflict;
+	}
+
+	public List<DepJarRiskAna> getJarRiskAnas() {
+		return jarRiskAnas;
+	}
+
+	private void setJarRiskAnas(List<DepJarRiskAna> jarRiskAnas) {
+		this.jarRiskAnas = jarRiskAnas;
+	}
 
 }

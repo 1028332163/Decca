@@ -9,7 +9,7 @@ import neu.lab.conflict.container.NodeConflicts;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.DepJar;
 import neu.lab.conflict.vo.NodeAdapter;
-import neu.lab.conflict.vo.NodeConflict;
+import neu.lab.conflict.vo.Conflict;
 
 public class JarDupRiskWriter {
 
@@ -17,7 +17,7 @@ public class JarDupRiskWriter {
 		try {
 			PrintWriter printer = new PrintWriter(new BufferedWriter(new FileWriter(new File(outPath), true)));
 			printer.println("===============projectPath->" + MavenUtil.i().getProjectInfo());
-			for (NodeConflict nodeConflict : NodeConflicts.i().getConflicts()) {
+			for (Conflict nodeConflict : NodeConflicts.i().getConflicts()) {
 
 				if (nodeConflict.getNodeAdapters().size() == 2) {// only two version
 					DepJar[] depJars = nodeConflict.getDepJars().toArray(new DepJar[2]);

@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import neu.lab.conflict.risk.DepJarCg;
-import neu.lab.conflict.risk.DepJarCgs;
+import neu.lab.conflict.risk.DepJarRiskAna;
+import neu.lab.conflict.risk.DepJarRiskAnas;
 import neu.lab.conflict.risk.ClsDupJarPairRisk;
 import neu.lab.conflict.util.SootUtil;
 import neu.lab.conflict.vo.ClassVO;
@@ -85,7 +85,7 @@ public class DupClsJarPair {
 		return onlyMthds;
 	}
 
-	public ClsDupJarPairRisk getPairRisk(DepJarCgs jarCgs) {
+	public ClsDupJarPairRisk getPairRisk(DepJarRiskAnas jarCgs) {
 		return new ClsDupJarPairRisk(this, jarCgs.getDepJarCg(getJar1()), jarCgs.getDepJarCg(getJar2()));
 	}
 

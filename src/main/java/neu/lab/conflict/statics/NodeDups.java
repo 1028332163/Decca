@@ -6,7 +6,7 @@ import java.util.List;
 
 import neu.lab.conflict.container.NodeAdapters;
 import neu.lab.conflict.vo.NodeAdapter;
-import neu.lab.conflict.vo.NodeConflict;
+import neu.lab.conflict.vo.Conflict;
 
 public class NodeDups {
 	private List<NodeDup> container;

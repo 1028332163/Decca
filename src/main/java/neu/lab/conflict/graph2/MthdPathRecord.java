@@ -1,6 +1,6 @@
-package neu.lab.conflict.graph;
+package neu.lab.conflict.graph2;
 
-public class Path {
+public class MthdPathRecord extends RecordI{
 	private String pathStr;
 	private boolean isFromHost;
 	private int pathLen;
@@ -13,20 +13,20 @@ public class Path {
 		return isFromHost;
 	}
 
-	public Path(String path, boolean isFromHost, int pathLen) {
+	public MthdPathRecord(String path, boolean isFromHost, int pathLen) {
 		this.pathStr = path;
 		this.isFromHost = isFromHost;
 		this.pathLen = pathLen;
 	}
 
-	public Path clone() {
-		return new Path(pathStr, isFromHost, pathLen);
+	public MthdPathRecord clone() {
+		return new MthdPathRecord(pathStr, isFromHost, pathLen);
 	}
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof Path) {
-			Path otherPath = (Path) other;
+		if (other instanceof MthdPathRecord) {
+			MthdPathRecord otherPath = (MthdPathRecord) other;
 			return pathStr.equals(otherPath.getPathStr());
 		} else {
 			return false;
@@ -46,7 +46,6 @@ public class Path {
 	public void addTail(String node) {
 		pathStr = pathStr + "->" + node;
 		pathLen++;
-
 	}
 
 	public String getPathStr() {

@@ -34,11 +34,11 @@
 			<version>3.2</version>
 			<scope>provided</scope>
 		</dependency>
- 		<dependency>
+		<dependency>
 			<groupId>org.apache.maven.shared</groupId>
 			<artifactId>maven-dependency-tree</artifactId>
 			<version>2.1</version>
-		</dependency> 
+		</dependency>
 		<dependency>
 			<groupId>org.codehaus.plexus</groupId>
 			<artifactId>plexus-utils</artifactId>
@@ -58,6 +58,11 @@
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
 			<version>1.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.18.2-GA</version>
 		</dependency>
 	</dependencies>
 

@@ -15,7 +15,7 @@ public class ClassDups {
 		container = new ArrayList<ClassDup>();
 		for (DepJar depJar : depJars.getAllDepJar()) {
 			if (depJar.isSelected()) {
-				List<String> allCls = SootUtil.getJarClasses(depJar);
+				List<String> allCls = depJar.getAllCls(false);
 				for (String cls : allCls) {
 					addCls(cls, depJar);
 				}

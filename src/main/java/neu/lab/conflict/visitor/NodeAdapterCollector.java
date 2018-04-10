@@ -28,28 +28,31 @@ public class NodeAdapterCollector implements DependencyNodeVisitor {
 
 		MavenUtil.i().getLog().debug(node.toNodeString() + " type:" + node.getArtifact().getType() + " version"
 				+ node.getArtifact().getVersionRange() + " selected:" + (node.getState() == DependencyNode.INCLUDED));
-		
-		if(Conf.DEL_LONGTIME) {
+
+		if (Conf.DEL_LONGTIME) {
 			if (longTimeLib.contains(node.getArtifact().getGroupId() + ":" + node.getArtifact().getArtifactId())) {
 				return false;
 			}
 		}
-		
+
 		if (Conf.DEL_OPTIONAL) {
 			if (node.getArtifact().isOptional()) {
 				return false;
 			}
 		}
+		
 		if (MavenUtil.i().getMojo().ignoreProvidedScope) {
 			if ("provided".equals(node.getArtifact().getScope())) {
 				return false;
 			}
 		}
+		
 		if (MavenUtil.i().getMojo().ignoreTestScope) {
 			if ("test".equals(node.getArtifact().getScope())) {
 				return false;
 			}
 		}
+		
 		if (MavenUtil.i().getMojo().ignoreRuntimeScope) {
 			if ("runtime".equals(node.getArtifact().getScope())) {
 				return false;

@@ -15,7 +15,7 @@ import neu.lab.conflict.statics.DupClsJarPair;
 import neu.lab.conflict.statics.DupClsJarPairs;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.util.UserConf;
-import neu.lab.conflict.risk.DepJarCgs;
+import neu.lab.conflict.risk.DepJarRiskAnas;
 import neu.lab.conflict.risk.FourRow;
 
 public class ClassDupRiskWriter {
@@ -64,7 +64,7 @@ public class ClassDupRiskWriter {
 	public void writeRchNum(String outPath, boolean append) {
 		try {
 			CSVPrinter printer = new CSVPrinter(new FileWriter(outPath, append), CSVFormat.DEFAULT);
-			DepJarCgs jarCgs = new DepJarCgs();
+			DepJarRiskAnas jarCgs = new DepJarRiskAnas();
 			for (DupClsJarPair jarPair : getJarPairs().getAllJarPair()) {
 				FourRow fourRow = jarPair.getPairRisk(jarCgs).getFourRow();
 				printer.printRecord(fourRow.mthdRow);

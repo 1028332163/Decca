@@ -26,7 +26,7 @@ public class ClsDupJarPairRisk {
 	private Set<String> rchedServices;
 	private Set<String> rchedServiceNames;
 
-	public ClsDupJarPairRisk(DupClsJarPair jarPair, DepJarCg cg1, DepJarCg cg2) {
+	public ClsDupJarPairRisk(DupClsJarPair jarPair, DepJarRiskAna cg1, DepJarRiskAna cg2) {
 		this.jarPair = jarPair;
 		this.rchedMthds = new HashSet<String>();
 		this.rchedServices = new HashSet<String>();
@@ -71,7 +71,7 @@ public class ClsDupJarPairRisk {
 		}
 	}
 
-	private void addRched(DepJarCg cg) {
+	private void addRched(DepJarRiskAna cg) {
 		for (String rchedMthd : cg.getRchedMthds()) {
 			if (jarPair.isInDupCls(rchedMthd))
 				rchedMthds.add(rchedMthd);

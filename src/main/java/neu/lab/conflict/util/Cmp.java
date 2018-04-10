@@ -15,7 +15,7 @@ import neu.lab.conflict.statics.ClassDup;
 import neu.lab.conflict.statics.NodeDup;
 import neu.lab.conflict.vo.ClassVO;
 import neu.lab.conflict.vo.MethodVO;
-import neu.lab.conflict.vo.NodeConflict;
+import neu.lab.conflict.vo.Conflict;
 
 public class Cmp {
 	public static void cmp() {

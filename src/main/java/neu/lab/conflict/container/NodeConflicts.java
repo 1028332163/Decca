@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import neu.lab.conflict.vo.NodeAdapter;
-import neu.lab.conflict.vo.NodeConflict;
+import neu.lab.conflict.vo.Conflict;
 
 public class NodeConflicts {
 	private static NodeConflicts instance;
@@ -20,39 +20,39 @@ public class NodeConflicts {
 		return instance;
 	}
 
-	private List<NodeConflict> container;
+	private List<Conflict> container;
 
 	/**
 	 * must initial NodeAdapters before this construct
 	 */
 	private NodeConflicts(NodeAdapters nodeAdapters) {
-		container = new ArrayList<NodeConflict>();
+		container = new ArrayList<Conflict>();
 		for (NodeAdapter node : nodeAdapters.getAllNodeAdapter()) {
 			addNodeAdapter(node);
 		}
 		
-		Iterator<NodeConflict> ite = container.iterator();
+		Iterator<Conflict> ite = container.iterator();
 		while (ite.hasNext()) {
-			NodeConflict conflict = ite.next();
+			Conflict conflict = ite.next();
 			if (!conflict.isConflict()) {// delete conflict if there is only one version
 				ite.remove();
 			}
 		}
 	}
 
-	public List<NodeConflict> getConflicts() {
+	public List<Conflict> getConflicts() {
 		return container;
 	}
 
 	private void addNodeAdapter(NodeAdapter nodeAdapter) {
-		NodeConflict conflict = null;
-		for (NodeConflict existConflict : container) {
+		Conflict conflict = null;
+		for (Conflict existConflict : container) {
 			if (existConflict.sameArtifact(nodeAdapter.getGroupId(), nodeAdapter.getArtifactId())) {
 				conflict = existConflict;
 			}
 		}
 		if (null == conflict) {
-			conflict = new NodeConflict(nodeAdapter.getGroupId(), nodeAdapter.getArtifactId());
+			conflict = new Conflict(nodeAdapter.getGroupId(), nodeAdapter.getArtifactId());
 			container.add(conflict);
 		}
 		conflict.addNode(nodeAdapter);
@@ -61,7 +61,7 @@ public class NodeConflicts {
 	@Override
 	public String toString() {
 		String str = "project has " + container.size() + " conflict-dependency:+\n";
-		for (NodeConflict conflictDep : container) {
+		for (Conflict conflictDep : container) {
 			str = str + conflictDep.toString() + "\n";
 		}
 		return str;

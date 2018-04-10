@@ -14,13 +14,13 @@ import org.dom4j.io.XMLWriter;
 
 import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.container.NodeConflicts;
-import neu.lab.conflict.risk.DepJarCgs;
+import neu.lab.conflict.risk.DepJarRiskAnas;
 import neu.lab.conflict.risk.FourRow;
 import neu.lab.conflict.statics.ClassDups;
 import neu.lab.conflict.statics.DupClsJarPair;
 import neu.lab.conflict.statics.DupClsJarPairs;
 import neu.lab.conflict.util.MavenUtil;
-import neu.lab.conflict.vo.NodeConflict;
+import neu.lab.conflict.vo.Conflict;
 
 public class JarRchedWriter {
 	public void writeCsv(String outPath, boolean append) {
@@ -30,7 +30,7 @@ public class JarRchedWriter {
 			// CSVFormat format = CSVFormat.DEFAULT.withHeader(header);
 
 			CSVPrinter printer = new CSVPrinter(new FileWriter(outPath, append), CSVFormat.DEFAULT);
-			for (NodeConflict conflict : NodeConflicts.i().getConflicts()) {
+			for (Conflict conflict : NodeConflicts.i().getConflicts()) {
 				FourRow fourRow = conflict.getRiskAna().getFourRow();
 				printer.printRecord(fourRow.mthdRow);
 				printer.printRecord(fourRow.mthdNameRow);
@@ -61,15 +61,15 @@ public class JarRchedWriter {
 			// add jar conflict
 			Element jarConfs = root.addElement("conflicts");
 //			jarConfs.addAttribute("type", "jar");
-			for (NodeConflict conflict : NodeConflicts.i().getConflicts()) {
-				jarConfs.add(conflict.getRiskAna().getConflictElement());
+			for (Conflict conflict : NodeConflicts.i().getConflicts()) {
+				jarConfs.add(conflict.getRiskAna().getRchNumEle());
 			}
 			if (detectClass) {// add class conflict
 				Element clsConfs = root.addElement("conflicts");
 				clsConfs.addAttribute("type", "class");
 				ClassDups classDups = new ClassDups(DepJars.i());
 				DupClsJarPairs jarPairs = new DupClsJarPairs(classDups);
-				DepJarCgs jarCgs = new DepJarCgs();
+				DepJarRiskAnas jarCgs = new DepJarRiskAnas();
 				for (DupClsJarPair jarPair : jarPairs.getAllJarPair()) {
 					clsConfs.add(jarPair.getPairRisk(jarCgs).getConflictElement());
 				}
@@ -90,6 +90,7 @@ public class JarRchedWriter {
 
 	public void writeAll(String string, boolean append) {
 		// TODO Auto-generated method stub
-
+		
 	}
+
 }

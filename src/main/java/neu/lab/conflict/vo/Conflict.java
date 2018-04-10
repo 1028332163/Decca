@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.Set;
 
 import neu.lab.conflict.risk.ConflictRiskAna;
+import neu.lab.conflict.risk.ref.ConflictRefRisk;
 import neu.lab.conflict.util.MavenUtil;
 
-public class NodeConflict {
+public class Conflict {
 	private String groupId;
 	private String artifactId;
 
@@ -17,7 +18,7 @@ public class NodeConflict {
 	private DepJar usedDepJar;
 	// private ConflictRiskAna riskAna;
 
-	public NodeConflict(String groupId, String artifactId) {
+	public Conflict(String groupId, String artifactId) {
 		nodes = new HashSet<NodeAdapter>();
 		this.groupId = groupId;
 		this.artifactId = artifactId;
@@ -71,6 +72,10 @@ public class NodeConflict {
 		// return riskAna;
 		return ConflictRiskAna.getConflictRiskAna(this);
 	}
+	
+	public ConflictRefRisk getRefRisk() {
+		return new ConflictRefRisk(this);
+	}
 
 	@Override
 	public String toString() {
@@ -78,7 +83,7 @@ public class NodeConflict {
 		for (DepJar depJar : depJars) {
 			str = str + depJar.getVersion() + ":" + depJar.getClassifier() + "-";
 		}
-		str = str + "-->used jar:" + getUsedDepJar().getVersion() + ":" + getUsedDepJar().getClassifier();
+		str = str + "---used jar:" + getUsedDepJar().getVersion() + ":" + getUsedDepJar().getClassifier();
 		return str;
 	}
 

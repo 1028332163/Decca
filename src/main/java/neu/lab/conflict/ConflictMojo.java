@@ -17,6 +17,7 @@ import org.apache.maven.shared.dependency.tree.DependencyNode;
 import org.apache.maven.shared.dependency.tree.DependencyTreeBuilder;
 import org.apache.maven.shared.dependency.tree.DependencyTreeBuilderException;
 
+import neu.lab.conflict.container.AllCls;
 import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.container.NodeAdapters;
 import neu.lab.conflict.container.NodeConflicts;
@@ -73,6 +74,7 @@ public abstract class ConflictMojo extends AbstractMojo {
 
 		NodeAdapters.init(root);
 		DepJars.init(NodeAdapters.i());// occur jar in tree
+		AllCls.init(DepJars.i());
 		NodeConflicts.init(NodeAdapters.i());// version conflict in tree
 
 	}

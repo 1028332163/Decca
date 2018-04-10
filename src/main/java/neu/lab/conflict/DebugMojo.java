@@ -18,14 +18,22 @@ import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.util.UserConf;
 import neu.lab.conflict.vo.NodeAdapter;
 import neu.lab.conflict.writer.ClassDupRiskWriter;
+import neu.lab.conflict.writer.RiskPathWriter;
 
 @Mojo(name = "debug", defaultPhase = LifecyclePhase.VALIDATE)
 public class DebugMojo extends ConflictMojo {
 
 	@Override
 	public void run() {
-//		writeDepNum(Conf.outDir + "debug.csv");
-		new ClassDupRiskWriter().writeByJar(UserConf.getOutDir() + "classDupByJar.txt");
+		// writeDepNum(Conf.outDir + "debug.csv");
+		// new ClassDupRiskWriter().writeByJar(UserConf.getOutDir() +
+		// "classDupByJar.txt");
+		printPath();
+	}
+
+	public void printPath() {
+//		new RiskPathWriter().writePath("D:\\cWS\\notepad++\\riskPath.xml", false);
+		 new RiskPathWriter().writeRefRisk("D:\\cWS\\notepad++\\riskPath.xml",true);
 	}
 
 	public void writeDepNum(String outPath) {

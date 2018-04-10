@@ -14,7 +14,7 @@ import neu.lab.conflict.statics.NodeDup;
 import neu.lab.conflict.statics.NodeDups;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.util.UserConf;
-import neu.lab.conflict.vo.NodeConflict;
+import neu.lab.conflict.vo.Conflict;
 
 public class StaWriter {
 	private NodeConflicts nodeConflicts;
@@ -54,7 +54,7 @@ public class StaWriter {
 			}
 			printer.println();
 			printer.println("=====dependency conflict:");
-			for (NodeConflict nodeConflict : nodeConflicts.getConflicts()) {
+			for (Conflict nodeConflict : nodeConflicts.getConflicts()) {
 				printer.println(nodeConflict.toString());
 			}
 			printer.println("=====dependency duplicate:");

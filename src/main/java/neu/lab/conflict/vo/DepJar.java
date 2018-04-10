@@ -11,16 +11,15 @@ import java.util.Set;
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
 
+import javassist.ClassPool;
 import neu.lab.conflict.container.NodeAdapters;
-import neu.lab.conflict.risk.DepJarCg;
+import neu.lab.conflict.risk.ConflictRiskAna;
+import neu.lab.conflict.risk.DepJarRiskAna;
+import neu.lab.conflict.risk.ref.tb.NoLimitRefTb;
 import neu.lab.conflict.soot.JarAna;
 import neu.lab.conflict.util.MavenUtil;
+import neu.lab.conflict.util.SootUtil;
 
-/**
- * 
- * @author asus
- *
- */
 /**
  * @author asus
  *
@@ -33,7 +32,7 @@ public class DepJar {
 	private List<String> jarFilePaths;// host project may have multiple source.
 	private Map<String, ClassVO> clsTb;// all class in jar
 	private Set<NodeAdapter> nodeAdapters;// all
-	private DepJarCg jarRisk;
+	private DepJarRiskAna jarRisk;
 	private Set<String> allMthd;
 
 	public DepJar(String groupId, String artifactId, String version, String classifier, List<String> jarFilePaths) {
@@ -55,7 +54,7 @@ public class DepJar {
 		return !this.isSelected();
 	}
 
-	public Element geJarConflictEle() {
+	public Element getRchNumEle() {
 		Element nodeEle = new DefaultElement("version");
 		nodeEle.addAttribute("versionId", getVersion());
 		nodeEle.addAttribute("loaded", "" + isSelected());
@@ -74,13 +73,13 @@ public class DepJar {
 		return nodeEle;
 	}
 
-	public DepJarCg getJarRiskAna(Map<String, ClassVO> clsTb) {
+	public DepJarRiskAna getJarRiskAna(ConflictRiskAna conflictRiskAna) {
 		// if (jarRisk == null) {
 		// jarRisk = new DepJarCg(this);
 		// }
 		//
 		// return jarRisk;
-		return new DepJarCg(this);
+		return new DepJarRiskAna(this, conflictRiskAna);
 	}
 
 	public Set<NodeAdapter> getNodeAdapters() {
@@ -141,10 +140,13 @@ public class DepJar {
 
 	public Map<String, ClassVO> getClsTb() {
 		if (clsTb == null) {
-			if (null == this.getJarFilePaths())// no file
+			if (null == this.getJarFilePaths(true)) {
+				// no file
 				clsTb = new HashMap<String, ClassVO>();
+				MavenUtil.i().getLog().warn("can't find jarFile for:"+toString());
+			}
 			else {
-				clsTb = JarAna.i().deconstruct(this.getJarFilePaths());
+				clsTb = JarAna.i().deconstruct(this.getJarFilePaths(true));
 				if (clsTb.size() == 0) {
 					MavenUtil.i().getLog().warn("get empty clsTb for " + toString());
 				}
@@ -159,15 +161,6 @@ public class DepJar {
 	public ClassVO getClassVO(String clsSig) {
 		return getClsTb().get(clsSig);
 	}
-
-	// public Map<String,ClassVO> getClsTb(){
-	// Map<String,ClassVO> clsTb = new
-	// for (ClassVO clses : getClses()) {
-	// String key = clses.getClsSig();
-	// ClassVO oldCls = loadClses.get(key);
-	// loadClses.put(newCls.getClsSig(), newCls);
-	// }
-	// }
 
 	public Set<String> getAllMthd() {
 		if (allMthd == null) {
@@ -185,8 +178,8 @@ public class DepJar {
 		return getAllMthd().contains(mthd);
 	}
 
-	public List<String> getOnlyClses(DepJar otherJar) {
-		List<String> onlyCls = new ArrayList<String>();
+	public Set<String> getOnlyClses(DepJar otherJar) {
+		Set<String> onlyCls = new HashSet<String>();
 		for (String clsSig : getClsTb().keySet()) {
 			ClassVO otherCls = otherJar.getClassVO(clsSig);
 			if (otherCls == null) {
@@ -196,8 +189,8 @@ public class DepJar {
 		return onlyCls;
 	}
 
-	public List<String> getOnlyMthds(DepJar otherJar) {
-		List<String> onlyMthds = new ArrayList<String>();
+	public Set<String> getOnlyMthds(DepJar otherJar) {
+		Set<String> onlyMthds = new HashSet<String>();
 		for (String clsSig : getClsTb().keySet()) {
 			ClassVO otherCls = otherJar.getClassVO(clsSig);
 			if (otherCls != null) {
@@ -261,21 +254,6 @@ public class DepJar {
 		return isSame(dep.getGroupId(), dep.getArtifactId(), dep.getVersion(), dep.getClassifier());
 	}
 
-	public List<String> getJarFilePaths() {
-		return jarFilePaths;
-	}
-
-	public List<String> getClassPath() {
-		// if node is inner project,will return source directory(using source directory
-		// can get classes before maven-package)
-		if (getNodeAdapters().size() == 1) {
-			NodeAdapter node = getNodeAdapters().iterator().next();
-			if (MavenUtil.i().isInner(node))
-				return MavenUtil.i().getSrcPaths();
-		}
-		return getJarFilePaths();
-	}
-
 	public boolean isSameLib(DepJar depJar) {
 		return getGroupId().equals(depJar.getGroupId()) && getArtifactId().equals(depJar.getArtifactId());
 	}
@@ -298,4 +276,64 @@ public class DepJar {
 		return innerMthds;
 	}
 
+	public Set<String> getOutMthds(Collection<String> testMthds) {
+		Set<String> jarMthds = getAllMthd();
+		Set<String> outMthds = new HashSet<String>();
+		for (String mthd : testMthds) {
+			if (!jarMthds.contains(mthd))
+				outMthds.add(mthd);
+		}
+		return outMthds;
+	}
+
+	private NoLimitRefTb refTb;
+
+	public NoLimitRefTb getRefTb() {
+		if (refTb == null) {
+			refTb = new NoLimitRefTb();
+			try {
+				ClassPool pool = new ClassPool();
+				for (String path : this.getJarFilePaths(true)) {
+					pool.appendClassPath(path);
+				}
+				for (String jarCls : getAllCls(true)) {
+					refTb.addByEr(jarCls, pool.get(jarCls).getRefClasses());
+				}
+			} catch (Exception e) {
+				MavenUtil.i().getLog().error("get refedCls error:", e);
+			}
+		}
+		return refTb;
+	}
+
+	public List<String> getAllCls(boolean useTarget) {
+		return SootUtil.getJarsClasses(this.getJarFilePaths(useTarget));
+	}
+	
+	public List<String> getJarFilePaths(boolean useTarget) {
+		if(!useTarget) {//use source directory
+			// if node is inner project,will return source directory(using source directory
+			// can get classes before maven-package)
+			if (getNodeAdapters().size() == 1) {
+				NodeAdapter node = getNodeAdapters().iterator().next();
+				if (MavenUtil.i().isInner(node))
+					return MavenUtil.i().getSrcPaths();
+			}
+		}
+		return jarFilePaths;
+	}
+
+	/**
+	 * @return when jar is host,this method return source directory,getJarFilePaths return target directory
+	 */
+//	public List<String> getClassPath() {
+//		// if node is inner project,will return source directory(using source directory
+//		// can get classes before maven-package)
+//		if (getNodeAdapters().size() == 1) {
+//			NodeAdapter node = getNodeAdapters().iterator().next();
+//			if (MavenUtil.i().isInner(node))
+//				return MavenUtil.i().getSrcPaths();
+//		}
+//		return getJarFilePaths();
+//	}
 }

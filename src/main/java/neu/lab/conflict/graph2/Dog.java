@@ -1,4 +1,4 @@
-package neu.lab.conflict.graph;
+package neu.lab.conflict.graph2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import neu.lab.conflict.util.MavenUtil;
 
 
 public class Dog {
-	private MthdRltGraph graph;
+	private GraphI graph;
 	protected String pos;
 	protected List<String> route;
 
@@ -19,19 +19,19 @@ public class Dog {
 
 	protected Map<String, List<String>> circleMap = new HashMap<String, List<String>>();
 																						
-	protected Map<String, MthdPathBook> books = new HashMap<String, MthdPathBook>();
+	protected Map<String, BookI> books = new HashMap<String, BookI>();
 
-	protected Map<String, MthdPathBook> tempBooks = new HashMap<String, MthdPathBook>();
+	protected Map<String, BookI> tempBooks = new HashMap<String, BookI>();
 
-	public Dog(MthdRltGraph graph) {
+	public Dog(GraphI graph) {
 		this.graph = graph;
 	}
 
-	protected MthdPathBook buyNodeBook(String nodeName) {
-		return new MthdPathBook(graph.getNode(nodeName));
+	protected BookI buyNodeBook(String nodeName) {
+		return graph.getNode(nodeName).getBook();
 	}
 
-	public Map<String, MthdPathBook> findRlt(Set<String> entrys) {
+	public Map<String, BookI> findRlt(Set<String> entrys) {
 		long start = System.currentTimeMillis();
 		for (String mthd : entrys) {
 			route = new ArrayList<String>();
@@ -74,12 +74,12 @@ public class Dog {
 	 * @param frontNode
 	 */
 	private void forward(String frontNode) {
-		MthdRltNode node = graph.getNode(frontNode);
+		NodeI node = graph.getNode(frontNode);
 		if (node != null) {
 			if (!route.contains(frontNode)) {
 				pos = frontNode;
 				route.add(pos);
-				MthdPathBook nodeRch = buyNodeBook(frontNode);
+				BookI nodeRch = buyNodeBook(frontNode);
 				this.tempBooks.put(frontNode, nodeRch);
 				graphMap.put(pos, new Cross(node));
 			} else {
@@ -99,7 +99,7 @@ public class Dog {
 		graphMap.remove(donePos);
 
 
-		MthdPathBook book = this.tempBooks.get(donePos);
+		BookI book = this.tempBooks.get(donePos);
 		book.addSelf();
 
 		this.tempBooks.remove(donePos);
@@ -122,8 +122,8 @@ public class Dog {
 	}
 
 	private void addChildBook(String donePos, String pos) {
-		MthdPathBook doneBook = this.books.get(donePos);
-		MthdPathBook doingBook = this.tempBooks.get(pos);
+		BookI doneBook = this.books.get(donePos);
+		BookI doingBook = this.tempBooks.get(pos);
 		doingBook.addChild(doneBook);
 	}
 

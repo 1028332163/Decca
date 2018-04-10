@@ -1,79 +1,93 @@
 package neu.lab.conflict.writer;
 
 import java.io.BufferedWriter;
+import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
 
 import neu.lab.conflict.Conf;
 import neu.lab.conflict.container.NodeConflicts;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.DepJar;
-import neu.lab.conflict.vo.NodeConflict;
+import neu.lab.conflict.vo.Conflict;
 
 public class RiskPathWriter {
 
-	public void write(String outPath) {
+	public void writePath(String outPath, boolean append) {
 		try {
-			List<NodeConflict> conflicts = NodeConflicts.i().getConflicts();
-			PrintWriter printer = new PrintWriter(
-					new BufferedWriter(new FileWriter(new File(outPath), true)));
-			printer.println("===============projectPath->" + MavenUtil.i().getProjectInfo());
-			if (conflicts.size() == 0) {
-				printer.println("NO_CONFLICT");
+			Writer fileWriter;
+			if (outPath == null) {
+				fileWriter = new CharArrayWriter();
 			} else {
-				for (NodeConflict conflict : conflicts) {
-					printer.println(conflict.getRiskAna().getRiskString());
-				}
+				fileWriter = new FileWriter(outPath, append);
 			}
-			printer.close();
-		}catch(Exception e) {
+			OutputFormat format = OutputFormat.createPrettyPrint();
+			XMLWriter xmlWriter = new XMLWriter(fileWriter, format);
+			Document document = DocumentHelper.createDocument();
+			Element root = document.addElement("project");
+			root.addAttribute("project",
+					MavenUtil.i().getProjectGroupId() + ":" + MavenUtil.i().getProjectArtifactId());
+			root.addAttribute("projectInfo", MavenUtil.i().getProjectInfo());
+			for (Conflict conflict : NodeConflicts.i().getConflicts()) {
+				root.add(conflict.getRiskAna().getRiskPathEle());
+			}
+			xmlWriter.write(document);
+			xmlWriter.close();
+			if (null == outPath) {// output to console
+				MavenUtil.i().getLog().info(fileWriter.toString());
+			} else {// output to file
+				MavenUtil.i().getLog().info("The result was exported to the file " + outPath);
+			}
+			fileWriter.close();
+		} catch (Exception e) {
 			MavenUtil.i().getLog().error("can't write jar duplicate risk:", e);
 		}
-
 	}
 
-	private void writeConflict(NodeConflict conflict) {
-		// printer.println(conflict.toString());
-		//
-		// Set<String> rchMthds = conflict.getRchedMthds();
-		//
-		// DepJar usedJar = conflict.getUsedDepJar();
-		// writeJarRch(rchMthds, usedJar);
-		// for (DepJar depJar : conflict.getDepJars()) {
-		// if (depJar != usedJar) {
-		// writeJarRch(rchMthds, depJar);
-		// }
-		// }
-		// printer.println("\n");
-		//
-		// for (JarRiskAna jarRisk : conflict.getJarRiskAnas()) {
-		//// printer.println(jarRisk.getRiskStr());
-		// printer.println();
-		// }
+	public void writeRefRisk(String outPath, boolean append) {
+		try {
+			Writer fileWriter;
+			if (outPath == null) {
+				fileWriter = new CharArrayWriter();
+			} else {
+				File f = new File(outPath);
+				if (!f.getParentFile().exists()) {
+					f.getParentFile().mkdirs();
+				}
+				fileWriter = new FileWriter(outPath, append);
+			}
+			OutputFormat format = OutputFormat.createPrettyPrint();
+			XMLWriter xmlWriter = new XMLWriter(fileWriter, format);
+			Document document = DocumentHelper.createDocument();
+			Element root = document.addElement("project");
+			root.addAttribute("project",
+					MavenUtil.i().getProjectGroupId() + ":" + MavenUtil.i().getProjectArtifactId());
+			root.addAttribute("projectInfo", MavenUtil.i().getProjectInfo());
+			for (Conflict conflict : NodeConflicts.i().getConflicts()) {
+				root.add(conflict.getRefRisk().getRiskEle());
+			}
+			xmlWriter.write(document);
+			xmlWriter.close();
+			if (null == outPath) {// output to console
+				MavenUtil.i().getLog().info(fileWriter.toString());
+			} else {// output to file
+				MavenUtil.i().getLog().info("The result was exported to the file " + outPath);
+			}
+			fileWriter.close();
+		} catch (Exception e) {
+			MavenUtil.i().getLog().error("can't write jar duplicate risk:", e);
+		}
 	}
-
-	// private void writeJarRch(Set<String> rchMthds, DepJar depJar) {
-	// Set<String> onlyMthds = min(rchMthds, depJar.getAllMthd());
-	// printer.println("reachmethod dont exist in " + depJar.toString() + " (" +
-	// onlyMthds.size() + "/"
-	// + rchMthds.size() + ")");
-	// for (String onlyMthd : onlyMthds) {
-	// printer.println("-" + onlyMthd);
-	// }
-	// printer.println();
-	// }
-
-	// private Set<String> min(Set<String> total, Set<String> some) {
-	// Set<String> only = new HashSet<String>();
-	// for (String str : total) {
-	// if (!some.contains(str))
-	// only.add(str);
-	// }
-	// return only;
-	// }
 
 }

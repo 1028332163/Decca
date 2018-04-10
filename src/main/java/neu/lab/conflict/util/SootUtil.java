@@ -53,30 +53,31 @@ public class SootUtil {
 	public static String mthdSig2cls(String mthdSig) {
 		return mthdSig.substring(1, mthdSig.indexOf(":"));
 	}
-	public static List<String> getJarClasses(DepJar depJar) {
-		return getJarClasses(depJar.getClassPath());
-	}
 
-	public static List<String> getJarClasses(List<String> paths) {
+	public static List<String> getJarsClasses(List<String> paths) {
 		List<String> allCls = new ArrayList<String>();
-		for (String classPath : paths) {
-			if (new File(classPath).exists()) {
-				if (!classPath.endsWith("tar.gz") && !classPath.endsWith(".pom") && !classPath.endsWith(".war")) {
-					allCls.addAll(SourceLocator.v().getClassesUnder(classPath));
-				} else {
-					MavenUtil.i().getLog().warn(classPath + "is illegal classpath");
-				}
-			} else {
-				MavenUtil.i().getLog().warn(classPath + "doesn't exist in local");
-			}
-
+		for (String path : paths) {
+			allCls.addAll(getJarClasses(path));
 		}
 		return allCls;
 	}
 
+	public static List<String> getJarClasses(String path) {
+		if (new File(path).exists()) {
+			if (!path.endsWith("tar.gz") && !path.endsWith(".pom") && !path.endsWith(".war")) {
+				return SourceLocator.v().getClassesUnder(path);
+			} else {
+				MavenUtil.i().getLog().warn(path + "is illegal classpath");
+			}
+		} else {
+			MavenUtil.i().getLog().warn(path + "doesn't exist in local");
+		}
+		return new ArrayList<String>();
+	}
+
 	public static Map<String, ClassVO> getClassTb(List<String> jarPaths) {
 		Map<String, ClassVO> clsTb = new HashMap<String, ClassVO>();
-		for (String clsSig : SootUtil.getJarClasses(jarPaths)) {
+		for (String clsSig : SootUtil.getJarsClasses(jarPaths)) {
 			SootClass sootClass = Scene.v().getSootClass(clsSig);
 			ClassVO clsVO = new ClassVO(sootClass.getName());
 			clsTb.put(sootClass.getName(), clsVO);
