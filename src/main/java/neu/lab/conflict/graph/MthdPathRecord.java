@@ -1,26 +1,21 @@
 package neu.lab.conflict.graph;
 
-public class MthdPathRecord extends RecordI{
-	private String pathStr;
-	private boolean isFromHost;
-	private int pathLen;
+public class MthdPathRecord extends PathRecord {
 
-	public int getPathLen() {
-		return pathLen;
-	}
+	protected boolean isFromHost;
 
 	public boolean isFromHost() {
 		return isFromHost;
 	}
 
 	public MthdPathRecord(String path, boolean isFromHost, int pathLen) {
-		this.pathStr = path;
+		super(path, pathLen);
 		this.isFromHost = isFromHost;
-		this.pathLen = pathLen;
 	}
 
-	public MthdPathRecord clone() {
-		return new MthdPathRecord(pathStr, isFromHost, pathLen);
+	@Override
+	public String toString() {
+		return getPathStr() + " isFromHost:" + isFromHost() + " path length:" + pathLen;
 	}
 
 	@Override
@@ -38,17 +33,8 @@ public class MthdPathRecord extends RecordI{
 		return pathStr.hashCode();
 	}
 
-	@Override
-	public String toString() {
-		return getPathStr() + " isFromHost:" + isFromHost() + " path length:" + pathLen;
+	public PathRecord clone() {
+		return new MthdPathRecord(pathStr, isFromHost, pathLen);
 	}
 
-	public void addTail(String node) {
-		pathStr = pathStr + "->" + node;
-		pathLen++;
-	}
-
-	public String getPathStr() {
-		return pathStr;
-	}
 }

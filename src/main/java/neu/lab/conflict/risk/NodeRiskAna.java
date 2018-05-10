@@ -12,10 +12,10 @@ import org.dom4j.tree.DefaultElement;
 
 import neu.lab.conflict.Conf;
 import neu.lab.conflict.graph.MthdPathBook;
-import neu.lab.conflict.graph.BookI;
+import neu.lab.conflict.graph.IBook;
 import neu.lab.conflict.graph.Dog;
 import neu.lab.conflict.graph.MthdRltGraph;
-import neu.lab.conflict.graph.MthdRltNode;
+import neu.lab.conflict.graph.MthdPathNode;
 import neu.lab.conflict.graph.MthdPathRecord;
 import neu.lab.conflict.soot.SootCg;
 import neu.lab.conflict.vo.DepJar;
@@ -36,7 +36,7 @@ public class NodeRiskAna {
 	private DepJarRiskAna jarRiskAna;
 	private MthdRltGraph graph;
 
-	private Map<String, BookI> books;// reached path of method in risk2Mthds
+	private Map<String, IBook> books;// reached path of method in risk2Mthds
 
 	public Element getRiskPathEle() {
 		Element ele = new DefaultElement("nodeRisk");
@@ -90,7 +90,7 @@ public class NodeRiskAna {
 			this.anaAncestors = ancestors;
 			rchedMthds = new HashSet<String>();
 			rchedServices = new HashSet<String>();
-			graph = new MthdRltGraph(new HashSet<MthdRltNode>(), new ArrayList<MethodCall>());
+			graph = new MthdRltGraph(new HashSet<MthdPathNode>(), new ArrayList<MethodCall>());
 		} else {
 			if (Conf.ANA_FROM_HOST) {// entry class is host class.
 				this.anaAncestors = ancestors;
@@ -151,7 +151,7 @@ public class NodeRiskAna {
 		return risk2Mthds;
 	}
 
-	public Map<String, BookI> getBooks() {
+	public Map<String, IBook> getBooks() {
 		if (books == null)
 			books = new Dog(graph).findRlt(getRisk2Mthds());
 		return books;
@@ -159,6 +159,10 @@ public class NodeRiskAna {
 
 	public void setGraph(MthdRltGraph graph) {
 		this.graph = graph;
+	}
+	
+	public MthdRltGraph getGraph() {
+		return this.graph;
 	}
 
 	public Set<String> getRchedServices() {

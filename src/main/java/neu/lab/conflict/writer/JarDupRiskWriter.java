@@ -5,10 +5,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
-import neu.lab.conflict.container.NodeConflicts;
+import neu.lab.conflict.container.Conflicts;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.DepJar;
-import neu.lab.conflict.vo.NodeAdapter;
 import neu.lab.conflict.vo.Conflict;
 
 public class JarDupRiskWriter {
@@ -17,14 +16,14 @@ public class JarDupRiskWriter {
 		try {
 			PrintWriter printer = new PrintWriter(new BufferedWriter(new FileWriter(new File(outPath), true)));
 			printer.println("===============projectPath->" + MavenUtil.i().getProjectInfo());
-			for (Conflict nodeConflict : NodeConflicts.i().getConflicts()) {
+			for (Conflict nodeConflict : Conflicts.i().getConflicts()) {
 
 				if (nodeConflict.getNodeAdapters().size() == 2) {// only two version
 					DepJar[] depJars = nodeConflict.getDepJars().toArray(new DepJar[2]);
 					DepJar depJar1 = depJars[0];
 					DepJar depJar2 = depJars[1];
 					if (depJar1 != null && depJar2 != null) {
-						printer.println("=======conflict:" + "<" + depJar1.toString() + ">" + "<" + depJar2.toString() + ">"
+						printer.println("=======jarConflict:" + "<" + depJar1.toString() + ">" + "<" + depJar2.toString() + ">"
 								+ " size:" + nodeConflict.getNodeAdapters().size());
 						printRisk(printer,depJar1,depJar2);
 					}
@@ -34,7 +33,7 @@ public class JarDupRiskWriter {
 			printer.println("\n\n");
 			printer.close();
 		} catch (Exception e) {
-			MavenUtil.i().getLog().error("can't write versionupdate:", e);
+			MavenUtil.i().getLog().error("can't write jarDuplicate:", e);
 		}
 
 	}

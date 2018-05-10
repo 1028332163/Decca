@@ -26,9 +26,4 @@ public class LimitRefTb extends RefTb {
 		}
 	}
 	
-	public void union(RefTb refTb) {
-		for (String ee : refTb) {
-			addByEe(ee, refTb.getErs(ee));
-		}
-	}
 }

@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import neu.lab.conflict.risk.DepJarRiskAna;
 import neu.lab.conflict.risk.DepJarRiskAnas;
 import neu.lab.conflict.risk.ClsDupJarPairRisk;
 import neu.lab.conflict.util.SootUtil;
@@ -51,7 +50,7 @@ public class DupClsJarPair {
 	}
 
 	public String getRiskString() {
-		StringBuilder sb = new StringBuilder("risk for jar-pair:");
+		StringBuilder sb = new StringBuilder("classConflict:");
 		sb.append("<" + jar1.toString() + ">");
 		sb.append("<" + jar2.toString() + ">\n");
 		sb.append(getJarString(jar1, jar2));

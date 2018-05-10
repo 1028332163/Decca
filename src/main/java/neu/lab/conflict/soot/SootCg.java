@@ -11,7 +11,7 @@ import java.util.Set;
 
 import neu.lab.conflict.Conf;
 import neu.lab.conflict.graph.MthdRltGraph;
-import neu.lab.conflict.graph.MthdRltNode;
+import neu.lab.conflict.graph.MthdPathNode;
 import neu.lab.conflict.risk.NodeRiskAna;
 import neu.lab.conflict.util.SootUtil;
 import neu.lab.conflict.util.MavenUtil;
@@ -67,7 +67,7 @@ public class SootCg extends SootAna {
 			MavenUtil.i().getLog().info("don't have entry for:" + nodeAnaUnit.toString());
 			nodeAnaUnit.setRchedMthds(new HashSet<String>());
 
-			nodeAnaUnit.setGraph(new MthdRltGraph(new HashSet<MthdRltNode>(), new ArrayList<MethodCall>()));
+			nodeAnaUnit.setGraph(new MthdRltGraph(new HashSet<MthdPathNode>(), new ArrayList<MethodCall>()));
 
 			nodeAnaUnit.setRchedServices(new HashSet<String>());
 			soot.G.reset();
@@ -132,8 +132,10 @@ class CgTf extends SceneTransformer {
 		Map<String, String> cgMap = new HashMap<String, String>();
 		cgMap.put("enabled", "true");
 		cgMap.put("apponly", "true");
+//		cgMap.put("all-reachable", "true");
 		List<SootMethod> entryMthds = new ArrayList<SootMethod>();
 		for (SootClass sootClass : Scene.v().getApplicationClasses()) {
+//			MavenUtil.i().getLog().info(sootClass.getName());
 			if (entryClses.contains(sootClass.getName())) {// entry class
 				for (SootMethod method : sootClass.getMethods()) {
 					entryMthds.add(method);
@@ -169,13 +171,14 @@ class CgTf extends SceneTransformer {
 	}
 
 	public MthdRltGraph getGraph() {
-		Set<MthdRltNode> nds = new HashSet<MthdRltNode>();
+		Set<MthdPathNode> nds = new HashSet<MthdPathNode>();
 		List<MethodCall> calls = new ArrayList<MethodCall>();
 
 		// form calls and nds
 		CallGraph cg = Scene.v().getCallGraph();
 		Iterator<Edge> ite = cg.iterator();
 		while (ite.hasNext()) {
+			
 			Edge edge = ite.next();
 			if (Conf.FLT_INTERFACE) {
 				if (edge.kind().name().equals("INTERFACE"))
@@ -186,10 +189,12 @@ class CgTf extends SceneTransformer {
 			String tgtClsName = edge.tgt().getDeclaringClass().getName();
 			String srcMthdName = edge.src().getSignature();
 			String tgtMthdName = edge.tgt().getSignature();
+			
+//			MavenUtil.i().getLog().info(srcMthdName+"->"+tgtMthdName);
 
 			calls.add(new MethodCall(srcMthdName, tgtMthdName));
-			nds.add(new MthdRltNode(srcMthdName, entryClses.contains(srcClsName), conflictJarClses.contains(srcClsName)));
-			nds.add(new MthdRltNode(tgtMthdName, entryClses.contains(tgtClsName), conflictJarClses.contains(tgtClsName)));
+			nds.add(new MthdPathNode(srcMthdName, entryClses.contains(srcClsName), conflictJarClses.contains(srcClsName)));
+			nds.add(new MthdPathNode(tgtMthdName, entryClses.contains(tgtClsName), conflictJarClses.contains(tgtClsName)));
 
 		}
 

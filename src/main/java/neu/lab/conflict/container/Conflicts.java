@@ -7,16 +7,16 @@ import java.util.List;
 import neu.lab.conflict.vo.NodeAdapter;
 import neu.lab.conflict.vo.Conflict;
 
-public class NodeConflicts {
-	private static NodeConflicts instance;
+public class Conflicts {
+	private static Conflicts instance;
 
 	public static void init(NodeAdapters nodeAdapters) {
 		if (instance == null) {
-			instance = new NodeConflicts(nodeAdapters);
+			instance = new Conflicts(nodeAdapters);
 		}
 	}
 
-	public static NodeConflicts i() {
+	public static Conflicts i() {
 		return instance;
 	}
 
@@ -25,7 +25,7 @@ public class NodeConflicts {
 	/**
 	 * must initial NodeAdapters before this construct
 	 */
-	private NodeConflicts(NodeAdapters nodeAdapters) {
+	private Conflicts(NodeAdapters nodeAdapters) {
 		container = new ArrayList<Conflict>();
 		for (NodeAdapter node : nodeAdapters.getAllNodeAdapter()) {
 			addNodeAdapter(node);

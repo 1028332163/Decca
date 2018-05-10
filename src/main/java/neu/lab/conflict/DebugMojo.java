@@ -1,9 +1,6 @@
 package neu.lab.conflict;
 
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +12,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.container.NodeAdapters;
 import neu.lab.conflict.util.MavenUtil;
-import neu.lab.conflict.util.UserConf;
 import neu.lab.conflict.vo.NodeAdapter;
-import neu.lab.conflict.writer.ClassDupRiskWriter;
+import neu.lab.conflict.writer.DistanceWriter;
 import neu.lab.conflict.writer.RiskPathWriter;
 
 @Mojo(name = "debug", defaultPhase = LifecyclePhase.VALIDATE)
@@ -26,9 +22,10 @@ public class DebugMojo extends ConflictMojo {
 	@Override
 	public void run() {
 		// writeDepNum(Conf.outDir + "debug.csv");
-		// new ClassDupRiskWriter().writeByJar(UserConf.getOutDir() +
+		// new neu.lab.conflict.writer.ClassDupRiskWriter().writeByJar(UserConf.getOutDir() +
 		// "classDupByJar.txt");
-		printPath();
+//		printPath();
+		new DistanceWriter().writeDistance("D:\\cWS\\notepad++\\distance.txt",false);
 	}
 
 	public void printPath() {

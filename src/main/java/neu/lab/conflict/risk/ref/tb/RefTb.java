@@ -7,9 +7,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+
 public abstract class RefTb implements Iterable<String> {
 	/**
-	 * key is source-class,value is target-class.A class can be called by multiple
+	 * key is target-class,value is source-class.A class can be called by multiple
 	 * class.
 	 */
 	protected Map<String, Set<String>> ee2ers;
@@ -17,7 +18,14 @@ public abstract class RefTb implements Iterable<String> {
 	public RefTb() {
 		ee2ers = new HashMap<String, Set<String>>();
 	}
+	
+//	public Collection<String> getAllEe(){
+//		return ee2ers.keySet();
+//	}
 
+	public int eeSize() {
+		return ee2ers.size();
+	}
 	public Set<String> getErs(String ee) {
 		return ee2ers.get(ee);
 	}
@@ -51,5 +59,12 @@ public abstract class RefTb implements Iterable<String> {
 		}
 		return refedEes;
 	}
-
+	public void union(RefTb refTb) {
+		for (String ee : refTb) {
+			addByEe(ee, refTb.getErs(ee));
+		}
+	}
+//	public ClsRefGraph getClsRefPathGraph() {
+//		return ClsRefGraph.getGraph(this);
+//	}
 }

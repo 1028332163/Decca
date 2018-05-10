@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 
 import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.container.NodeAdapters;
-import neu.lab.conflict.container.NodeConflicts;
+import neu.lab.conflict.container.Conflicts;
 import neu.lab.conflict.statics.ClassDup;
 import neu.lab.conflict.statics.ClassDups;
 import neu.lab.conflict.statics.NodeDup;
@@ -17,12 +17,12 @@ import neu.lab.conflict.util.UserConf;
 import neu.lab.conflict.vo.Conflict;
 
 public class StaWriter {
-	private NodeConflicts nodeConflicts;
+	private Conflicts nodeConflicts;
 	private NodeDups nodeDups;
 	private ClassDups classDups;
 
 	public StaWriter() {
-		nodeConflicts = NodeConflicts.i();
+		nodeConflicts = Conflicts.i();
 		nodeDups = new NodeDups(NodeAdapters.i());
 		classDups = new ClassDups(DepJars.i());
 	}

@@ -9,29 +9,28 @@ import java.util.Set;
 import neu.lab.conflict.Conf;
 import neu.lab.conflict.util.MavenUtil;
 
-
 public class Dog {
-	private GraphI graph;
+	private IGraph graph;
 	protected String pos;
 	protected List<String> route;
 
 	protected Map<String, Cross> graphMap = new HashMap<String, Cross>();
 
 	protected Map<String, List<String>> circleMap = new HashMap<String, List<String>>();
-																						
-	protected Map<String, BookI> books = new HashMap<String, BookI>();
 
-	protected Map<String, BookI> tempBooks = new HashMap<String, BookI>();
+	protected Map<String, IBook> books = new HashMap<String, IBook>();
 
-	public Dog(GraphI graph) {
+	protected Map<String, IBook> tempBooks = new HashMap<String, IBook>();
+
+	public Dog(IGraph graph) {
 		this.graph = graph;
 	}
 
-	protected BookI buyNodeBook(String nodeName) {
+	protected IBook buyNodeBook(String nodeName) {
 		return graph.getNode(nodeName).getBook();
 	}
 
-	public Map<String, BookI> findRlt(Set<String> entrys) {
+	public Map<String, IBook> findRlt(Set<String> entrys) {
 		long start = System.currentTimeMillis();
 		for (String mthd : entrys) {
 			route = new ArrayList<String>();
@@ -61,7 +60,7 @@ public class Dog {
 
 	private void getChildBook(String frontNode) {
 		if (books.containsKey(frontNode)) {
-			addChildBook(frontNode, pos);
+			addChildBookInfo(frontNode, pos);
 		} else {
 			forward(frontNode);
 		}
@@ -74,12 +73,13 @@ public class Dog {
 	 * @param frontNode
 	 */
 	private void forward(String frontNode) {
-		NodeI node = graph.getNode(frontNode);
+//		System.out.println("forward to " + frontNode);
+		INode node = graph.getNode(frontNode);
 		if (node != null) {
 			if (!route.contains(frontNode)) {
 				pos = frontNode;
 				route.add(pos);
-				BookI nodeRch = buyNodeBook(frontNode);
+				IBook nodeRch = buyNodeBook(frontNode);
 				this.tempBooks.put(frontNode, nodeRch);
 				graphMap.put(pos, new Cross(node));
 			} else {
@@ -96,11 +96,11 @@ public class Dog {
 
 	private void back() {
 		String donePos = route.get(route.size() - 1);
+//		System.out.println("back from " + donePos);
 		graphMap.remove(donePos);
 
-
-		BookI book = this.tempBooks.get(donePos);
-		book.addSelf();
+		IBook book = this.tempBooks.get(donePos);
+		book.addSelfNode();
 
 		this.tempBooks.remove(donePos);
 		this.books.put(donePos, book);
@@ -117,13 +117,13 @@ public class Dog {
 			pos = null;
 		} else {
 			pos = route.get(route.size() - 1);
-			addChildBook(donePos, pos);
+			addChildBookInfo(donePos, pos);
 		}
 	}
 
-	private void addChildBook(String donePos, String pos) {
-		BookI doneBook = this.books.get(donePos);
-		BookI doingBook = this.tempBooks.get(pos);
+	private void addChildBookInfo(String donePos, String pos) {
+		IBook doneBook = this.books.get(donePos);
+		IBook doingBook = this.tempBooks.get(pos);
 		doingBook.addChild(doneBook);
 	}
 

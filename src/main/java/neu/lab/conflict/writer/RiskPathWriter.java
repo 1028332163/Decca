@@ -1,14 +1,9 @@
 package neu.lab.conflict.writer;
 
-import java.io.BufferedWriter;
 import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -16,10 +11,8 @@ import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 
-import neu.lab.conflict.Conf;
-import neu.lab.conflict.container.NodeConflicts;
+import neu.lab.conflict.container.Conflicts;
 import neu.lab.conflict.util.MavenUtil;
-import neu.lab.conflict.vo.DepJar;
 import neu.lab.conflict.vo.Conflict;
 
 public class RiskPathWriter {
@@ -39,7 +32,7 @@ public class RiskPathWriter {
 			root.addAttribute("project",
 					MavenUtil.i().getProjectGroupId() + ":" + MavenUtil.i().getProjectArtifactId());
 			root.addAttribute("projectInfo", MavenUtil.i().getProjectInfo());
-			for (Conflict conflict : NodeConflicts.i().getConflicts()) {
+			for (Conflict conflict : Conflicts.i().getConflicts()) {
 				root.add(conflict.getRiskAna().getRiskPathEle());
 			}
 			xmlWriter.write(document);
@@ -74,7 +67,7 @@ public class RiskPathWriter {
 			root.addAttribute("project",
 					MavenUtil.i().getProjectGroupId() + ":" + MavenUtil.i().getProjectArtifactId());
 			root.addAttribute("projectInfo", MavenUtil.i().getProjectInfo());
-			for (Conflict conflict : NodeConflicts.i().getConflicts()) {
+			for (Conflict conflict : Conflicts.i().getConflicts()) {
 				root.add(conflict.getRefRisk().getRiskEle());
 			}
 			xmlWriter.write(document);

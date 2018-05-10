@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 
 import neu.lab.conflict.Conf;
-import neu.lab.conflict.container.NodeConflicts;
+import neu.lab.conflict.container.Conflicts;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.DepJar;
 import neu.lab.conflict.vo.NodeAdapter;
@@ -16,7 +16,7 @@ public class UpVerWriter {
 	public void write(String outPath) {
 		try {
 			PrintWriter printer = new PrintWriter(new BufferedWriter(new FileWriter(new File(outPath), true)));
-			for (Conflict nodeConflict : NodeConflicts.i().getConflicts()) {
+			for (Conflict nodeConflict : Conflicts.i().getConflicts()) {
 				if (nodeConflict.getNodeAdapters().size() == 2) {// only two version
 					NodeAdapter[] depJars = nodeConflict.getNodeAdapters().toArray(new NodeAdapter[2]);
 					NodeAdapter node1 = depJars[0];

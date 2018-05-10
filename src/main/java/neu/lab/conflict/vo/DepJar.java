@@ -99,6 +99,9 @@ public class DepJar {
 
 	}
 
+	/**
+	 * @return the import path of depJar.
+	 */
 	public String getValidDepPath() {
 		StringBuilder sb = new StringBuilder(toString() + ":");
 		for (NodeAdapter node : getNodeAdapters()) {
@@ -310,6 +313,13 @@ public class DepJar {
 		return SootUtil.getJarsClasses(this.getJarFilePaths(useTarget));
 	}
 	
+	/**
+	 * @param useTarget: host-class-name can get from source directory(false) or target directory(true).
+	 * using source directory: 
+	 * advantage: get class before maven-package
+	 * disadvantage:classcan't deconstruct by soot,miss class that generated.
+	 * @return
+	 */
 	public List<String> getJarFilePaths(boolean useTarget) {
 		if(!useTarget) {//use source directory
 			// if node is inner project,will return source directory(using source directory
@@ -323,17 +333,4 @@ public class DepJar {
 		return jarFilePaths;
 	}
 
-	/**
-	 * @return when jar is host,this method return source directory,getJarFilePaths return target directory
-	 */
-//	public List<String> getClassPath() {
-//		// if node is inner project,will return source directory(using source directory
-//		// can get classes before maven-package)
-//		if (getNodeAdapters().size() == 1) {
-//			NodeAdapter node = getNodeAdapters().iterator().next();
-//			if (MavenUtil.i().isInner(node))
-//				return MavenUtil.i().getSrcPaths();
-//		}
-//		return getJarFilePaths();
-//	}
 }

@@ -8,13 +8,13 @@ import java.util.Set;
 
 import neu.lab.conflict.util.SootUtil;
 
-public class MthdRltNode implements NodeI{
+public class MthdPathNode extends PathNode{
 	private String name;
 	private boolean isHostNode;
 	private boolean isConflictNode;
 	private Set<String> inNds;
 	private Set<String> outNds;
-	public MthdRltNode(String name,boolean isHostNode,boolean isConflictNode) {
+	public MthdPathNode(String name,boolean isHostNode,boolean isConflictNode) {
 		this.name = name;
 		this.isHostNode = isHostNode;
 		this.isConflictNode = isConflictNode;
@@ -57,8 +57,8 @@ public class MthdRltNode implements NodeI{
 	}
 	@Override
 	public boolean equals(Object other) {
-		if(other instanceof MthdRltNode) {
-			MthdRltNode otherNode = (MthdRltNode)other;
+		if(other instanceof MthdPathNode) {
+			MthdPathNode otherNode = (MthdPathNode)other;
 			return name.equals(otherNode.getName());
 		}
 		return false;
@@ -101,8 +101,12 @@ public class MthdRltNode implements NodeI{
 	}
 
 	@Override
-	public BookI getBook() {
-		// TODO Auto-generated method stub
+	public IBook getBook() {
 		return new MthdPathBook(this);
+	}
+
+	@Override
+	public IRecord formNewRecord() {
+		return new MthdPathRecord(getName(), isHostNode(), 1);
 	}
 }

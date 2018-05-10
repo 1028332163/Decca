@@ -13,7 +13,7 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 
 import neu.lab.conflict.container.DepJars;
-import neu.lab.conflict.container.NodeConflicts;
+import neu.lab.conflict.container.Conflicts;
 import neu.lab.conflict.risk.DepJarRiskAnas;
 import neu.lab.conflict.risk.FourRow;
 import neu.lab.conflict.statics.ClassDups;
@@ -30,7 +30,7 @@ public class JarRchedWriter {
 			// CSVFormat format = CSVFormat.DEFAULT.withHeader(header);
 
 			CSVPrinter printer = new CSVPrinter(new FileWriter(outPath, append), CSVFormat.DEFAULT);
-			for (Conflict conflict : NodeConflicts.i().getConflicts()) {
+			for (Conflict conflict : Conflicts.i().getConflicts()) {
 				FourRow fourRow = conflict.getRiskAna().getFourRow();
 				printer.printRecord(fourRow.mthdRow);
 				printer.printRecord(fourRow.mthdNameRow);
@@ -61,7 +61,7 @@ public class JarRchedWriter {
 			// add jar conflict
 			Element jarConfs = root.addElement("conflicts");
 //			jarConfs.addAttribute("type", "jar");
-			for (Conflict conflict : NodeConflicts.i().getConflicts()) {
+			for (Conflict conflict : Conflicts.i().getConflicts()) {
 				jarConfs.add(conflict.getRiskAna().getRchNumEle());
 			}
 			if (detectClass) {// add class conflict

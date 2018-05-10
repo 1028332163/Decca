@@ -1,5 +1,6 @@
 package neu.lab.conflict.graph;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -12,18 +13,18 @@ import neu.lab.conflict.graph.filter.FilterInvoker;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.MethodCall;
 
-public class MthdRltGraph implements GraphI{
+public class MthdRltGraph implements IGraph{
 	
-	private Map<String, MthdRltNode> name2node;
+	private Map<String, MthdPathNode> name2node;
 
-	public MthdRltGraph(Set<MthdRltNode> nodes, List<MethodCall> calls) {
+	public MthdRltGraph(Set<MthdPathNode> nodes, List<MethodCall> calls) {
 
 		// filter
 		MavenUtil.i().getLog().debug("graph-before-filter nodes size:" + nodes.size() + " calls size:" + calls.size());
 		if (Conf.FLT_CALL)
 			filtCalls(calls);
-		name2node = new HashMap<String, MthdRltNode>();
-		for (MthdRltNode node : nodes) {
+		name2node = new HashMap<String, MthdPathNode>();
+		for (MthdPathNode node : nodes) {
 			name2node.put(node.getName(), node);
 		}
 		for (MethodCall call : calls) {
@@ -40,7 +41,7 @@ public class MthdRltGraph implements GraphI{
 
 	private void filterDangerImpl() {
 		for (String ndName : name2node.keySet()) {
-			MthdRltNode node = name2node.get(ndName);
+			MthdPathNode node = name2node.get(ndName);
 			Map<String, Integer> name2cnt = node.calNameCnt();
 			for (String outName : name2cnt.keySet()) {
 				if (name2cnt.get(outName) >= Conf.DANGER_IMPL_T) {// delete out-method contains this name
@@ -73,9 +74,9 @@ public class MthdRltGraph implements GraphI{
 		int delNum;
 		do {
 			delNum = 0;
-			Iterator<Entry<String, MthdRltNode>> ite = name2node.entrySet().iterator();
+			Iterator<Entry<String, MthdPathNode>> ite = name2node.entrySet().iterator();
 			while (ite.hasNext()) {
-				MthdRltNode node = ite.next().getValue();
+				MthdPathNode node = ite.next().getValue();
 				if (node.isHostNode()) {// host method
 
 				} else if (risk2mthds.contains(node.getName())) {// risk2method
@@ -100,7 +101,8 @@ public class MthdRltGraph implements GraphI{
 		} while (delNum > 0);
 	}
 
-	public NodeI getNode(String name) {
+	@Override
+	public INode getNode(String name) {
 		return name2node.get(name);
 	}
 
@@ -122,5 +124,10 @@ public class MthdRltGraph implements GraphI{
 //			sb.append("\n");
 //		}
 		return sb.toString();
+	}
+
+	@Override
+	public Collection<String> getAllNode() {
+		return name2node.keySet();
 	}
 }

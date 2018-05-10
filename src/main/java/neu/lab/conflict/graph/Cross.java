@@ -12,7 +12,7 @@ import java.util.Iterator;
 public class Cross {
 	Iterator<String> cross;
 
-	Cross(NodeI node) {
+	Cross(INode node) {
 		Collection<String> inMthds = node.getNexts();
 		if (null != inMthds) {
 			this.cross = inMthds.iterator();
