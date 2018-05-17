@@ -102,6 +102,10 @@ public class MavenUtil {
 		return mojo.project.getGroupId() + ":" + mojo.project.getArtifactId() + ":" + mojo.project.getVersion() + "@"
 				+ mojo.project.getFile().getAbsolutePath();
 	}
+	
+	public String getProjectCor() {
+		return mojo.project.getGroupId() + ":" + mojo.project.getArtifactId() + ":" + mojo.project.getVersion();
+	}
 
 	public String getProjectGroupId() {
 		return mojo.project.getGroupId();
