@@ -2,7 +2,9 @@ package neu.lab.conflict.util;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
@@ -17,12 +19,28 @@ import neu.lab.conflict.vo.NodeAdapter;
 
 public class MavenUtil {
 	private static MavenUtil instance = new MavenUtil();
+	private Set<String> hostClses;
 
 	public static MavenUtil i() {
 		return instance;
 	}
 
 	private MavenUtil() {
+
+	}
+
+	private Set<String> getHostClses() {
+		if (hostClses == null) {
+			hostClses = new HashSet<String>();
+			for (String srcDir : this.getSrcPaths()) {
+				hostClses.addAll(SootUtil.getJarClasses(srcDir));
+			}
+		}
+		return hostClses;
+	}
+
+	public boolean isHostClass(String clsSig) {
+		return getHostClses().contains(clsSig);
 	}
 
 	private ConflictMojo mojo;
@@ -84,7 +102,7 @@ public class MavenUtil {
 		return mojo.project.getGroupId() + ":" + mojo.project.getArtifactId() + ":" + mojo.project.getVersion() + "@"
 				+ mojo.project.getFile().getAbsolutePath();
 	}
-	
+
 	public String getProjectGroupId() {
 		return mojo.project.getGroupId();
 	}
@@ -92,10 +110,11 @@ public class MavenUtil {
 	public String getProjectArtifactId() {
 		return mojo.project.getArtifactId();
 	}
-	
+
 	public String getProjectVersion() {
 		return mojo.project.getVersion();
 	}
+
 	public ConflictMojo getMojo() {
 		return mojo;
 	}

@@ -29,6 +29,8 @@ public class Conf {
 	
 	public static boolean ANA_FROM_HOST = true;
 	
+	public static boolean CNT_RISK_CLASS_METHOD = false;//if methods that are in risk-class is risk-method.
+	
 //	public static final String outSir = "D:\\ws\\sta\\";
 }
 

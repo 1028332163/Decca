@@ -12,6 +12,7 @@ import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
 
 import javassist.ClassPool;
+import neu.lab.conflict.Conf;
 import neu.lab.conflict.container.NodeAdapters;
 import neu.lab.conflict.risk.ConflictRiskAna;
 import neu.lab.conflict.risk.DepJarRiskAna;
@@ -52,6 +53,10 @@ public class DepJar {
 	 */
 	public boolean isRisk() {
 		return !this.isSelected();
+	}
+	
+	public boolean containsCls(String clsSig) {
+		return this.getClsTb().containsKey(clsSig);
 	}
 
 	public Element getRchNumEle() {
@@ -278,8 +283,27 @@ public class DepJar {
 		}
 		return innerMthds;
 	}
+	
+	public Set<String> getRiskMthds(Collection<String> testMthds){
+		if(Conf.CNT_RISK_CLASS_METHOD) {
+			return this.getOutMthds(testMthds);
+		}else {
+			Set<String> riskMthds = new HashSet<String>();
+			for(String testMthd:testMthds) {
+				if(!this.containsMthd(testMthd)&&this.containsCls(SootUtil.mthdSig2cls(testMthd))) {
+//					System.out.println("jar class size"+this.getClsTb().size()+"jar contains:"+SootUtil.mthdSig2cls(testMthd));
+					riskMthds.add(testMthd);
+				}
+			}
+			return riskMthds;
+		}
+	}
 
-	public Set<String> getOutMthds(Collection<String> testMthds) {
+	/**methods that this jar don't have.
+	 * @param testMthds
+	 * @return
+	 */
+	private Set<String> getOutMthds(Collection<String> testMthds) {
 		Set<String> jarMthds = getAllMthd();
 		Set<String> outMthds = new HashSet<String>();
 		for (String mthd : testMthds) {

@@ -11,6 +11,15 @@ public class DijkstraNode {
 	private String name;
 	private Map<String,Double> distances;//key is all in-method.All value is 1.
 	
+	public DijkstraNode(String name) {
+		this.name = name;
+		distances = new HashMap<String,Double>();
+	}
+	
+	public String getName() {
+		return name;
+	}
+
 	public DijkstraNode(MthdPathNode node) {
 		distances = new HashMap<String,Double>();
 		this.name = node.getName();
@@ -18,7 +27,11 @@ public class DijkstraNode {
 			distances.put(inNd, new Double(1));
 		}
 	}
-	
+
+	public void addIn(String inNd) {
+		distances.put(inNd, new Double(1));
+	}
+
 	public Double getDistance(String otherNd) {
 		Double distance = distances.get(otherNd);
 		if(null!=distance)
@@ -64,9 +77,9 @@ public class DijkstraNode {
 	
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder("node:"+name+" "+System.lineSeparator());
+		StringBuilder sb = new StringBuilder("node:"+name+","+System.lineSeparator());
 		for(String inNd:distances.keySet()) {
-			sb.append(inNd);
+			sb.append(inNd+",");
 			sb.append(System.lineSeparator());
 		}
 		return sb.toString();

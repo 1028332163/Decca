@@ -14,13 +14,26 @@ public class NameAndDist implements Comparable<NameAndDist> {
 
 	@Override
 	public int compareTo(NameAndDist o) {
-		return (int) (distance - o.distance);
+		double diff = distance - o.distance;
+//		return (int)diff;
+		if(diff!=0) {
+			return (int)diff;
+		}else {
+			return name.hashCode()-o.hashCode();
+		}
 	}
 
 	@Override
 	public String toString() {
 		return name + " " + distance;
 	}
+	
+//	@Override
+//	public boolean equals(Object obj) {
+//		if(obj instanceof NameAndDist) {
+//			NameAndDist other = (NameAndDist)obj;
+//		}
+//	}
 
 //	public static void main(String[] args) {
 //		NameAndDist d1 = new NameAndDist("a", 2.0);

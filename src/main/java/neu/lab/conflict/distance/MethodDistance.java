@@ -1,19 +1,26 @@
 package neu.lab.conflict.distance;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import neu.lab.conflict.util.MavenUtil;
+import neu.lab.conflict.util.SootUtil;
 
 public class MethodDistance {
 
 	private Map<String, Map<String, Double>> distances;// <source,<target,distance>>
+
+	private static MethodDistance instance;
 
 	private MethodDistance() {
 		distances = new HashMap<String, Map<String, Double>>();
 	}
 
 	public static MethodDistance i() {
-		return new MethodDistance();
+		if (instance == null) {
+			instance = new MethodDistance();
+		}
+		return instance;
 	}
 
 	public void addDistances(Map<String, Map<String, Double>> newData) {
@@ -35,15 +42,17 @@ public class MethodDistance {
 			}
 		}
 	}
-	 @Override
-	 public String toString() {
-		 StringBuilder sb = new StringBuilder();
-		 for(String source:distances.keySet()) {
-			 Map<String,Double> dises = distances.get(source);
-			 for(String target:dises.keySet()) {
-				 sb.append(source+","+target+","+dises.get(target));
-			 }
-		 }
-		 return sb.toString();
-	 }
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (String source : distances.keySet()) {
+			Map<String, Double> dises = distances.get(source);
+			for (String target : dises.keySet()) {
+				sb.append(source + "," + target + "," + dises.get(target)+","+MavenUtil.i().isHostClass(SootUtil.mthdSig2cls(target)));
+				sb.append(System.lineSeparator());
+			}
+		}
+		return sb.toString();
+	}
 }

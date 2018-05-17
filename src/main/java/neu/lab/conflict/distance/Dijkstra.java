@@ -15,6 +15,10 @@ import neu.lab.conflict.graph.MthdPathNode;
 public class Dijkstra {
 
 	private Map<String, DijkstraNode> name2node;
+	
+	public Dijkstra() {
+		name2node = new HashMap<String,DijkstraNode>();
+	}
 
 	public Dijkstra(MthdRltGraph graph) {
 		name2node = new HashMap<String, DijkstraNode>();
@@ -24,11 +28,16 @@ public class Dijkstra {
 		}
 	}
 	
+	public void addNode(DijkstraNode node) {
+		name2node.put(node.getName(), node);
+	}
+	
 	public Map<String, Map<String, Double>> getDistanceTb(Collection<String> startNds){
 		 Map<String, Map<String, Double>> distances = new HashMap<String,Map<String, Double>>();
 		 for(String startNd:startNds) {
 			 distances.put(startNd, getDistanceTb(startNd));
 		 }
+
 		 return distances;
 	}
 
@@ -36,6 +45,10 @@ public class Dijkstra {
 		TreeSet<NameAndDist> doingNds = initDoingDistes(startNd);// doing-distances;
 		Map<String, Double> doneNds = new HashMap<String, Double>();
 		while (!doingNds.isEmpty()) {
+//			System.out.println("-----------");
+//			for(NameAndDist nd:doingNds) {
+//				System.out.println(nd);
+//			}
 			NameAndDist min = doingNds.pollFirst();
 			if (min.distance == Double.MAX_VALUE) {// left-node is all unreachable.
 				break;
@@ -71,8 +84,10 @@ public class Dijkstra {
 		doingDistes.add(new NameAndDist(startName, new Double(0)));
 		DijkstraNode startNd = name2node.get(startName);
 		for (String nd : getAllNd()) {
+//			System.out.println(nd);
 			doingDistes.add(new NameAndDist(nd, startNd.getDistance(nd)));
 		}
+//		System.out.println(doingDistes.size());
 		return doingDistes;
 	}
 

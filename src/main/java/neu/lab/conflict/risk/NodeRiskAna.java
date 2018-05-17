@@ -139,14 +139,14 @@ public class NodeRiskAna {
 
 	public Set<String> getRisk1Mthds() {
 		if (risk1Mthds == null) {
-			risk1Mthds = getReplaceJar().getOutMthds(getRchedMthds());
+			risk1Mthds = getReplaceJar().getRiskMthds(getRchedMthds());
 		}
 		return risk1Mthds;
 	}
 
 	public Set<String> getRisk2Mthds() {
 		if (risk2Mthds == null) {
-			risk2Mthds = getReplaceJar().getOutMthds(getRchedServices());
+			risk2Mthds = getReplaceJar().getRiskMthds(getRchedServices());
 		}
 		return risk2Mthds;
 	}

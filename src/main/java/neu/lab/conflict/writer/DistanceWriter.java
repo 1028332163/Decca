@@ -20,7 +20,7 @@ public class DistanceWriter {
 					for(NodeRiskAna nodeRisk:jarRisk.getNodeRiskAnas()) {
 						MavenUtil.i().getLog().info("risk Mthd:"+nodeRisk.getRisk2Mthds().size());
 						Dijkstra dj = new Dijkstra(nodeRisk.getGraph());
-						printer.println(dj.toString());
+//						printer.println(dj.toString());
 						MethodDistance.i().addDistances(dj.getDistanceTb(nodeRisk.getRisk2Mthds()));
 					}
 				}
