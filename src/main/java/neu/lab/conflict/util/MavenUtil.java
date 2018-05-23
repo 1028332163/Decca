@@ -32,8 +32,10 @@ public class MavenUtil {
 	private Set<String> getHostClses() {
 		if (hostClses == null) {
 			hostClses = new HashSet<String>();
-			for (String srcDir : this.getSrcPaths()) {
-				hostClses.addAll(SootUtil.getJarClasses(srcDir));
+			if (null != this.getSrcPaths()) {
+				for (String srcDir : this.getSrcPaths()) {
+					hostClses.addAll(SootUtil.getJarClasses(srcDir));
+				}
 			}
 		}
 		return hostClses;
@@ -91,6 +93,9 @@ public class MavenUtil {
 
 	public List<String> getSrcPaths() {
 		List<String> srcPaths = new ArrayList<String>();
+		if(this.mojo==null) {
+			return null;
+		}
 		for (String srcPath : this.mojo.compileSourceRoots) {
 			if (new File(srcPath).exists())
 				srcPaths.add(srcPath);
@@ -102,7 +107,7 @@ public class MavenUtil {
 		return mojo.project.getGroupId() + ":" + mojo.project.getArtifactId() + ":" + mojo.project.getVersion() + "@"
 				+ mojo.project.getFile().getAbsolutePath();
 	}
-	
+
 	public String getProjectCor() {
 		return mojo.project.getGroupId() + ":" + mojo.project.getArtifactId() + ":" + mojo.project.getVersion();
 	}

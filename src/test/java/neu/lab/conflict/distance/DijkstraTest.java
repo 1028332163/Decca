@@ -20,37 +20,34 @@ public class DijkstraTest {
 
 	@Test
 	public void test() throws Exception {
+		long start = System.currentTimeMillis();
+		Set<String> startNds = new HashSet<String>();
+		File f = new File("d:/djGraph.txt");
+		startNds.add("<com.google.common.hash.Hashing$ConcatenatedHashFunction: boolean equals(java.lang.Object)>");
 //		File f = new File("projectFile/distance.txt");
-//		System.out.println(f.getAbsolutePath());
-//		Dijkstra dj = loadGraph(f);
-//		Set<String> startNds = new HashSet<String>();
 //		startNds.add("<neu.lab.plug.testcase.homemade.b.B1: void m2()>");
 //		startNds.add("<neu.lab.plug.testcase.homemade.b.B2: void m1()>");
-//		 Map<String, Map<String, Double>> distances = dj.getDistanceTb(startNds);
-//		
-//		 for(String source:distances.keySet()) {
-//		 Map<String,Double> dises = distances.get(source);
-//		 for(String target:dises.keySet()) {
-//			 System.out.println(source+","+target+","+dises.get(target));
-//		 }
-//		 
-//		 MethodDistance.i().addDistances(distances);
-//		 System.out.println(MethodDistance.i().toString());
-//	 }
+		Dijkstra dj = loadGraph(f);
+		Map<String, Map<String, Double>> distances = dj.getDistanceTb(startNds);
+
+
+		MethodDistance.i().addDistances(distances);
+		 System.out.println(MethodDistance.i().toString());
+		 System.out.println((System.currentTimeMillis()-start)/1000);
 	}
 
 	private Dijkstra loadGraph(File graphFile) throws Exception {
-		Dijkstra dj = new Dijkstra();
+		Dijkstra dj = new DijkstraMap();
 		BufferedReader reader = new BufferedReader(new FileReader(graphFile));
 		String line = reader.readLine();
 		DijkstraNode currentNd = null;
 		while (line != null) {
-			if (!"".equals(line)) {
+			if (!"".equals(line)&&!"graph:".equals(line)) {
 				line = line.replace(",", "");
-				if(line.startsWith("node:")) {
+				if (line.startsWith("node:")) {
 					currentNd = new DijkstraNode(line.replace("node:", ""));
 					dj.addNode(currentNd);
-				}else {
+				} else {
 					currentNd.addIn(line);
 				}
 			}
