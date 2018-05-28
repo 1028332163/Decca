@@ -27,7 +27,7 @@ public class NodeRefRisk {
 	}
 
 	public Element getRiskEle() {
-		return getRiskPathEle() ;
+		return getRiskRefPathEle() ;
 	}
 	
 	private Element getRiskRefEle() {
@@ -50,7 +50,7 @@ public class NodeRefRisk {
 		return ele;
 	}
 	
-	private Element getRiskPathEle() {
+	private Element getRiskRefPathEle() {
 		Element ele = new DefaultElement("nodeRisk");
 		ele.addAttribute("id", node.getWholePath());
 		Element clsesEle = ele.addElement("riskClasses");
@@ -76,7 +76,7 @@ public class NodeRefRisk {
 	}
 
 	public ClsRefGraph getClsRefGraph() {
-		return ClsRefGraph.getGraph(this.node);
+		return ClsRefGraph.getGraph(this.node,true);
 	}
 
 	private LimitRefTb getlimitRefTb() {

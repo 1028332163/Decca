@@ -20,7 +20,7 @@ import neu.lab.conflict.writer.JarRchedWriter;
 @Mojo(name = "detect", defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST)
 public class DetectMojo extends ConflictMojo {
 
-	@Parameter(property = "resultFileType", defaultValue = "xml")
+	@Parameter(property = "resultFileType", defaultValue = "csv")
 	protected String resultFileType;
 
 	@Parameter(property = "resultFilePath")
@@ -42,18 +42,19 @@ public class DetectMojo extends ConflictMojo {
 //			if (Conf.CLASS_DUP)
 //				FinalClasses.init(DepJars.i());
 			if ("xml".equals(resultFileType)) {
-//				if (null == resultFilePath) {
-//					resultFilePath = MavenUtil.i().getBuildDir().getAbsolutePath() + File.separator
-//							+ "levelPredict.xml";
-//				}
+				if (null == resultFilePath) {
+					resultFilePath = "d:\\ws\\jarRch\\" + File.separator
+							+MavenUtil.i().getProjectCor().replace(":", "+") +".xml";
+				}
 				new JarRchedWriter().writeXml(resultFilePath, append,detectClass);
 			} else if ("csv".equals(resultFileType)) {
 				if (null == resultFilePath) {
-					resultFilePath = MavenUtil.i().getBuildDir().getAbsolutePath() + File.separator + "reachnum.csv";
+					resultFilePath = "d:\\ws\\jarRch\\" + File.separator
+							+MavenUtil.i().getProjectCor().replace(":", "+") +".csv";
 				}
 				new JarRchedWriter().writeCsv(resultFilePath, append);
 			} else if("all".equals(resultFileType)) {
-				new JarRchedWriter().writeAll("d:\\ws\\sta\\", append);
+				new JarRchedWriter().writeAll("d:\\ws\\jarRch\\", append);
 			}else {
 				getLog().error("resultFileType can be xml/csv , can't be " + resultFileType);
 			}

@@ -70,7 +70,7 @@ public class Conflict {
 		// riskAna = ConflictRiskAna.getConflictRiskAna(this);
 		// }
 		// return riskAna;
-		return ConflictRiskAna.getConflictRiskAna(this);
+		return new ConflictRiskAna(this);
 	}
 	
 	public ConflictRefRisk getRefRisk() {

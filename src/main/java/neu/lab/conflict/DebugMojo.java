@@ -24,9 +24,16 @@ public class DebugMojo extends ConflictMojo {
 		// writeDepNum(Conf.outDir + "debug.csv");
 		// new neu.lab.conflict.writer.ClassDupRiskWriter().writeByJar(UserConf.getOutDir() +
 		// "classDupByJar.txt");
-//		printPath();
-		String outPath = "D:\\ws\\distance\\"+(MavenUtil.i().getProjectCor()+".txt").replace(":", "+");
-		new DistanceWriter().writeDistance(outPath,false);
+		printClsDistance();
+	}
+	
+	public void printClsDistance() {
+		String outPath = "D:\\ws\\distance_cls\\"+(MavenUtil.i().getProjectCor()+".txt").replace(":", "+");
+		new DistanceWriter().writeClsDistance(outPath,false);
+	}
+	public void printMthdDistance() {
+		String outPath = "D:\\ws\\distance_mthd\\"+(MavenUtil.i().getProjectCor()+".txt").replace(":", "+");
+		new DistanceWriter().writeMthdDistance(outPath,false);
 	}
 
 	public void printPath() {

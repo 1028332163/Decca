@@ -54,7 +54,7 @@ public class DepJar {
 	public boolean isRisk() {
 		return !this.isSelected();
 	}
-	
+
 	public boolean containsCls(String clsSig) {
 		return this.getClsTb().containsKey(clsSig);
 	}
@@ -151,9 +151,8 @@ public class DepJar {
 			if (null == this.getJarFilePaths(true)) {
 				// no file
 				clsTb = new HashMap<String, ClassVO>();
-				MavenUtil.i().getLog().warn("can't find jarFile for:"+toString());
-			}
-			else {
+				MavenUtil.i().getLog().warn("can't find jarFile for:" + toString());
+			} else {
 				clsTb = JarAna.i().deconstruct(this.getJarFilePaths(true));
 				if (clsTb.size() == 0) {
 					MavenUtil.i().getLog().warn("get empty clsTb for " + toString());
@@ -283,15 +282,16 @@ public class DepJar {
 		}
 		return innerMthds;
 	}
-	
-	public Set<String> getRiskMthds(Collection<String> testMthds){
-		if(Conf.CNT_RISK_CLASS_METHOD) {
+
+	public Set<String> getRiskMthds(Collection<String> testMthds) {
+		if (Conf.CNT_RISK_CLASS_METHOD) {
 			return this.getOutMthds(testMthds);
-		}else {
+		} else {
 			Set<String> riskMthds = new HashSet<String>();
-			for(String testMthd:testMthds) {
-				if(!this.containsMthd(testMthd)&&this.containsCls(SootUtil.mthdSig2cls(testMthd))) {
-//					System.out.println("jar class size"+this.getClsTb().size()+"jar contains:"+SootUtil.mthdSig2cls(testMthd));
+			for (String testMthd : testMthds) {
+				if (!this.containsMthd(testMthd) && this.containsCls(SootUtil.mthdSig2cls(testMthd))) {
+					// System.out.println("jar class size"+this.getClsTb().size()+"jar
+					// contains:"+SootUtil.mthdSig2cls(testMthd));
 					riskMthds.add(testMthd);
 				}
 			}
@@ -299,7 +299,9 @@ public class DepJar {
 		}
 	}
 
-	/**methods that this jar don't have.
+	/**
+	 * methods that this jar don't have.
+	 * 
 	 * @param testMthds
 	 * @return
 	 */
@@ -336,25 +338,32 @@ public class DepJar {
 	public List<String> getAllCls(boolean useTarget) {
 		return SootUtil.getJarsClasses(this.getJarFilePaths(useTarget));
 	}
-	
+
 	/**
-	 * @param useTarget: host-class-name can get from source directory(false) or target directory(true).
-	 * using source directory: 
-	 * advantage: get class before maven-package
-	 * disadvantage:classcan't deconstruct by soot,miss class that generated.
+	 * @param useTarget:
+	 *            host-class-name can get from source directory(false) or target
+	 *            directory(true). using source directory: advantage: get class
+	 *            before maven-package disadvantage:classcan't deconstruct by
+	 *            soot,miss class that generated.
 	 * @return
 	 */
 	public List<String> getJarFilePaths(boolean useTarget) {
-		if(!useTarget) {//use source directory
+		if (!useTarget) {// use source directory
 			// if node is inner project,will return source directory(using source directory
 			// can get classes before maven-package)
-			if (getNodeAdapters().size() == 1) {
-				NodeAdapter node = getNodeAdapters().iterator().next();
-				if (MavenUtil.i().isInner(node))
-					return MavenUtil.i().getSrcPaths();
-			}
+			if (isHost())
+				return MavenUtil.i().getSrcPaths();
 		}
 		return jarFilePaths;
+	}
+
+	public boolean isHost() {
+		if (getNodeAdapters().size() == 1) {
+			NodeAdapter node = getNodeAdapters().iterator().next();
+			if (MavenUtil.i().isInner(node))
+				return true;
+		}
+		return false;
 	}
 
 }

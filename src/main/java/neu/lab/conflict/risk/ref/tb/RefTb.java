@@ -10,7 +10,7 @@ import java.util.Set;
 
 public abstract class RefTb implements Iterable<String> {
 	/**
-	 * key is target-class,value is source-class.A class can be called by multiple
+	 * key is target-class,value is source-class.A target-class can be called by multiple
 	 * class.
 	 */
 	protected Map<String, Set<String>> ee2ers;

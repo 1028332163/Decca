@@ -42,10 +42,11 @@ public abstract class SootAna {
 	}
 
 	private boolean canAna(String jarFilePath) {
-		if(!jarFilePath.contains("\\asm\\")) {
-			return true;
+//		return true;
+		if(jarFilePath.contains("\\asm\\")&&jarFilePath.contains("6")) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	protected void addGenArg(List<String> argsList) {

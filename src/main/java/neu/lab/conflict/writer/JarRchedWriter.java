@@ -89,7 +89,6 @@ public class JarRchedWriter {
 	}
 
 	public void writeAll(String string, boolean append) {
-		// TODO Auto-generated method stub
 		
 	}
 

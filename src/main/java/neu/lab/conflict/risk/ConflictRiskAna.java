@@ -33,18 +33,31 @@ public class ConflictRiskAna {
 	private Set<String> risk1Mthds;// reached and thrown
 	private Set<String> risk2Mthds;// reached and thrown and called by method in other jar.
 
+//	public static ConflictRiskAna getConflictRiskAna(Conflict nodeConflict) {
+//		MavenUtil.i().getLog().info("conflict risk ana for:" + nodeConflict.toString());
+//		ConflictRiskAna riskAna = new ConflictRiskAna(nodeConflict);
+//		return riskAna;
+//	}
+
+	public ConflictRiskAna(Conflict nodeConflict) {
+		this.nodeConflict = nodeConflict;
+		jarRiskAnas = new ArrayList<DepJarRiskAna>();
+		for (DepJar depJar : nodeConflict.getDepJars()) {
+			jarRiskAnas.add(depJar.getJarRiskAna(this));
+		}
+	}
+
 	public Element getRiskPathEle() {
 		Element ele = new DefaultElement("conflictRisk");
 		ele.addAttribute("id", nodeConflict.toString());
 		ele.addAttribute("reached_size", "" + getRchedMthds().size());
-		ele.addAttribute("reached_thrown_size", ""+getRisk1Mthds().size());
-		ele.addAttribute("reached_thrown_service",""+getRisk2Mthds().size());
+		ele.addAttribute("reached_thrown_size", "" + getRisk1Mthds().size());
+		ele.addAttribute("reached_thrown_service", "" + getRisk2Mthds().size());
 		for (DepJarRiskAna jarRiskAna : getJarRiskAnas()) {
 			ele.add(jarRiskAna.getRiskPathEle());
 		}
 		return ele;
 	}
-
 
 	public Element getRchNumEle() {
 		Element conflictEle = new DefaultElement("conflictJar");
@@ -180,17 +193,6 @@ public class ConflictRiskAna {
 		return record;
 	}
 
-	public static ConflictRiskAna getConflictRiskAna(Conflict nodeConflict) {
-		MavenUtil.i().getLog().info("conflict risk ana for:" + nodeConflict.toString());
-		ConflictRiskAna riskAna = new ConflictRiskAna(nodeConflict);
-		List<DepJarRiskAna> jarRiskAnas = new ArrayList<DepJarRiskAna>();
-		for (DepJar depJar : nodeConflict.getDepJars()) {
-			jarRiskAnas.add(depJar.getJarRiskAna(riskAna));
-		}
-		riskAna.setJarRiskAnas(jarRiskAnas);
-		return riskAna;
-	}
-
 	private static Map<String, ClassVO> getClsTb(Conflict nodeConflict) {
 		if (Conf.CLASS_DUP)
 			return FinalClasses.i().getClsTb();
@@ -277,10 +279,6 @@ public class ConflictRiskAna {
 
 	public DepJar getUsedDepJar() {
 		return nodeConflict.getUsedDepJar();
-	}
-
-	private ConflictRiskAna(Conflict nodeConflict) {
-		this.nodeConflict = nodeConflict;
 	}
 
 	public List<DepJarRiskAna> getJarRiskAnas() {
