@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import neu.lab.conflict.container.DepJars;
-import neu.lab.conflict.util.SootUtil;
 import neu.lab.conflict.vo.DepJar;
 
 public class ClassDups {
@@ -15,8 +14,7 @@ public class ClassDups {
 		container = new ArrayList<ClassDup>();
 		for (DepJar depJar : depJars.getAllDepJar()) {
 			if (depJar.isSelected()) {
-				List<String> allCls = depJar.getAllCls(false);
-				for (String cls : allCls) {
+				for (String cls : depJar.getAllCls(false)) {
 					addCls(cls, depJar);
 				}
 			}

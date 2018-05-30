@@ -8,6 +8,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 
 import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.container.NodeAdapters;
@@ -19,12 +20,19 @@ import neu.lab.conflict.writer.RiskPathWriter;
 @Mojo(name = "debug", defaultPhase = LifecyclePhase.VALIDATE)
 public class DebugMojo extends ConflictMojo {
 
+//	@Parameter( property = "clsRisk", defaultValue = "true" )
+//	public boolean clsRisk;
+//	
+//	@Parameter( property = "mthdRisk", defaultValue = "true" )
+//	public boolean mthdRisk;
+	
 	@Override
 	public void run() {
 		// writeDepNum(Conf.outDir + "debug.csv");
 		// new neu.lab.conflict.writer.ClassDupRiskWriter().writeByJar(UserConf.getOutDir() +
 		// "classDupByJar.txt");
 		printClsDistance();
+//		printMthdDistance();
 	}
 	
 	public void printClsDistance() {

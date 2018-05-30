@@ -6,22 +6,21 @@ import java.util.Map;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.util.SootUtil;
 
-public class MethodDistance {
+public abstract class NodeDistances {
 
 	private Map<String, Map<String, Double>> distances;// <source,<target,distance>>
 
-	private static MethodDistance instance;
 
-	private MethodDistance() {
+	public NodeDistances() {
 		distances = new HashMap<String, Map<String, Double>>();
 	}
 
-	public static MethodDistance i() {
-		if (instance == null) {
-			instance = new MethodDistance();
-		}
-		return instance;
-	}
+//	public static NodeDistances i() {
+//		if (instance == null) {
+//			instance = new NodeDistances();
+//		}
+//		return instance;
+//	}
 
 	public void addDistances(Map<String, Map<String, Double>> newData) {
 		for (String source : newData.keySet()) {
@@ -42,17 +41,17 @@ public class MethodDistance {
 			}
 		}
 	}
-
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (String source : distances.keySet()) {
 			Map<String, Double> dises = distances.get(source);
 			for (String target : dises.keySet()) {
-				sb.append(source + "," + target + "," + dises.get(target)+","+MavenUtil.i().isHostClass(SootUtil.mthdSig2cls(target)));
+				sb.append(source + "," + target + "," + dises.get(target)+","+isHostNode(target));
 				sb.append(System.lineSeparator());
 			}
 		}
 		return sb.toString();
 	}
+	public abstract boolean isHostNode(String nodeName);
 }

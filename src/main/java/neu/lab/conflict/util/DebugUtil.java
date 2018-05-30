@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 
 import neu.lab.conflict.container.Conflicts;
 import neu.lab.conflict.distance.Dijkstra;
-import neu.lab.conflict.distance.MethodDistance;
+import neu.lab.conflict.distance.NodeDistances;
 import neu.lab.conflict.risk.DepJarRiskAna;
 import neu.lab.conflict.risk.NodeRiskAna;
 import neu.lab.conflict.vo.Conflict;

@@ -1,5 +1,6 @@
 package neu.lab.conflict.container;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,5 +34,15 @@ public class AllCls {
 	
 	public boolean contains(String cls) {
 		return clses.contains(cls);
+	}
+	
+	public Set<String> getNotInClses(Collection<String> testSet){
+		Set<String> notInClses = new HashSet<String>();
+		for(String cls:testSet) {
+			if(!this.contains(cls)) {
+				notInClses.add(cls);
+			}
+		}
+		return notInClses;
 	}
 }

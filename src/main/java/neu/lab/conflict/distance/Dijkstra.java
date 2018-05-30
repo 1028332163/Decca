@@ -1,16 +1,12 @@
 package neu.lab.conflict.distance;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeSet;
 
 import neu.lab.conflict.graph.MthdRltGraph;
+import neu.lab.conflict.graph.IGraph;
 import neu.lab.conflict.graph.MthdPathNode;
 
 public abstract class Dijkstra {
@@ -21,11 +17,11 @@ public abstract class Dijkstra {
 		name2node = new HashMap<String, DijkstraNode>();
 	}
 
-	public Dijkstra(MthdRltGraph graph) {
+	public Dijkstra(IGraph graph) {
 		name2node = new HashMap<String, DijkstraNode>();
 		for (String node : graph.getAllNode()) {
 			// neu.lab.conflict.util.MavenUtil.i().getLog().info(node);
-			name2node.put(node, new DijkstraNode((MthdPathNode) graph.getNode(node)));
+			name2node.put(node, new DijkstraNode(graph.getNode(node)));
 		}
 	}
 

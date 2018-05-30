@@ -5,12 +5,13 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import neu.lab.conflict.Conf;
 import neu.lab.conflict.vo.ClassVO;
-import neu.lab.conflict.vo.DepJar;
 import neu.lab.conflict.vo.MethodVO;
 import soot.Scene;
 import soot.SootClass;
@@ -54,8 +55,8 @@ public class SootUtil {
 		return mthdSig.substring(1, mthdSig.indexOf(":"));
 	}
 
-	public static List<String> getJarsClasses(List<String> paths) {
-		List<String> allCls = new ArrayList<String>();
+	public static Set<String> getJarsClasses(List<String> paths) {
+		Set<String> allCls = new HashSet<String>();
 		for (String path : paths) {
 			allCls.addAll(getJarClasses(path));
 		}

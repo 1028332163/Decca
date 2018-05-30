@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import neu.lab.conflict.graph.MthdRltGraph;
+import neu.lab.conflict.graph.IGraph;
 
 public class DijkstraSorted extends Dijkstra {
-	public DijkstraSorted(MthdRltGraph graph) {
+	public DijkstraSorted(IGraph graph) {
 		super(graph);
 	}
 	public Map<String, Double> getDistanceTb(String startNd) {

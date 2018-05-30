@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import neu.lab.conflict.graph.INode;
 import neu.lab.conflict.graph.MthdPathNode;
 
 public class DijkstraNode {
@@ -20,10 +21,10 @@ public class DijkstraNode {
 		return name;
 	}
 
-	public DijkstraNode(MthdPathNode node) {
+	public DijkstraNode(INode node) {
 		distances = new HashMap<String,Double>();
 		this.name = node.getName();
-		for(String inNd:node.getInNds()) {
+		for(String inNd:node.getNexts()) {
 			distances.put(inNd, new Double(1));
 		}
 	}

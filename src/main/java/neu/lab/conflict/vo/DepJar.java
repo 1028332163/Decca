@@ -13,7 +13,10 @@ import org.dom4j.tree.DefaultElement;
 
 import javassist.ClassPool;
 import neu.lab.conflict.Conf;
+import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.container.NodeAdapters;
+import neu.lab.conflict.graph.ClsRefGraph;
+import neu.lab.conflict.graph.ClsRefNode;
 import neu.lab.conflict.risk.ConflictRiskAna;
 import neu.lab.conflict.risk.DepJarRiskAna;
 import neu.lab.conflict.risk.ref.tb.NoLimitRefTb;
@@ -187,9 +190,9 @@ public class DepJar {
 
 	public Set<String> getOnlyClses(DepJar otherJar) {
 		Set<String> onlyCls = new HashSet<String>();
-		for (String clsSig : getClsTb().keySet()) {
-			ClassVO otherCls = otherJar.getClassVO(clsSig);
-			if (otherCls == null) {
+		Set<String> otherAll = otherJar.getAllCls(true);
+		for (String clsSig : getAllCls(true)) {
+			if (!otherAll.contains(clsSig)) {
 				onlyCls.add(clsSig);
 			}
 		}
@@ -335,7 +338,7 @@ public class DepJar {
 		return refTb;
 	}
 
-	public List<String> getAllCls(boolean useTarget) {
+	public Set<String> getAllCls(boolean useTarget) {
 		return SootUtil.getJarsClasses(this.getJarFilePaths(useTarget));
 	}
 
@@ -366,4 +369,41 @@ public class DepJar {
 		return false;
 	}
 
+	/**
+	 * graph-nodes contains all the jar packaged in jar-with-dependency.
+	 * specially,this dep-jar will replace selected-jar.
+	 * 
+	 * @return
+	 */
+	public ClsRefGraph getWholeClsRefG() {
+		ClsRefGraph graph = new ClsRefGraph();
+		try {
+			ClassPool pool = new ClassPool();
+			Set<String> allSysCls = new HashSet<String>();
+			for (DepJar jar : DepJars.i().getAllDepJar()) {
+				if (jar == this || (jar.isSelected() && !jar.isSameLib(this))) {
+					for (String path : jar.getJarFilePaths(true)) {
+						pool.appendClassPath(path);
+					}
+					for (String jarCls : jar.getAllCls(true)) {
+						graph.addNode(jarCls);
+						allSysCls.add(jarCls);
+					}
+				}
+			}
+			for (String sysCls : allSysCls) {// each er
+				for (Object ee : pool.get(sysCls).getRefClasses()) {
+					if (!sysCls.equals(ee)) {
+						ClsRefNode node = (ClsRefNode) graph.getNode((String) ee);
+						if (node != null)
+							node.addInCls(sysCls);
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			MavenUtil.i().getLog().error("get refedCls error:", e);
+		}
+		return graph;
+	}
 }
