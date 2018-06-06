@@ -393,7 +393,7 @@ public class DepJar {
 			}
 			for (String sysCls : allSysCls) {// each er
 				for (Object ee : pool.get(sysCls).getRefClasses()) {
-					if (!sysCls.equals(ee)) {
+					if (!sysCls.equals(ee)) {//don't add relation of self.
 						ClsRefNode node = (ClsRefNode) graph.getNode((String) ee);
 						if (node != null)
 							node.addInCls(sysCls);

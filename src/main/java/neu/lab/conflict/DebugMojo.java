@@ -8,7 +8,6 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
 
 import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.container.NodeAdapters;
@@ -20,33 +19,45 @@ import neu.lab.conflict.writer.RiskPathWriter;
 @Mojo(name = "debug", defaultPhase = LifecyclePhase.VALIDATE)
 public class DebugMojo extends ConflictMojo {
 
-//	@Parameter( property = "clsRisk", defaultValue = "true" )
-//	public boolean clsRisk;
-//	
-//	@Parameter( property = "mthdRisk", defaultValue = "true" )
-//	public boolean mthdRisk;
-	
+	// @Parameter( property = "clsRisk", defaultValue = "true" )
+	// public boolean clsRisk;
+	//
+	// @Parameter( property = "mthdRisk", defaultValue = "true" )
+	// public boolean mthdRisk;
+
 	@Override
 	public void run() {
 		// writeDepNum(Conf.outDir + "debug.csv");
-		// new neu.lab.conflict.writer.ClassDupRiskWriter().writeByJar(UserConf.getOutDir() +
+		// new
+		// neu.lab.conflict.writer.ClassDupRiskWriter().writeByJar(UserConf.getOutDir()
+		// +
 		// "classDupByJar.txt");
 		printClsDistance();
-//		printMthdDistance();
+		// printMthdDistance();
 	}
-	
+
 	public void printClsDistance() {
-		String outPath = "D:\\ws\\distance_cls\\"+(MavenUtil.i().getProjectCor()+".txt").replace(":", "+");
-		new DistanceWriter().writeClsDistance(outPath,false);
+		String outPath = "D:\\ws_testcase\\image\\distance_cls\\"
+				+ (MavenUtil.i().getProjectCor() + ".txt").replace(":", "+");
+		java.io.File f = new java.io.File(outPath);
+		if (!f.getParentFile().exists()) {
+			f.getParentFile().mkdirs();
+		}
+		new DistanceWriter().writeOnceClsDistance(outPath, false);
 	}
+
 	public void printMthdDistance() {
-		String outPath = "D:\\ws\\distance_mthd\\"+(MavenUtil.i().getProjectCor()+".txt").replace(":", "+");
-		new DistanceWriter().writeMthdDistance(outPath,false);
+		String outPath = "D:\\ws_testcase\\image\\distance_mthd\\" + (MavenUtil.i().getProjectCor() + ".txt").replace(":", "+");
+		java.io.File f = new java.io.File(outPath);
+		if (!f.getParentFile().exists()) {
+			f.getParentFile().mkdirs();
+		}
+		new DistanceWriter().writeMthdDistance(outPath, false);
 	}
 
 	public void printPath() {
-//		new RiskPathWriter().writePath("D:\\cWS\\notepad++\\riskPath.xml", false);
-		 new RiskPathWriter().writeRefRisk("D:\\cWS\\notepad++\\riskPath.xml",true);
+		// new RiskPathWriter().writePath("D:\\cWS\\notepad++\\riskPath.xml", false);
+		new RiskPathWriter().writeRefRisk("D:\\cWS\\notepad++\\riskPath.xml", true);
 	}
 
 	public void writeDepNum(String outPath) {
