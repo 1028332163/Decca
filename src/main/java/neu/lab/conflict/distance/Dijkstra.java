@@ -34,7 +34,11 @@ public abstract class Dijkstra {
 		for (String startNd : startNds) {
 			distances.put(startNd, getDistanceTb(startNd));
 		}
-
+		
+//		Map<String, Double> t2d = distances.get("org.apache.xerces.xinclude.XIncludeTextReader");
+//		if(t2d!=null) {
+//			System.out.println("distance:"+t2d.get("org.apache.xerces.xinclude.XIncludeTextReader"));
+//		}
 		return distances;
 	}
 

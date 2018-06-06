@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import neu.lab.conflict.graph.IGraph;
 import neu.lab.conflict.graph.MthdRltGraph;
 
 import java.util.Set;
@@ -13,7 +14,7 @@ public class DijkstraMap extends Dijkstra{
 	public DijkstraMap() {
 		
 	}
-	public DijkstraMap(MthdRltGraph graph) {
+	public DijkstraMap(IGraph graph) {
 		super(graph);
 	}
 	public Map<String, Double> getDistanceTb(String startNd) {

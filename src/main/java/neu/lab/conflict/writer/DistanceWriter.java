@@ -12,7 +12,8 @@ import neu.lab.conflict.container.Conflicts;
 import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.distance.ClassDistances;
 import neu.lab.conflict.distance.Dijkstra;
-import neu.lab.conflict.distance.DijkstraSorted;
+import neu.lab.conflict.distance.DijkstraMap;
+//import neu.lab.conflict.distance.DijkstraSorted;
 import neu.lab.conflict.distance.MethodDistances;
 import neu.lab.conflict.distance.NodeDistances;
 import neu.lab.conflict.graph.ClsRefGraph;
@@ -37,7 +38,7 @@ public class DistanceWriter {
 								.getNotInClses(depJar.getOnlyClses(conflict.getUsedDepJar()));
 						if (thrownClses.size() > 0) {
 							// System.out.println();
-							Dijkstra dj = new DijkstraSorted(depJar.getWholeClsRefG());
+							Dijkstra dj = new DijkstraMap(depJar.getWholeClsRefG());
 							distances.addDistances(dj.getDistanceTb(thrownClses));
 						}
 					}
@@ -91,7 +92,7 @@ public class DistanceWriter {
 					}
 				}
 				//calculate distance
-				Dijkstra dj = new DijkstraSorted(graph);
+				Dijkstra dj = new DijkstraMap(graph);
 				NodeDistances distances = new ClassDistances();
 				distances.addDistances(dj.getDistanceTb(thrownClses));
 				PrintWriter printer = new PrintWriter(new FileWriter(outPath, append));
@@ -115,7 +116,7 @@ public class DistanceWriter {
 					for (NodeRiskAna nodeRisk : jarRisk.getNodeRiskAnas()) {
 						MavenUtil.i().getLog().info("risk Mthd:" + nodeRisk.getRisk2Mthds().size());
 						MavenUtil.i().getLog().info("dj start:");
-						Dijkstra dj = new DijkstraSorted(nodeRisk.getGraph());
+						Dijkstra dj = new DijkstraMap(nodeRisk.getGraph());
 						MavenUtil.i().getLog().info("write graph start:");
 						// DebugUtil.i().print("d:\\djGraph.txt", dj.toString(), false);
 						StringBuilder sb = new StringBuilder();

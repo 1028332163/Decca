@@ -50,11 +50,11 @@ public class DijkstraSorted extends Dijkstra {
 
 	private TreeSet<NameAndDist> initDoingDistes(String startName) {
 		TreeSet<NameAndDist> doingDistes = new TreeSet<NameAndDist>();// doing-distances;
-		doingDistes.add(new NameAndDist(startName, new Double(0)));
 		DijkstraNode startNd = name2node.get(startName);
 		for (String nd : getAllNd()) {
 			doingDistes.add(new NameAndDist(nd, startNd.getDistance(nd)));
 		}
+		doingDistes.add(new NameAndDist(startName, new Double(0)));
 		return doingDistes;
 	}
 }
