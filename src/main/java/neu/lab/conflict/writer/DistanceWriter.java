@@ -217,7 +217,17 @@ public class DistanceWriter {
 				//write result
 				PrintWriter printer = new PrintWriter(new FileWriter(outPath, append));
 				String pomPath = MavenUtil.i().getBaseDir().getAbsolutePath()+"\\pom.xml";
+				//get all bottom that can be reached by hostNode.
+				Set<String> rchedBottom = new HashSet<String>();
 				for(String bottom:b2t2d.keySet()) {
+					Map<String,Double> t2d = b2t2d.get(bottom);
+					for(String top:t2d.keySet()) {
+						if(MavenUtil.i().isHostClass(top)&&!t2d.get(top).equals(Double.MAX_VALUE)) {
+							rchedBottom.add(bottom);
+						}
+					}
+				}
+				for(String bottom:rchedBottom) {
 					Map<String,Double> t2d = b2t2d.get(bottom);
 					for(String top:t2d.keySet()) {
 						if(t2d.get(top)==1) {
