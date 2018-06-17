@@ -71,12 +71,10 @@ public abstract class ConflictMojo extends AbstractMojo {
 	
 	protected void initGlobalVar() {
 		MavenUtil.i().setMojo(this);
-
 		NodeAdapters.init(root);
 		DepJars.init(NodeAdapters.i());// occur jar in tree
 		AllCls.init(DepJars.i());
 		Conflicts.init(NodeAdapters.i());// version conflict in tree
-
 	}
 
 	public void execute() throws MojoExecutionException {

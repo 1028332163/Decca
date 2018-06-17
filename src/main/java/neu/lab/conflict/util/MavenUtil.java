@@ -127,4 +127,8 @@ public class MavenUtil {
 	public ConflictMojo getMojo() {
 		return mojo;
 	}
+	
+	public File getBaseDir() {
+		return mojo.project.getBasedir();
+	}
 }

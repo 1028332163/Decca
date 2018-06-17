@@ -32,8 +32,18 @@ public class DebugMojo extends ConflictMojo {
 		// neu.lab.conflict.writer.ClassDupRiskWriter().writeByJar(UserConf.getOutDir()
 		// +
 		// "classDupByJar.txt");
-		printClsDistance();
+//		printClsDistance();
 		// printMthdDistance();
+		printNeibor();
+	}
+
+	private void printNeibor() {
+		String outPath = "D:\\ws_testcase\\image\\neibor.txt";
+		java.io.File f = new java.io.File(outPath);
+		if (!f.getParentFile().exists()) {
+			f.getParentFile().mkdirs();
+		}
+		new DistanceWriter().writeNeibor(outPath, true);
 	}
 
 	public void printClsDistance() {

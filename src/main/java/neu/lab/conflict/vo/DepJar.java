@@ -346,8 +346,8 @@ public class DepJar {
 	 * @param useTarget:
 	 *            host-class-name can get from source directory(false) or target
 	 *            directory(true). using source directory: advantage: get class
-	 *            before maven-package disadvantage:classcan't deconstruct by
-	 *            soot,miss class that generated.
+	 *            before maven-package disadvantage:class can't deconstruct by
+	 *            soot;miss class that generated.
 	 * @return
 	 */
 	public List<String> getJarFilePaths(boolean useTarget) {

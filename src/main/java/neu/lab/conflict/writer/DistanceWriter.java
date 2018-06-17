@@ -3,7 +3,9 @@ package neu.lab.conflict.writer;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javassist.ClassPool;
@@ -26,6 +28,12 @@ import neu.lab.conflict.vo.DepJar;
 
 public class DistanceWriter {
 
+	/**
+	 * add throw-jar to the classpool of javassist.
+	 * 
+	 * @param outPath
+	 * @param append
+	 */
 	public void writeClsDistance(String outPath, boolean append) {
 		try {
 			// boolean exit = false;
@@ -46,60 +54,6 @@ public class DistanceWriter {
 			}
 			printer.println(distances.toString());
 			printer.close();
-		} catch (Exception e) {
-			MavenUtil.i().getLog().error("can't write distance risk:", e);
-		}
-
-	}
-
-	public void writeOnceClsDistance(String outPath, boolean append) {
-		try {
-			//get class that not in selected-jars.
-			Collection<String> thrownClses = new HashSet<String>();
-			for (Conflict conflict : Conflicts.i().getConflicts()) {
-				for (DepJar depJar : conflict.getDepJars()) {
-					if (depJar != conflict.getUsedDepJar()) {
-						thrownClses.addAll(AllCls.i().getNotInClses(depJar.getOnlyClses(conflict.getUsedDepJar())));
-					}
-				}
-			}
-			if(thrownClses.size()>0) {
-				//form class-graph
-				ClsRefGraph graph = new ClsRefGraph();
-				ClassPool pool = new ClassPool();
-				Set<String> allSysCls = new HashSet<String>();
-				for(String thrownCls:thrownClses) {
-					graph.addNode(thrownCls);
-				}
-				for (DepJar jar : DepJars.i().getAllDepJar()) {
-					if (jar.isSelected()) {
-						for (String path : jar.getJarFilePaths(true)) {
-							pool.appendClassPath(path);
-						}
-						for (String jarCls : jar.getAllCls(true)) {
-							graph.addNode(jarCls);
-							allSysCls.add(jarCls);
-						}
-					}
-				}
-				for (String sysCls : allSysCls) {// each er
-					for (Object ee : pool.get(sysCls).getRefClasses()) {
-						if (!sysCls.equals(ee)) {//don't add relation of self.
-							ClsRefNode node = (ClsRefNode) graph.getNode((String) ee);
-							if (node != null)
-								node.addInCls(sysCls);
-						}
-					}
-				}
-				//calculate distance
-				Dijkstra dj = new DijkstraMap(graph);
-				NodeDistances distances = new ClassDistances();
-				distances.addDistances(dj.getDistanceTb(thrownClses));
-				PrintWriter printer = new PrintWriter(new FileWriter(outPath, append));
-				printer.println(distances.toString());
-				printer.close();
-			}
-			
 		} catch (Exception e) {
 			MavenUtil.i().getLog().error("can't write distance risk:", e);
 		}
@@ -136,6 +90,145 @@ public class DistanceWriter {
 			}
 			printer.println(distances.toString());
 			printer.close();
+		} catch (Exception e) {
+			MavenUtil.i().getLog().error("can't write distance risk:", e);
+		}
+	}
+
+	/**
+	 * add used-jar to the class-pool of java-assist.
+	 * 
+	 * @param outPath
+	 * @param append
+	 */
+	public void writeOnceClsDistance(String outPath, boolean append) {
+		try {
+			// get class that not in selected-jars.
+			Collection<String> thrownClses = new HashSet<String>();
+			for (Conflict conflict : Conflicts.i().getConflicts()) {
+				for (DepJar depJar : conflict.getDepJars()) {
+					if (depJar != conflict.getUsedDepJar()) {
+						thrownClses.addAll(AllCls.i().getNotInClses(depJar.getOnlyClses(conflict.getUsedDepJar())));
+					}
+				}
+			}
+			if (thrownClses.size() > 0) {
+				// form class-graph
+				ClsRefGraph graph = new ClsRefGraph();
+				ClassPool pool = new ClassPool();
+				Set<String> allSysCls = new HashSet<String>();
+				for (String thrownCls : thrownClses) {
+					graph.addNode(thrownCls);
+				}
+				for (DepJar jar : DepJars.i().getAllDepJar()) {
+					if (jar.isSelected()) {
+						for (String path : jar.getJarFilePaths(true)) {
+							pool.appendClassPath(path);
+						}
+						for (String jarCls : jar.getAllCls(true)) {
+							graph.addNode(jarCls);
+							allSysCls.add(jarCls);
+						}
+					}
+				}
+				for (String sysCls : allSysCls) {// each er
+					for (Object ee : pool.get(sysCls).getRefClasses()) {
+						if (!sysCls.equals(ee)) {// don't add relation of self.
+							ClsRefNode node = (ClsRefNode) graph.getNode((String) ee);
+							if (node != null)
+								node.addInCls(sysCls);
+						}
+					}
+				}
+				// calculate distance
+				Dijkstra dj = new DijkstraMap(graph);
+				NodeDistances distances = new ClassDistances();
+				distances.addDistances(dj.getDistanceTb(thrownClses));
+				PrintWriter printer = new PrintWriter(new FileWriter(outPath, append));
+				printer.println(distances.toString());
+				printer.close();
+			}
+
+		} catch (Exception e) {
+			MavenUtil.i().getLog().error("can't write distance risk:", e);
+		}
+
+	}
+
+	/**
+	 * D:\cWS\eclipse1\testcase.top\pom.xml,
+	 * neu.lab.testcase.middle.ClassMiddle,
+	 * D:\cEnvironment\repository\neu\lab\testcase.middle\1.0\testcase.middle-1.0.jar
+	 * 
+	 * @param outPath
+	 * @param append
+	 */
+	public void writeNeibor(String outPath, boolean append) {
+		try {
+			// get class that not in selected-jars.
+			Collection<String> thrownClses = new HashSet<String>();
+			for (Conflict conflict : Conflicts.i().getConflicts()) {
+				for (DepJar depJar : conflict.getDepJars()) {
+					if (depJar != conflict.getUsedDepJar()) {
+						thrownClses.addAll(AllCls.i().getNotInClses(depJar.getOnlyClses(conflict.getUsedDepJar())));
+					}
+				}
+			}
+			if (thrownClses.size() > 0) {
+				// form class-graph
+				ClsRefGraph graph = new ClsRefGraph();
+				ClassPool pool = new ClassPool();
+				Set<String> allSysCls = new HashSet<String>();
+				for (String thrownCls : thrownClses) {
+					graph.addNode(thrownCls);
+				}
+				for (DepJar jar : DepJars.i().getAllDepJar()) {
+					if (jar.isSelected()) {
+						for (String path : jar.getJarFilePaths(true)) {
+							pool.appendClassPath(path);
+						}
+						for (String jarCls : jar.getAllCls(true)) {
+							graph.addNode(jarCls);
+							allSysCls.add(jarCls);
+						}
+					}
+				}
+				for (String sysCls : allSysCls) {// each er
+					for (Object ee : pool.get(sysCls).getRefClasses()) {
+						if (!sysCls.equals(ee)) {// don't add relation of self.
+							ClsRefNode node = (ClsRefNode) graph.getNode((String) ee);
+							if (node != null)
+								node.addInCls(sysCls);
+						}
+					}
+				}
+				// calculate distance
+				Dijkstra dj = new DijkstraMap(graph);
+				Map<String,Map<String,Double>> b2t2d = dj.getDistanceTb(thrownClses);
+				//map class to jarpath
+				Map<String,String> cls2jarPath = new HashMap<String,String>();
+				for (DepJar depJar : DepJars.i().getAllDepJar()) {
+					if (depJar.isSelected()) {
+						for(String cls:depJar.getAllCls(true)) {
+							cls2jarPath.put(cls, depJar.getJarFilePaths(true).get(0));
+						}
+					}
+				}
+				//write result
+				PrintWriter printer = new PrintWriter(new FileWriter(outPath, append));
+				String pomPath = MavenUtil.i().getBaseDir().getAbsolutePath()+"\\pom.xml";
+				for(String bottom:b2t2d.keySet()) {
+					Map<String,Double> t2d = b2t2d.get(bottom);
+					for(String top:t2d.keySet()) {
+						if(t2d.get(top)==1) {
+							printer.println(pomPath+","+top+","+cls2jarPath.get(top));
+						}
+					}
+				}
+				
+				printer.close();
+			}
+
 		} catch (Exception e) {
 			MavenUtil.i().getLog().error("can't write distance risk:", e);
 		}
