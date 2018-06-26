@@ -13,9 +13,9 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 
 import neu.lab.conflict.container.DepJars;
+import neu.lab.conflict.risk.node.DepJarNRisks;
+import neu.lab.conflict.risk.node.FourRow;
 import neu.lab.conflict.container.Conflicts;
-import neu.lab.conflict.risk.DepJarRiskAnas;
-import neu.lab.conflict.risk.FourRow;
 import neu.lab.conflict.statics.ClassDups;
 import neu.lab.conflict.statics.DupClsJarPair;
 import neu.lab.conflict.statics.DupClsJarPairs;
@@ -31,7 +31,7 @@ public class JarRchedWriter {
 
 			CSVPrinter printer = new CSVPrinter(new FileWriter(outPath, append), CSVFormat.DEFAULT);
 			for (Conflict conflict : Conflicts.i().getConflicts()) {
-				FourRow fourRow = conflict.getRiskAna().getFourRow();
+				FourRow fourRow = conflict.getNRisk().getFourRow();
 				printer.printRecord(fourRow.mthdRow);
 				printer.printRecord(fourRow.mthdNameRow);
 				printer.printRecord(fourRow.serviceRow);
@@ -62,14 +62,14 @@ public class JarRchedWriter {
 			Element jarConfs = root.addElement("conflicts");
 //			jarConfs.addAttribute("type", "jar");
 			for (Conflict conflict : Conflicts.i().getConflicts()) {
-				jarConfs.add(conflict.getRiskAna().getRchNumEle());
+				jarConfs.add(conflict.getNRisk().getRchNumEle());
 			}
 			if (detectClass) {// add class conflict
 				Element clsConfs = root.addElement("conflicts");
 				clsConfs.addAttribute("type", "class");
 				ClassDups classDups = new ClassDups(DepJars.i());
 				DupClsJarPairs jarPairs = new DupClsJarPairs(classDups);
-				DepJarRiskAnas jarCgs = new DepJarRiskAnas();
+				DepJarNRisks jarCgs = new DepJarNRisks();
 				for (DupClsJarPair jarPair : jarPairs.getAllJarPair()) {
 					clsConfs.add(jarPair.getPairRisk(jarCgs).getConflictElement());
 				}

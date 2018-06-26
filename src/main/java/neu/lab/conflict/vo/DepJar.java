@@ -17,8 +17,8 @@ import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.container.NodeAdapters;
 import neu.lab.conflict.graph.ClsRefGraph;
 import neu.lab.conflict.graph.ClsRefNode;
-import neu.lab.conflict.risk.ConflictRiskAna;
-import neu.lab.conflict.risk.DepJarRiskAna;
+import neu.lab.conflict.risk.node.ConflictNRisk;
+import neu.lab.conflict.risk.node.DepJarNRisk;
 import neu.lab.conflict.risk.ref.tb.NoLimitRefTb;
 import neu.lab.conflict.soot.JarAna;
 import neu.lab.conflict.util.MavenUtil;
@@ -36,7 +36,7 @@ public class DepJar {
 	private List<String> jarFilePaths;// host project may have multiple source.
 	private Map<String, ClassVO> clsTb;// all class in jar
 	private Set<NodeAdapter> nodeAdapters;// all
-	private DepJarRiskAna jarRisk;
+	private DepJarNRisk jarRisk;
 	private Set<String> allMthd;
 
 	public DepJar(String groupId, String artifactId, String version, String classifier, List<String> jarFilePaths) {
@@ -81,13 +81,13 @@ public class DepJar {
 		return nodeEle;
 	}
 
-	public DepJarRiskAna getJarRiskAna(ConflictRiskAna conflictRiskAna) {
+	public DepJarNRisk getJarRiskAna(ConflictNRisk conflictRiskAna) {
 		// if (jarRisk == null) {
 		// jarRisk = new DepJarCg(this);
 		// }
 		//
 		// return jarRisk;
-		return new DepJarRiskAna(this, conflictRiskAna);
+		return new DepJarNRisk(this, conflictRiskAna);
 	}
 
 	public Set<NodeAdapter> getNodeAdapters() {
@@ -215,6 +215,17 @@ public class DepJar {
 		return onlyMthds;
 	}
 
+	public Set<String> getThrownMthds(DepJar usedJar) {
+		Set<String> thrownMthds = new HashSet<String>();
+		Set<String> usedMthds = new HashSet<String>();
+		for (String mthd : this.getAllMthd()) {
+			if (!usedMthds.contains(mthd)) {
+				thrownMthds.add(mthd);
+			}
+		}
+		return thrownMthds;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof DepJar) {
@@ -286,6 +297,10 @@ public class DepJar {
 		return innerMthds;
 	}
 
+	/**note:from the view of usedJar. e.g. getReplaceJar().getRiskMthds(getRchedMthds());
+	 * @param testMthds
+	 * @return
+	 */
 	public Set<String> getRiskMthds(Collection<String> testMthds) {
 		if (Conf.CNT_RISK_CLASS_METHOD) {
 			return this.getOutMthds(testMthds);
@@ -393,7 +408,7 @@ public class DepJar {
 			}
 			for (String sysCls : allSysCls) {// each er
 				for (Object ee : pool.get(sysCls).getRefClasses()) {
-					if (!sysCls.equals(ee)) {//don't add relation of self.
+					if (!sysCls.equals(ee)) {// don't add relation of self.
 						ClsRefNode node = (ClsRefNode) graph.getNode((String) ee);
 						if (node != null)
 							node.addInCls(sysCls);

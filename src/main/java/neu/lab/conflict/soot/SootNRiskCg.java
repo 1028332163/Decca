@@ -11,8 +11,8 @@ import java.util.Set;
 
 import neu.lab.conflict.Conf;
 import neu.lab.conflict.graph.MthdRltGraph;
+import neu.lab.conflict.risk.node.NodeNRisk;
 import neu.lab.conflict.graph.MthdPathNode;
-import neu.lab.conflict.risk.NodeRiskAna;
 import neu.lab.conflict.util.SootUtil;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.DepJar;
@@ -29,30 +29,30 @@ import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.util.queue.QueueReader;
 
-public class SootCg extends SootAna {
+public class SootNRiskCg extends SootAna {
 	public static long runtime = 0;
-	private static SootCg instance = new SootCg();
+	private static SootNRiskCg instance = new SootNRiskCg();
 
-	private SootCg() {
+	private SootNRiskCg() {
 
 	}
 
-	public static SootCg i() {
+	public static SootNRiskCg i() {
 		return instance;
 	}
 
-	public void cmpCg(NodeRiskAna nodeAnaUnit) {
+	public void cmpCg(NodeNRisk nodeAnaUnit) {
 		MavenUtil.i().getLog().info("use soot to compute reach methods for " + nodeAnaUnit.toString());
 
 		try {
 			long startTime = System.currentTimeMillis();
 
-			CgTf transformer = new CgTf(nodeAnaUnit);
+			NRiskCgTf transformer = new NRiskCgTf(nodeAnaUnit);
 			PackManager.v().getPack("wjtp").add(new Transform("wjtp.myTrans", transformer));
 
 			SootUtil.modifyLogOut();
 
-			soot.Main.main(getArgs(nodeAnaUnit.getJarFilePaths().toArray(new String[0])).toArray(new String[0]));
+			soot.Main.main(getArgs(nodeAnaUnit.getPrcDirPaths().toArray(new String[0])).toArray(new String[0]));
 
 			nodeAnaUnit.setRchedMthds(transformer.getRchMthds());
 
@@ -82,9 +82,9 @@ public class SootCg extends SootAna {
 
 }
 
-class CgTf extends SceneTransformer {
+class NRiskCgTf extends SceneTransformer {
 
-	private NodeRiskAna nodeRiskAna;
+	private NodeNRisk nodeRiskAna;
 	private Set<String> entryClses;
 	private Set<String> conflictJarClses;// classes in duplicated jar
 
@@ -99,7 +99,7 @@ class CgTf extends SceneTransformer {
 	// private List<MethodCall> riskCalls;// source is from other jar,target is to
 	// risk1Mthds.
 
-	public CgTf(NodeRiskAna nodeRiskAna) throws Exception {
+	public NRiskCgTf(NodeNRisk nodeRiskAna) throws Exception {
 		super();
 		this.nodeRiskAna = nodeRiskAna;
 		this.rchMthds = new HashSet<String>();
@@ -108,9 +108,8 @@ class CgTf extends SceneTransformer {
 		// risk1Mthds = new HashSet<String>();
 		// risk2Mthds = new HashSet<String>();
 
-		entryClses = new HashSet<String>();
 //		entryClses.addAll(SootUtil.getJarsClasses(nodeRiskAna.getTopNode().getFilePath()));
-		entryClses.addAll(nodeRiskAna.getTopNode().getDepJar().getAllCls(true));
+		entryClses = nodeRiskAna.getTopNode().getDepJar().getAllCls(true);
 		if (entryClses.size() == 0) {
 			throw new Exception("don't have entry!");
 		}
@@ -124,7 +123,7 @@ class CgTf extends SceneTransformer {
 
 	@Override
 	protected void internalTransform(String phaseName, Map<String, String> options) {
-		MavenUtil.i().getLog().info("cg start..");
+		MavenUtil.i().getLog().info("NRiskCgTf start..");
 		DepJar depJar = nodeRiskAna.getJarRiskAna().getDepJar();
 		if (!depJar.hasClsTb()) {
 			depJar.setClsTb(SootUtil.getClassTb(depJar.getJarFilePaths(true)));
@@ -132,7 +131,7 @@ class CgTf extends SceneTransformer {
 		Map<String, String> cgMap = new HashMap<String, String>();
 		cgMap.put("enabled", "true");
 		cgMap.put("apponly", "true");
-//		cgMap.put("all-reachable", "true");
+		
 		List<SootMethod> entryMthds = new ArrayList<SootMethod>();
 		for (SootClass sootClass : Scene.v().getApplicationClasses()) {
 //			MavenUtil.i().getLog().info(sootClass.getName());
@@ -167,7 +166,7 @@ class CgTf extends SceneTransformer {
 				rchServices.add(edge.tgt().getSignature());
 			}
 		}
-		MavenUtil.i().getLog().info("cg end!");
+		MavenUtil.i().getLog().info("NRiskCgTf end.");
 	}
 
 	public MthdRltGraph getGraph() {

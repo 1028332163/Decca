@@ -1,4 +1,4 @@
-package neu.lab.conflict.risk;
+package neu.lab.conflict.risk.node;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,7 +17,7 @@ import neu.lab.conflict.graph.Dog;
 import neu.lab.conflict.graph.MthdRltGraph;
 import neu.lab.conflict.graph.MthdPathNode;
 import neu.lab.conflict.graph.MthdPathRecord;
-import neu.lab.conflict.soot.SootCg;
+import neu.lab.conflict.soot.SootNRiskCg;
 import neu.lab.conflict.vo.DepJar;
 import neu.lab.conflict.vo.MethodCall;
 import neu.lab.conflict.vo.NodeAdapter;
@@ -26,14 +26,14 @@ import neu.lab.conflict.vo.NodeAdapter;
  * @author asus
  *
  */
-public class NodeRiskAna {
+public class NodeNRisk {
 	private LinkedList<NodeAdapter> anaAncestors;// there is order(from down to up)
 	private Set<String> rchedMthds;// reached method in call-graph computed
 	private Set<String> rchedServices;//
 
 	private Set<String> risk1Mthds;// reached and thrown
 	private Set<String> risk2Mthds;// reached and thrown and called by method in other jar.
-	private DepJarRiskAna jarRiskAna;
+	private DepJarNRisk jarRiskAna;
 	private MthdRltGraph graph;
 
 	private Map<String, IBook> books;// reached path of method in risk2Mthds
@@ -83,7 +83,7 @@ public class NodeRiskAna {
 		return ele;
 	}
 
-	public NodeRiskAna(NodeAdapter nodeAdapter, DepJarRiskAna jarRiskAna) {
+	public NodeNRisk(NodeAdapter nodeAdapter, DepJarNRisk jarRiskAna) {
 		this.jarRiskAna = jarRiskAna;
 		LinkedList<NodeAdapter> ancestors = nodeAdapter.getAncestors(true);
 		if (ancestors.size() == 1) {// manageNode that don't have ancestor don‘t need analysis.
@@ -99,7 +99,7 @@ public class NodeRiskAna {
 				this.anaAncestors.add(ancestors.get(0));
 				this.anaAncestors.add(ancestors.get(1));
 			}
-			SootCg.i().cmpCg(this);
+			SootNRiskCg.i().cmpCg(this);
 		}
 
 	}
@@ -112,7 +112,7 @@ public class NodeRiskAna {
 		return anaAncestors.getLast();
 	}
 
-	public List<String> getJarFilePaths() {
+	public List<String> getPrcDirPaths() {
 		List<String> paths = new ArrayList<String>();
 		for (NodeAdapter nodeAdapter : anaAncestors) {
 			paths.addAll(nodeAdapter.getFilePath());
@@ -173,7 +173,7 @@ public class NodeRiskAna {
 		this.rchedServices = rchedServices;
 	}
 
-	public DepJarRiskAna getJarRiskAna() {
+	public DepJarNRisk getJarRiskAna() {
 		return jarRiskAna;
 	}
 

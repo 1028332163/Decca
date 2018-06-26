@@ -33,7 +33,7 @@ public class RiskPathWriter {
 					MavenUtil.i().getProjectGroupId() + ":" + MavenUtil.i().getProjectArtifactId());
 			root.addAttribute("projectInfo", MavenUtil.i().getProjectInfo());
 			for (Conflict conflict : Conflicts.i().getConflicts()) {
-				root.add(conflict.getRiskAna().getRiskPathEle());
+				root.add(conflict.getNRisk().getRiskPathEle());
 			}
 			xmlWriter.write(document);
 			xmlWriter.close();

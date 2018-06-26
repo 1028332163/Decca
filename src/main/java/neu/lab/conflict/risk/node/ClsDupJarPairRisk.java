@@ -1,4 +1,4 @@
-package neu.lab.conflict.risk;
+package neu.lab.conflict.risk.node;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,7 +26,7 @@ public class ClsDupJarPairRisk {
 	private Set<String> rchedServices;
 	private Set<String> rchedServiceNames;
 
-	public ClsDupJarPairRisk(DupClsJarPair jarPair, DepJarRiskAna cg1, DepJarRiskAna cg2) {
+	public ClsDupJarPairRisk(DupClsJarPair jarPair, DepJarNRisk cg1, DepJarNRisk cg2) {
 		this.jarPair = jarPair;
 		this.rchedMthds = new HashSet<String>();
 		this.rchedServices = new HashSet<String>();
@@ -71,7 +71,7 @@ public class ClsDupJarPairRisk {
 		}
 	}
 
-	private void addRched(DepJarRiskAna cg) {
+	private void addRched(DepJarNRisk cg) {
 		for (String rchedMthd : cg.getRchedMthds()) {
 			if (jarPair.isInDupCls(rchedMthd))
 				rchedMthds.add(rchedMthd);

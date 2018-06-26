@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import neu.lab.conflict.risk.ConflictRiskAna;
-import neu.lab.conflict.risk.ref.ConflictRefRisk;
+import neu.lab.conflict.risk.node.ConflictNRisk;
+import neu.lab.conflict.risk.ref.ConflictRRisk;
 import neu.lab.conflict.util.MavenUtil;
 
 public class Conflict {
@@ -65,17 +65,21 @@ public class Conflict {
 		return getDepJars().size() > 1;
 	}
 
-	public ConflictRiskAna getRiskAna() {
+	public ConflictNRisk getNRisk() {
 		// if(riskAna==null) {
 		// riskAna = ConflictRiskAna.getConflictRiskAna(this);
 		// }
 		// return riskAna;
-		return new ConflictRiskAna(this);
+		return new ConflictNRisk(this);
 	}
 	
-	public ConflictRefRisk getRefRisk() {
-		return new ConflictRefRisk(this);
+	public ConflictRRisk getRefRisk() {
+		return new ConflictRRisk(this);
 	}
+	
+//	public 
+	
+	
 
 	@Override
 	public String toString() {

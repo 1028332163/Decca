@@ -9,7 +9,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.container.FinalClasses;
 import neu.lab.conflict.soot.JarAna;
-import neu.lab.conflict.soot.SootCg;
+import neu.lab.conflict.soot.SootNRiskCg;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.util.UserConf;
 import neu.lab.conflict.writer.JarRchedWriter;
@@ -59,7 +59,7 @@ public class DetectMojo extends ConflictMojo {
 				getLog().error("resultFileType can be xml/csv , can't be " + resultFileType);
 			}
 			getLog().info("time to deconstruct jar :" + JarAna.runtime);
-			getLog().info("time to compute call-graph :" + SootCg.runtime);
+			getLog().info("time to compute call-graph :" + SootNRiskCg.runtime);
 			
 		}
 

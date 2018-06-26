@@ -1,4 +1,4 @@
-package neu.lab.conflict.risk;
+package neu.lab.conflict.risk.node;
 
 import java.util.List;
 

@@ -20,8 +20,8 @@ import neu.lab.conflict.distance.MethodDistances;
 import neu.lab.conflict.distance.NodeDistances;
 import neu.lab.conflict.graph.ClsRefGraph;
 import neu.lab.conflict.graph.ClsRefNode;
-import neu.lab.conflict.risk.DepJarRiskAna;
-import neu.lab.conflict.risk.NodeRiskAna;
+import neu.lab.conflict.risk.node.DepJarNRisk;
+import neu.lab.conflict.risk.node.NodeNRisk;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.Conflict;
 import neu.lab.conflict.vo.DepJar;
@@ -66,8 +66,8 @@ public class DistanceWriter {
 			PrintWriter printer = new PrintWriter(new FileWriter(outPath, append));
 			NodeDistances distances = new MethodDistances();
 			for (Conflict conflict : Conflicts.i().getConflicts()) {
-				for (DepJarRiskAna jarRisk : conflict.getRiskAna().getJarRiskAnas()) {
-					for (NodeRiskAna nodeRisk : jarRisk.getNodeRiskAnas()) {
+				for (DepJarNRisk jarRisk : conflict.getNRisk().getJarRiskAnas()) {
+					for (NodeNRisk nodeRisk : jarRisk.getNodeRiskAnas()) {
 						MavenUtil.i().getLog().info("risk Mthd:" + nodeRisk.getRisk2Mthds().size());
 						MavenUtil.i().getLog().info("dj start:");
 						Dijkstra dj = new DijkstraMap(nodeRisk.getGraph());

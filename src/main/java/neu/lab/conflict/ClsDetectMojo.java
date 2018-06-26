@@ -4,7 +4,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
 import neu.lab.conflict.soot.JarAna;
-import neu.lab.conflict.soot.SootCg;
+import neu.lab.conflict.soot.SootNRiskCg;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.util.UserConf;
 import neu.lab.conflict.writer.ClassDupRiskWriter;
@@ -21,7 +21,7 @@ public class ClsDetectMojo extends ConflictMojo{
 		}else {
 			new ClassDupRiskWriter().writeRchNum(UserConf.getOutDir() + "classRch.csv",append);
 			getLog().info("jarDeconstrction time:" + JarAna.runtime);
-			getLog().info("call graph time:" + SootCg.runtime);
+			getLog().info("call graph time:" + SootNRiskCg.runtime);
 		}
 	}
 }

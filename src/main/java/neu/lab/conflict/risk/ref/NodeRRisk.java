@@ -16,12 +16,12 @@ import neu.lab.conflict.graph.IRecord;
 import neu.lab.conflict.risk.ref.tb.LimitRefTb;
 import neu.lab.conflict.vo.NodeAdapter;
 
-public class NodeRefRisk {
+public class NodeRRisk {
 	private NodeAdapter node;
-	private DepJarRefRisk jarRisk;
+	private DepJarRRisk jarRisk;
 	private LimitRefTb limitRefTb;
 
-	public NodeRefRisk(NodeAdapter node1, DepJarRefRisk depJarRefRisk) {
+	public NodeRRisk(NodeAdapter node1, DepJarRRisk depJarRefRisk) {
 		this.node = node1;
 		this.jarRisk = depJarRefRisk;
 	}

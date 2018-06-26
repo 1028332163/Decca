@@ -21,6 +21,7 @@ public class DepJars {
 	}
 
 	private Set<DepJar> container;
+	private DepJar hostDepJar;
 
 	private DepJars(NodeAdapters nodeAdapters) {
 		container = new HashSet<DepJar>();
@@ -28,6 +29,29 @@ public class DepJars {
 			container.add(new DepJar(nodeAdapter.getGroupId(), nodeAdapter.getArtifactId(), nodeAdapter.getVersion(),
 					nodeAdapter.getClassifier(), nodeAdapter.getFilePath()));
 		}
+		for(DepJar depJar:container) {
+			if(depJar.isHost()) {
+				hostDepJar = depJar;
+				if(hostDepJar!=null) {
+					MavenUtil.i().getLog().warn("multiple depjar for host ");
+				}
+			}
+		}
+	}
+	
+	public Set<DepJar> getUsedDepJars(){
+		Set<DepJar> usedDepJars = new HashSet<DepJar>();
+		for(DepJar depJar:container) {
+			if(depJar.isSelected()) {
+				usedDepJars.add(depJar);
+			}
+		}
+		return usedDepJars;
+	}
+	
+
+	public DepJar getHostDepJar() {
+		return hostDepJar;
 	}
 
 	public DepJar getDep(String groupId, String artifactId, String version, String classifier) {

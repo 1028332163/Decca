@@ -9,16 +9,16 @@ import org.dom4j.tree.DefaultElement;
 import neu.lab.conflict.vo.Conflict;
 import neu.lab.conflict.vo.DepJar;
 
-public class ConflictRefRisk {
+public class ConflictRRisk {
 
 	private Conflict conflict;
-	private List<DepJarRefRisk> jarRisks;
+	private List<DepJarRRisk> jarRisks;
 
-	public ConflictRefRisk(Conflict conflict1) {
+	public ConflictRRisk(Conflict conflict1) {
 		this.conflict = conflict1;
-		jarRisks = new ArrayList<DepJarRefRisk>();
+		jarRisks = new ArrayList<DepJarRRisk>();
 		for(DepJar jar:conflict.getDepJars()) {
-			jarRisks.add(new DepJarRefRisk(jar,this));
+			jarRisks.add(new DepJarRRisk(jar,this));
 		}
 	}
 	
@@ -29,7 +29,7 @@ public class ConflictRefRisk {
 	public Element getRiskEle() {
 		Element ele = new DefaultElement("conflictRisk");
 		ele.addAttribute("id", conflict.toString());
-		for (DepJarRefRisk jarRiskAna : jarRisks) {
+		for (DepJarRRisk jarRiskAna : jarRisks) {
 			ele.add(jarRiskAna.getRiskEle());
 		}
 		return ele;

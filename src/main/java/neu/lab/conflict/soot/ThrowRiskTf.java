@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import neu.lab.conflict.risk.NodeRiskAna;
+import neu.lab.conflict.risk.node.NodeNRisk;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.MethodCall;
 import soot.MethodOrMethodContext;
@@ -29,7 +29,7 @@ import soot.util.queue.QueueReader;
  *
  */
 public abstract class ThrowRiskTf extends SceneTransformer {
-	protected NodeRiskAna sootAnaUnit;
+	protected NodeNRisk sootAnaUnit;
 	protected Set<MethodCall> riskRlts;
 	protected Set<String> riskJarClses;// class in risk jar
 	private Set<String> entryClses;
@@ -37,7 +37,7 @@ public abstract class ThrowRiskTf extends SceneTransformer {
 
 	protected Set<String> riskMthds;
 
-	public void init(NodeRiskAna sootAnaUnit, Set<MethodCall> relations, Set<String> thrownMthds) {
+	public void init(NodeNRisk sootAnaUnit, Set<MethodCall> relations, Set<String> thrownMthds) {
 		this.sootAnaUnit = sootAnaUnit;
 		this.riskRlts = relations;
 		this.thrownMthds = thrownMthds;

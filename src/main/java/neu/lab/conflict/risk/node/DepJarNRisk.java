@@ -1,4 +1,4 @@
-package neu.lab.conflict.risk;
+package neu.lab.conflict.risk.node;
 
 import java.util.Set;
 
@@ -23,10 +23,10 @@ import java.util.List;
  * @author asus
  *
  */
-public class DepJarRiskAna {
+public class DepJarNRisk {
 
 	private DepJar depJar;
-	private ConflictRiskAna conflictAna;
+	private ConflictNRisk conflictAna;
 	private Set<ClassVO> onlyClses;// exist in jar,but not in final
 	// private Map<String, List<MethodVO>> onlyMthds;// method exist in jar
 	// class,but not in final same name
@@ -37,9 +37,9 @@ public class DepJarRiskAna {
 	private Set<String> risk1Mthds;// reached and thrown
 	private Set<String> risk2Mthds;// reached and thrown and called by method in other jar.
 
-	private List<NodeRiskAna> nodeRiskAnas;
+	private List<NodeNRisk> nodeRiskAnas;
 
-	public DepJarRiskAna(DepJar depJar, ConflictRiskAna conflictAna) {
+	public DepJarNRisk(DepJar depJar, ConflictNRisk conflictAna) {
 		this.depJar = depJar;
 		onlyClses = new HashSet<ClassVO>();
 		this.conflictAna = conflictAna;
@@ -56,7 +56,7 @@ public class DepJarRiskAna {
 		ele.addAttribute("reached_size", "" + rchedMthds.size());
 		ele.addAttribute("reached_thrown_size", "" + getRisk1Mthds().size());
 		ele.addAttribute("reached_thrown_service", "" + getRisk2Mthds().size());
-		for (NodeRiskAna nodeRiskAna : getNodeRiskAnas()) {
+		for (NodeNRisk nodeRiskAna : getNodeRiskAnas()) {
 			ele.add(nodeRiskAna.getRiskPathEle());
 		}
 		return ele;
@@ -72,7 +72,7 @@ public class DepJarRiskAna {
 	private void sum() {
 		rchedMthds = new HashSet<String>();
 		rchedServices = new HashSet<String>();
-		for (NodeRiskAna nodeRiskAna : nodeRiskAnas) {
+		for (NodeNRisk nodeRiskAna : nodeRiskAnas) {
 			rchedMthds.addAll(nodeRiskAna.getRchedMthds());
 			rchedServices.addAll(nodeRiskAna.getRchedServices());
 		}
@@ -82,9 +82,9 @@ public class DepJarRiskAna {
 		onlyClses.add(cls);
 	}
 
-	public List<NodeRiskAna> getNodeRiskAnas() {
+	public List<NodeNRisk> getNodeRiskAnas() {
 		if (nodeRiskAnas == null) {
-			nodeRiskAnas = new ArrayList<NodeRiskAna>();
+			nodeRiskAnas = new ArrayList<NodeNRisk>();
 			for (NodeAdapter node : depJar.getNodeAdapters()) {
 				nodeRiskAnas.add(node.getNodeRiskAna(this));
 			}
@@ -99,7 +99,7 @@ public class DepJarRiskAna {
 	public Set<String> getRisk1Mthds() {
 		if (risk1Mthds == null) {
 			risk1Mthds = new HashSet<String>();
-			for (NodeRiskAna nodeRisk : getNodeRiskAnas()) {
+			for (NodeNRisk nodeRisk : getNodeRiskAnas()) {
 				risk1Mthds.addAll(nodeRisk.getRisk1Mthds());
 			}
 		}
@@ -109,7 +109,7 @@ public class DepJarRiskAna {
 	public Set<String> getRisk2Mthds() {
 		if (risk2Mthds == null) {
 			risk2Mthds = new HashSet<String>();
-			for (NodeRiskAna nodeRisk : getNodeRiskAnas()) {
+			for (NodeNRisk nodeRisk : getNodeRiskAnas()) {
 				risk2Mthds.addAll(nodeRisk.getRisk2Mthds());
 			}
 		}

@@ -6,8 +6,8 @@ import java.io.PrintWriter;
 import neu.lab.conflict.container.Conflicts;
 import neu.lab.conflict.distance.Dijkstra;
 import neu.lab.conflict.distance.NodeDistances;
-import neu.lab.conflict.risk.DepJarRiskAna;
-import neu.lab.conflict.risk.NodeRiskAna;
+import neu.lab.conflict.risk.node.DepJarNRisk;
+import neu.lab.conflict.risk.node.NodeNRisk;
 import neu.lab.conflict.vo.Conflict;
 
 public class DebugUtil {

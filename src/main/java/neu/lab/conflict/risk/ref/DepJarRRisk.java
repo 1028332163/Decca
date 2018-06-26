@@ -10,19 +10,19 @@ import org.dom4j.tree.DefaultElement;
 import neu.lab.conflict.vo.DepJar;
 import neu.lab.conflict.vo.NodeAdapter;
 
-public class DepJarRefRisk {
+public class DepJarRRisk {
 
 	private DepJar depJar;
-	private ConflictRefRisk conflictRisk;
-	private List<NodeRefRisk> nodeRisks;
+	private ConflictRRisk conflictRisk;
+	private List<NodeRRisk> nodeRisks;
 	private Set<String> throwClses;
 
-	public DepJarRefRisk(DepJar depJar, ConflictRefRisk conflictRisk) {
+	public DepJarRRisk(DepJar depJar, ConflictRRisk conflictRisk) {
 		this.depJar = depJar;
 		this.conflictRisk = conflictRisk;
-		nodeRisks = new ArrayList<NodeRefRisk>();
+		nodeRisks = new ArrayList<NodeRRisk>();
 		for (NodeAdapter node : depJar.getNodeAdapters()) {
-			nodeRisks.add(new NodeRefRisk(node, this));
+			nodeRisks.add(new NodeRRisk(node, this));
 		}
 	}
 
@@ -36,7 +36,7 @@ public class DepJarRefRisk {
 	public Element getRiskEle() {
 		Element ele = new DefaultElement("jarRisk");
 		ele.addAttribute("id", depJar.toString());
-		for (NodeRefRisk nodeRiskAna : nodeRisks) {
+		for (NodeRRisk nodeRiskAna : nodeRisks) {
 			ele.add(nodeRiskAna.getRiskEle());
 		}
 		return ele;

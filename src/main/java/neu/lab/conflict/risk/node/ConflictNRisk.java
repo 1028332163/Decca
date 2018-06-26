@@ -1,4 +1,4 @@
-package neu.lab.conflict.risk;
+package neu.lab.conflict.risk.node;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,10 +18,10 @@ import neu.lab.conflict.vo.ClassVO;
 import neu.lab.conflict.vo.DepJar;
 import neu.lab.conflict.vo.Conflict;
 
-public class ConflictRiskAna {
+public class ConflictNRisk {
 	private final double T_LOW = 0.98;
 	private final double T_HIGH = 1;
-	private List<DepJarRiskAna> jarRiskAnas;
+	private List<DepJarNRisk> jarRiskAnas;
 	private Conflict nodeConflict;
 
 	private Set<String> rchedMthds;// reached method in call-graph computed(entry class is host class)
@@ -39,9 +39,9 @@ public class ConflictRiskAna {
 //		return riskAna;
 //	}
 
-	public ConflictRiskAna(Conflict nodeConflict) {
+	public ConflictNRisk(Conflict nodeConflict) {
 		this.nodeConflict = nodeConflict;
-		jarRiskAnas = new ArrayList<DepJarRiskAna>();
+		jarRiskAnas = new ArrayList<DepJarNRisk>();
 		for (DepJar depJar : nodeConflict.getDepJars()) {
 			jarRiskAnas.add(depJar.getJarRiskAna(this));
 		}
@@ -53,7 +53,7 @@ public class ConflictRiskAna {
 		ele.addAttribute("reached_size", "" + getRchedMthds().size());
 		ele.addAttribute("reached_thrown_size", "" + getRisk1Mthds().size());
 		ele.addAttribute("reached_thrown_service", "" + getRisk2Mthds().size());
-		for (DepJarRiskAna jarRiskAna : getJarRiskAnas()) {
+		for (DepJarNRisk jarRiskAna : getJarRiskAnas()) {
 			ele.add(jarRiskAna.getRiskPathEle());
 		}
 		return ele;
@@ -203,7 +203,7 @@ public class ConflictRiskAna {
 	public Set<String> getRchedMthds() {
 		if (rchedMthds == null) {
 			rchedMthds = new HashSet<String>();
-			for (DepJarRiskAna jarRiskAna : getJarRiskAnas()) {
+			for (DepJarNRisk jarRiskAna : getJarRiskAnas()) {
 				rchedMthds.addAll(jarRiskAna.getRchedMthds());
 			}
 		}
@@ -213,7 +213,7 @@ public class ConflictRiskAna {
 	public Set<String> getRchedServices() {
 		if (rchedServices == null) {
 			rchedServices = new HashSet<String>();
-			for (DepJarRiskAna jarRiskAna : getJarRiskAnas()) {
+			for (DepJarNRisk jarRiskAna : getJarRiskAnas()) {
 				rchedServices.addAll(jarRiskAna.getRchedServices());
 			}
 		}
@@ -223,7 +223,7 @@ public class ConflictRiskAna {
 	public Set<String> getRisk1Mthds() {
 		if (risk1Mthds == null) {
 			risk1Mthds = new HashSet<String>();
-			for (DepJarRiskAna jarAna : getJarRiskAnas()) {
+			for (DepJarNRisk jarAna : getJarRiskAnas()) {
 				risk1Mthds.addAll(jarAna.getRisk1Mthds());
 			}
 		}
@@ -233,7 +233,7 @@ public class ConflictRiskAna {
 	public Set<String> getRisk2Mthds() {
 		if (risk2Mthds == null) {
 			risk2Mthds = new HashSet<String>();
-			for (DepJarRiskAna jarAna : getJarRiskAnas()) {
+			for (DepJarNRisk jarAna : getJarRiskAnas()) {
 				risk2Mthds.addAll(jarAna.getRisk2Mthds());
 			}
 		}
@@ -281,11 +281,11 @@ public class ConflictRiskAna {
 		return nodeConflict.getUsedDepJar();
 	}
 
-	public List<DepJarRiskAna> getJarRiskAnas() {
+	public List<DepJarNRisk> getJarRiskAnas() {
 		return jarRiskAnas;
 	}
 
-	private void setJarRiskAnas(List<DepJarRiskAna> jarRiskAnas) {
+	private void setJarRiskAnas(List<DepJarNRisk> jarRiskAnas) {
 		this.jarRiskAnas = jarRiskAnas;
 	}
 

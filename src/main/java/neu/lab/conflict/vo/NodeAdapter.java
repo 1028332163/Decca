@@ -14,8 +14,8 @@ import org.dom4j.tree.DefaultElement;
 
 import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.container.NodeAdapters;
-import neu.lab.conflict.risk.DepJarRiskAna;
-import neu.lab.conflict.risk.NodeRiskAna;
+import neu.lab.conflict.risk.node.DepJarNRisk;
+import neu.lab.conflict.risk.node.NodeNRisk;
 import neu.lab.conflict.util.ClassifierUtil;
 import neu.lab.conflict.util.MavenUtil;
 
@@ -122,8 +122,8 @@ public class NodeAdapter {
 		return node.getArtifact().getVersion();
 	}
 
-	public NodeRiskAna getNodeRiskAna(DepJarRiskAna jarRiskAna) {
-		return new NodeRiskAna(this, jarRiskAna);
+	public NodeNRisk getNodeRiskAna(DepJarNRisk jarRiskAna) {
+		return new NodeNRisk(this, jarRiskAna);
 	}
 
 	/**
