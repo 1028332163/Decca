@@ -2,8 +2,8 @@ package neu.lab.conflict.graph;
 
 import java.util.ArrayList;
 
-public abstract class PathBook extends IBook{
-	public PathBook(PathNode node) {
+public abstract class Book4Path extends IBook{
+	public Book4Path(Node4Path node) {
 		this.node = node;
 		this.records = new ArrayList<IRecord>();
 	}
@@ -27,7 +27,7 @@ public abstract class PathBook extends IBook{
 
 	public void addNdToAllPath(String node) {
 		for (IRecord recordI : records) {
-			PathRecord mthdPathRecord = (PathRecord) recordI;
+			Record4Path mthdPathRecord = (Record4Path) recordI;
 			mthdPathRecord.addTail(node);
 		}
 	}

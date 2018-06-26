@@ -5,19 +5,19 @@ import java.util.List;
 
 import neu.lab.conflict.Conf;
 
-public class MthdPathBook extends PathBook {
+public class Book4MthdPath extends Book4Path {
 
-	public MthdPathBook(PathNode node) {
+	public Book4MthdPath(Node4Path node) {
 		super(node);
 	}
 
 	/**
 	 * @return path from host to conflict node
 	 */
-	public List<MthdPathRecord> getRiskPath() {
-		List<MthdPathRecord> riskPaths = new ArrayList<MthdPathRecord>();
+	public List<Record4MthdPath> getRiskPath() {
+		List<Record4MthdPath> riskPaths = new ArrayList<Record4MthdPath>();
 		for (IRecord recordI : getRecords()) {
-			MthdPathRecord path = (MthdPathRecord) recordI;
+			Record4MthdPath path = (Record4MthdPath) recordI;
 			if (path.isFromHost())
 				// if (path.getPathLen() >= Conf.MIN_PATH_DEP)// path whose depth is 2 is
 				// unreasonable.
@@ -30,7 +30,7 @@ public class MthdPathBook extends PathBook {
 	public String toString() {
 		StringBuilder sb = new StringBuilder(node.getName() + "\n");
 		for (IRecord recordI : getRecords()) {
-			MthdPathRecord path = (MthdPathRecord) recordI;
+			Record4MthdPath path = (Record4MthdPath) recordI;
 			sb.append("-");
 			sb.append(path.getPathStr());
 			sb.append("\n");

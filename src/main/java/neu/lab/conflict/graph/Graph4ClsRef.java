@@ -11,22 +11,22 @@ import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.util.SootUtil;
 import neu.lab.conflict.vo.NodeAdapter;
 
-public class ClsRefGraph implements IGraph {
-	private Map<String, ClsRefNode> name2node;
+public class Graph4ClsRef implements IGraph {
+	private Map<String, Node4ClsRef> name2node;
 
-	public ClsRefGraph() {
-		name2node = new HashMap<String, ClsRefNode>();
+	public Graph4ClsRef() {
+		name2node = new HashMap<String, Node4ClsRef>();
 	}
 
 	public void addNode(String nodeName, boolean isHostNode) {
 		if (name2node.get(nodeName) != null) {
 			MavenUtil.i().getLog().info("duplicate class for " + nodeName + " when forming class-refrence-graph");
 		}
-		name2node.put(nodeName, new ClsRefNode(nodeName, isHostNode));
+		name2node.put(nodeName, new Node4ClsRef(nodeName, isHostNode));
 	}
 
 	public void addErs(String ee, Collection<String> ers) {
-		ClsRefNode eeNode = name2node.get(ee);
+		Node4ClsRef eeNode = name2node.get(ee);
 		if (eeNode != null) {
 			for (String er : ers) {
 				eeNode.addInCls(er);
@@ -40,9 +40,9 @@ public class ClsRefGraph implements IGraph {
 		}
 	}
 
-	public static ClsRefGraph getGraph(NodeAdapter node, boolean filterEdge) {
+	public static Graph4ClsRef getGraph(NodeAdapter node, boolean filterEdge) {
 		LinkedList<NodeAdapter> ancestors = node.getAncestors(true);// from down to top
-		ClsRefGraph graph = new ClsRefGraph();
+		Graph4ClsRef graph = new Graph4ClsRef();
 		// add node to graph
 		for (int i = 0; i < ancestors.size(); i++) {
 			for (String clsName : ancestors.get(i).getDepJar().getAllCls(true)) {
@@ -70,7 +70,7 @@ public class ClsRefGraph implements IGraph {
 	private void filterEdge() {
 		// filter edge that host to host.Edge that is in conflict-jar needn't be
 		// filtered because conflict-jar wasn't added in graph-factory.
-		for (ClsRefNode node : name2node.values()) {
+		for (Node4ClsRef node : name2node.values()) {
 			node.delGhostRefer(name2node);
 			if (node.isHostNode()) {
 				node.delHostRefer(name2node);
@@ -88,17 +88,17 @@ public class ClsRefGraph implements IGraph {
 	 * 
 	 * @return
 	 */
-	public ClsRefNode mustGetNode(String nodeName) {
-		ClsRefNode node = name2node.get(nodeName);
+	public Node4ClsRef mustGetNode(String nodeName) {
+		Node4ClsRef node = name2node.get(nodeName);
 		if (node == null) {
-			node = new ClsRefNode(nodeName, MavenUtil.i().isHostClass(nodeName));
+			node = new Node4ClsRef(nodeName, MavenUtil.i().isHostClass(nodeName));
 			name2node.put(nodeName, node);
 		}
 		return node;
 	}
 
 	public void addNode(String nodeName) {
-		name2node.put(nodeName, new ClsRefNode(nodeName, MavenUtil.i().isHostClass(nodeName)));
+		name2node.put(nodeName, new Node4ClsRef(nodeName, MavenUtil.i().isHostClass(nodeName)));
 	}
 
 	@Override

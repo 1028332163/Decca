@@ -3,10 +3,10 @@ package neu.lab.conflict.graph;
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
 
-public class ClsRefPathRecord extends PathRecord {
+public class Record4ClsRefPath extends Record4Path {
 	private boolean isFromHost;
 
-	public ClsRefPathRecord(String pathStr, int pathLen, boolean isFromHost) {
+	public Record4ClsRefPath(String pathStr, int pathLen, boolean isFromHost) {
 		super(pathStr, pathLen);
 		this.isFromHost = isFromHost;
 	}
@@ -21,7 +21,7 @@ public class ClsRefPathRecord extends PathRecord {
 
 	@Override
 	public IRecord clone() {
-		return new ClsRefPathRecord(pathStr, pathLen, isFromHost);
+		return new Record4ClsRefPath(pathStr, pathLen, isFromHost);
 	}
 
 }

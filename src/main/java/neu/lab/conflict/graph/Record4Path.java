@@ -1,6 +1,6 @@
 package neu.lab.conflict.graph;
 
-public abstract class PathRecord extends IRecord{
+public abstract class Record4Path extends IRecord{
 	protected String pathStr;
 	
 	protected int pathLen;
@@ -9,7 +9,7 @@ public abstract class PathRecord extends IRecord{
 		return pathLen;
 	}
 
-	public PathRecord(String pathStr,  int pathLen) {
+	public Record4Path(String pathStr,  int pathLen) {
 		this.pathStr = pathStr;
 		this.pathLen = pathLen;
 	}

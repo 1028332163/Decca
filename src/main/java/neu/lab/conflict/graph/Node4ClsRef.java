@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class ClsRefNode extends PathNode {
+public class Node4ClsRef extends Node4Path {
 
 	public boolean isHostNode() {
 		return isHostNode;
@@ -16,7 +16,7 @@ public class ClsRefNode extends PathNode {
 	private boolean isHostNode;
 	private List<String> inClses;// class who references this class
 
-	public ClsRefNode(String clsName, boolean isHostNode) {
+	public Node4ClsRef(String clsName, boolean isHostNode) {
 		this.clsName = clsName;
 		this.isHostNode = isHostNode;
 		inClses = new ArrayList<String>();
@@ -31,7 +31,7 @@ public class ClsRefNode extends PathNode {
 	 * 
 	 * @param name2node
 	 */
-	public void delGhostRefer(Map<String, ClsRefNode> name2node) {
+	public void delGhostRefer(Map<String, Node4ClsRef> name2node) {
 		Iterator<String> referIte = inClses.iterator();
 		while (referIte.hasNext()) {
 			if (null == name2node.get(referIte.next()))
@@ -44,10 +44,10 @@ public class ClsRefNode extends PathNode {
 	 * 
 	 * @param name2node
 	 */
-	public void delHostRefer(Map<String, ClsRefNode> name2node) {
+	public void delHostRefer(Map<String, Node4ClsRef> name2node) {
 		Iterator<String> referIte = inClses.iterator();
 		while (referIte.hasNext()) {
-			ClsRefNode referNode = name2node.get(referIte.next());
+			Node4ClsRef referNode = name2node.get(referIte.next());
 			if (referNode != null && referNode.isHostNode)
 				referIte.remove();
 		}
@@ -65,12 +65,12 @@ public class ClsRefNode extends PathNode {
 
 	@Override
 	public IBook getBook() {
-		return new ClsRefPathBook(this);
+		return new Book4ClsRefPath(this);
 	}
 
 	@Override
 	public IRecord formNewRecord() {
-		return new ClsRefPathRecord(getName(), 1, isHostNode);
+		return new Record4ClsRefPath(getName(), 1, isHostNode);
 	}
 
 	@Override
