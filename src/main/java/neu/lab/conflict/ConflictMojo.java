@@ -70,7 +70,7 @@ public abstract class ConflictMojo extends AbstractMojo {
 	@Parameter(property = "append", defaultValue = "false")
 	public boolean append;
 
-	protected void initGlobalVar() {
+	protected void initGlobalVar() throws Exception {
 		MavenUtil.i().setMojo(this);
 		NodeAdapters.init(root);
 		DepJars.init(NodeAdapters.i());// occur jar in tree
@@ -87,7 +87,11 @@ public abstract class ConflictMojo extends AbstractMojo {
 			} catch (DependencyTreeBuilderException e) {
 				throw new MojoExecutionException(e.getMessage());
 			}
-			initGlobalVar();
+			try {
+				initGlobalVar();
+			} catch (Exception e) {
+				throw new MojoExecutionException("too large project!");
+			}
 			run();
 			this.getLog().info("dog-run-time:" + Dog.runtime);
 		} else {

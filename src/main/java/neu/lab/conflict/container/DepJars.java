@@ -14,7 +14,7 @@ public class DepJars {
 		return instance;
 	}
 
-	public static void init(NodeAdapters nodeAdapters) {
+	public static void init(NodeAdapters nodeAdapters) throws Exception {
 		if (instance == null) {
 			instance = new DepJars(nodeAdapters);
 		}
@@ -23,11 +23,14 @@ public class DepJars {
 	private Set<DepJar> container;
 	private DepJar hostDepJar;
 
-	private DepJars(NodeAdapters nodeAdapters) {
+	private DepJars(NodeAdapters nodeAdapters) throws Exception {
 		container = new HashSet<DepJar>();
 		for (NodeAdapter nodeAdapter : nodeAdapters.getAllNodeAdapter()) {
 			container.add(new DepJar(nodeAdapter.getGroupId(), nodeAdapter.getArtifactId(), nodeAdapter.getVersion(),
 					nodeAdapter.getClassifier(), nodeAdapter.getFilePath()));
+		}
+		if(container.size()>50) {
+			throw new Exception("too large project.");
 		}
 
 	}

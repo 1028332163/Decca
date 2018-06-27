@@ -147,6 +147,7 @@ class JRiskCgTf extends SceneTransformer {
 			}
 		}
 		graph =  new Graph4MthdProb(nds, mthdRlts);
+		MavenUtil.i().getLog().info("JRiskCgTf end..");
 	}
 
 	public Set<String> getRchMthds() {
