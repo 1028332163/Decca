@@ -14,6 +14,7 @@ import neu.lab.conflict.container.NodeAdapters;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.NodeAdapter;
 import neu.lab.conflict.writer.DistanceWriter;
+import neu.lab.conflict.writer.JarRiskWriter;
 import neu.lab.conflict.writer.RiskPathWriter;
 
 @Mojo(name = "debug", defaultPhase = LifecyclePhase.VALIDATE)
@@ -34,7 +35,9 @@ public class DebugMojo extends ConflictMojo {
 		// "classDupByJar.txt");
 //		printClsDistance();
 		// printMthdDistance();
-		printNeibor();
+//		printNeibor();
+			
+		 printMthdProb();
 	}
 
 	private void printNeibor() {
@@ -64,7 +67,15 @@ public class DebugMojo extends ConflictMojo {
 		}
 		new DistanceWriter().writeMthdDistance(outPath, false);
 	}
-
+	
+	public void printMthdProb() {
+		String outDir ="D:\\ws_testcase\\image\\distance_mthdProb\\";
+		java.io.File f = new java.io.File(outDir);
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+		new JarRiskWriter().write(outDir, false);
+	}
 	public void printPath() {
 		// new RiskPathWriter().writePath("D:\\cWS\\notepad++\\riskPath.xml", false);
 		new RiskPathWriter().writeRefRisk("D:\\cWS\\notepad++\\riskPath.xml", true);

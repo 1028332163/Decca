@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import neu.lab.conflict.graph.MthdPathNode;
-import neu.lab.conflict.graph.MthdRltGraph;
+import neu.lab.conflict.graph.Graph4MthdPath;
+import neu.lab.conflict.graph.Graph4MthdProb;
+import neu.lab.conflict.graph.Node4MthdPath;
+import neu.lab.conflict.graph.Node4MthdProb;
 import neu.lab.conflict.risk.jar.DepJarJRisk;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.util.SootUtil;
@@ -58,6 +60,10 @@ public class SootJRiskCg extends SootAna {
 			runtime = runtime + (System.currentTimeMillis() - startTime) / 1000;
 		} catch (Exception e) {
 			MavenUtil.i().getLog().warn("cg error: ", e);
+			
+			depJarJRisk.setRchedMthds(new HashSet<String>());
+
+			depJarJRisk.setGraph(new Graph4MthdProb(new HashSet<Node4MthdProb>(), new ArrayList<MethodCall>()));
 		}
 		soot.G.reset();
 	}
@@ -80,7 +86,7 @@ class JRiskCgTf extends SceneTransformer {
 	private Set<String> entryClses;
 	private Set<String> conflictJarClses;
 	private Set<String> rchMthds;
-	private MthdRltGraph graph;
+	private Graph4MthdProb graph;
 
 	public JRiskCgTf(DepJarJRisk depJarJRisk) {
 		super();
@@ -119,7 +125,7 @@ class JRiskCgTf extends SceneTransformer {
 			}
 		}
 		// get call-graph.
-		Set<MthdPathNode> nds = new HashSet<MthdPathNode>();
+		Set<Node4MthdProb> nds = new HashSet<Node4MthdProb>();
 		List<MethodCall> mthdRlts = new ArrayList<MethodCall>();
 		CallGraph cg = Scene.v().getCallGraph();
 		Iterator<Edge> ite = cg.iterator();
@@ -134,20 +140,20 @@ class JRiskCgTf extends SceneTransformer {
 			if (conflictJarClses.contains(SootUtil.mthdSig2cls(srcMthdName))
 					&& conflictJarClses.contains(SootUtil.mthdSig2cls(tgtMthdName))) {
 				// filter relation inside conflictJar
-			} else {
-				nds.add(new MthdPathNode(srcMthdName, entryClses.contains(srcClsName), conflictJarClses.contains(srcClsName)));
-				nds.add(new MthdPathNode(tgtMthdName, entryClses.contains(tgtClsName), conflictJarClses.contains(tgtClsName)));
+			}else {
+				nds.add(new Node4MthdProb(srcMthdName, entryClses.contains(srcClsName), conflictJarClses.contains(srcClsName)));
+				nds.add(new Node4MthdProb(tgtMthdName, entryClses.contains(tgtClsName), conflictJarClses.contains(tgtClsName)));
 				mthdRlts.add(new MethodCall(srcMthdName, tgtMthdName));
 			}
 		}
-		graph =  new MthdRltGraph(nds, mthdRlts);
+		graph =  new Graph4MthdProb(nds, mthdRlts);
 	}
 
 	public Set<String> getRchMthds() {
 		return rchMthds;
 	}
 
-	public MthdRltGraph getGraph() {
+	public Graph4MthdProb getGraph() {
 		return graph;
 	}
 	

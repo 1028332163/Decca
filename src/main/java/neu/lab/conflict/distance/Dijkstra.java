@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import neu.lab.conflict.graph.MthdRltGraph;
+import neu.lab.conflict.graph.Graph4MthdPath;
 import neu.lab.conflict.graph.IGraph;
-import neu.lab.conflict.graph.MthdPathNode;
+import neu.lab.conflict.graph.Node4MthdPath;
 
 public abstract class Dijkstra {
 

@@ -25,7 +25,7 @@ public abstract class Book4Path extends IBook{
 		}
 	}
 
-	public void addNdToAllPath(String node) {
+	private void addNdToAllPath(String node) {
 		for (IRecord recordI : records) {
 			Record4Path mthdPathRecord = (Record4Path) recordI;
 			mthdPathRecord.addTail(node);

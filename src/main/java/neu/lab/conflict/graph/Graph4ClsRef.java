@@ -2,13 +2,11 @@ package neu.lab.conflict.graph;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
 import neu.lab.conflict.risk.ref.tb.RefTb;
 import neu.lab.conflict.util.MavenUtil;
-import neu.lab.conflict.util.SootUtil;
 import neu.lab.conflict.vo.NodeAdapter;
 
 public class Graph4ClsRef implements IGraph {

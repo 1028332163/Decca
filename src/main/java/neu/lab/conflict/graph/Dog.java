@@ -10,6 +10,7 @@ import neu.lab.conflict.Conf;
 import neu.lab.conflict.util.MavenUtil;
 
 public class Dog {
+	public static long runtime = 0;
 	private IGraph graph;
 	protected String pos;
 	protected List<String> route;
@@ -50,6 +51,7 @@ public class Dog {
 		}
 		long runtime = (System.currentTimeMillis() - start) / 1000;
 		MavenUtil.i().getLog().info("dog run time:" + runtime);
+		Dog.runtime = Dog.runtime + runtime;
 		return this.books;
 	}
 
@@ -73,7 +75,7 @@ public class Dog {
 	 * @param frontNode
 	 */
 	private void forward(String frontNode) {
-//		System.out.println("forward to " + frontNode);
+		// System.out.println("forward to " + frontNode);
 		INode node = graph.getNode(frontNode);
 		if (node != null) {
 			if (!route.contains(frontNode)) {
@@ -96,7 +98,7 @@ public class Dog {
 
 	private void back() {
 		String donePos = route.get(route.size() - 1);
-//		System.out.println("back from " + donePos);
+		// System.out.println("back from " + donePos);
 		graphMap.remove(donePos);
 
 		IBook book = this.tempBooks.get(donePos);

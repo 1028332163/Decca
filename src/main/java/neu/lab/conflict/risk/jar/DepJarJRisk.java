@@ -1,11 +1,20 @@
 package neu.lab.conflict.risk.jar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import neu.lab.conflict.container.DepJars;
-import neu.lab.conflict.graph.MthdRltGraph;
+import neu.lab.conflict.distance.MethodProDistances;
+import neu.lab.conflict.graph.Dog;
+import neu.lab.conflict.graph.Graph4MthdProb;
+import neu.lab.conflict.graph.IBook;
+import neu.lab.conflict.graph.IRecord;
+import neu.lab.conflict.graph.Node4MthdProb;
+import neu.lab.conflict.graph.Record4MthdProb;
 import neu.lab.conflict.soot.SootJRiskCg;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.DepJar;
@@ -16,7 +25,8 @@ public class DepJarJRisk {
 	private ConflictJRisk conflictRisk;
 	private Set<String> thrownMthds;
 	private Set<String> rchedMthds;
-	private MthdRltGraph graph;
+	private Graph4MthdProb graph;
+	private Map<String, IBook> books;
 
 	public DepJarJRisk(DepJar depJar, ConflictJRisk conflictRisk) {
 		this.depJar = depJar;
@@ -26,9 +36,18 @@ public class DepJarJRisk {
 		// calculate call-graph
 		if (getThrownMthds().size() > 0) {
 			SootJRiskCg.i().cmpCg(this);
+			// calculate distance
+			books = new Dog(graph).findRlt(graph.getHostNds());
+		} else {
+			this.setRchedMthds(new HashSet<String>());
+			this.setGraph(new Graph4MthdProb(new HashSet<Node4MthdProb>(), new ArrayList<MethodCall>()));
+			this.books = new HashMap<String, IBook>();
 		}
-		// calculate distance
 
+	}
+
+	public String getVersion() {
+		return depJar.getVersion();
 	}
 
 	public Set<String> getThrownMthds() {
@@ -36,6 +55,23 @@ public class DepJarJRisk {
 			thrownMthds = conflictRisk.getUsedDepJar().getRiskMthds(depJar.getAllMthd());
 		}
 		return thrownMthds;
+	}
+
+	public Map<String, IBook> getBooks() {
+		return books;
+	}
+
+	public MethodProDistances getMethodProDistances() {
+		MethodProDistances distances = new MethodProDistances();
+		Map<String, IBook> books = getBooks();
+		for (IBook book : books.values()) {
+			for (IRecord iRecord : book.getRecords()) {
+				Record4MthdProb record = (Record4MthdProb) iRecord;
+				if (getThrownMthds().contains(record.getTgtMthd()))
+					distances.addDistance(record.getTgtMthd(), book.getNodeName(), record.getProb());
+			}
+		}
+		return distances;
 	}
 
 	public List<String> getPrcDirPaths() throws Exception {
@@ -72,7 +108,7 @@ public class DepJarJRisk {
 		this.rchedMthds = rchedMthds;
 	}
 
-	public void setGraph(MthdRltGraph graph) {
+	public void setGraph(Graph4MthdProb graph) {
 		this.graph = graph;
 	}
 

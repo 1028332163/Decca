@@ -8,8 +8,8 @@ import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
 
 import neu.lab.conflict.container.AllCls;
-import neu.lab.conflict.graph.ClsRefGraph;
-import neu.lab.conflict.graph.ClsRefPathRecord;
+import neu.lab.conflict.graph.Graph4ClsRef;
+import neu.lab.conflict.graph.Record4ClsRefPath;
 import neu.lab.conflict.graph.Dog;
 import neu.lab.conflict.graph.IBook;
 import neu.lab.conflict.graph.IRecord;
@@ -65,7 +65,7 @@ public class NodeRRisk {
 					
 					if(books.get(riskCls)!=null) {
 						for(IRecord record:books.get(riskCls).getRecords()) {
-							ClsRefPathRecord pathRecord = (ClsRefPathRecord)record;
+							Record4ClsRefPath pathRecord = (Record4ClsRefPath)record;
 							clsEle.add(pathRecord.getPathEle());
 						}
 					}
@@ -75,8 +75,8 @@ public class NodeRRisk {
 		return ele;
 	}
 
-	public ClsRefGraph getClsRefGraph() {
-		return ClsRefGraph.getGraph(this.node,true);
+	public Graph4ClsRef getClsRefGraph() {
+		return Graph4ClsRef.getGraph(this.node,true);
 	}
 
 	private LimitRefTb getlimitRefTb() {

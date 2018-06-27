@@ -29,14 +29,7 @@ public class DepJars {
 			container.add(new DepJar(nodeAdapter.getGroupId(), nodeAdapter.getArtifactId(), nodeAdapter.getVersion(),
 					nodeAdapter.getClassifier(), nodeAdapter.getFilePath()));
 		}
-		for(DepJar depJar:container) {
-			if(depJar.isHost()) {
-				hostDepJar = depJar;
-				if(hostDepJar!=null) {
-					MavenUtil.i().getLog().warn("multiple depjar for host ");
-				}
-			}
-		}
+
 	}
 	
 	public Set<DepJar> getUsedDepJars(){
@@ -51,6 +44,18 @@ public class DepJars {
 	
 
 	public DepJar getHostDepJar() {
+		if(hostDepJar==null) {
+			MavenUtil.i().getLog().warn("depJar size:"+container.size());
+			for(DepJar depJar:container) {
+				System.out.println(depJar);
+				if(depJar.isHost()) {
+					if(hostDepJar!=null) {
+						MavenUtil.i().getLog().warn("multiple depjar for host ");
+					}
+					hostDepJar = depJar;
+				}
+			}
+		}
 		return hostDepJar;
 	}
 

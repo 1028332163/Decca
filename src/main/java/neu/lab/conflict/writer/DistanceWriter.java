@@ -18,8 +18,8 @@ import neu.lab.conflict.distance.DijkstraMap;
 //import neu.lab.conflict.distance.DijkstraSorted;
 import neu.lab.conflict.distance.MethodDistances;
 import neu.lab.conflict.distance.NodeDistances;
-import neu.lab.conflict.graph.ClsRefGraph;
-import neu.lab.conflict.graph.ClsRefNode;
+import neu.lab.conflict.graph.Graph4ClsRef;
+import neu.lab.conflict.graph.Node4ClsRef;
 import neu.lab.conflict.risk.node.DepJarNRisk;
 import neu.lab.conflict.risk.node.NodeNRisk;
 import neu.lab.conflict.util.MavenUtil;
@@ -114,7 +114,7 @@ public class DistanceWriter {
 			}
 			if (thrownClses.size() > 0) {
 				// form class-graph
-				ClsRefGraph graph = new ClsRefGraph();
+				Graph4ClsRef graph = new Graph4ClsRef();
 				ClassPool pool = new ClassPool();
 				Set<String> allSysCls = new HashSet<String>();
 				for (String thrownCls : thrownClses) {
@@ -134,7 +134,7 @@ public class DistanceWriter {
 				for (String sysCls : allSysCls) {// each er
 					for (Object ee : pool.get(sysCls).getRefClasses()) {
 						if (!sysCls.equals(ee)) {// don't add relation of self.
-							ClsRefNode node = (ClsRefNode) graph.getNode((String) ee);
+							Node4ClsRef node = (Node4ClsRef) graph.getNode((String) ee);
 							if (node != null)
 								node.addInCls(sysCls);
 						}
@@ -176,7 +176,7 @@ public class DistanceWriter {
 			}
 			if (thrownClses.size() > 0) {
 				// form class-graph
-				ClsRefGraph graph = new ClsRefGraph();
+				Graph4ClsRef graph = new Graph4ClsRef();
 				ClassPool pool = new ClassPool();
 				Set<String> allSysCls = new HashSet<String>();
 				for (String thrownCls : thrownClses) {
@@ -196,7 +196,7 @@ public class DistanceWriter {
 				for (String sysCls : allSysCls) {// each er
 					for (Object ee : pool.get(sysCls).getRefClasses()) {
 						if (!sysCls.equals(ee)) {// don't add relation of self.
-							ClsRefNode node = (ClsRefNode) graph.getNode((String) ee);
+							Node4ClsRef node = (Node4ClsRef) graph.getNode((String) ee);
 							if (node != null)
 								node.addInCls(sysCls);
 						}

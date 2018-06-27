@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import neu.lab.conflict.risk.jar.ConflictJRisk;
 import neu.lab.conflict.risk.node.ConflictNRisk;
 import neu.lab.conflict.risk.ref.ConflictRRisk;
 import neu.lab.conflict.util.MavenUtil;
@@ -77,7 +78,9 @@ public class Conflict {
 		return new ConflictRRisk(this);
 	}
 	
-//	public 
+	public ConflictJRisk getJRisk() {
+		return new ConflictJRisk(this);
+	}
 	
 	
 
@@ -97,6 +100,10 @@ public class Conflict {
 
 	public String getArtifactId() {
 		return artifactId;
+	}
+	
+	public String getSig() {
+		return getGroupId()+":"+getArtifactId();
 	}
 	/**
 	 * @return first version is the used version

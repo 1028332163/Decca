@@ -11,12 +11,12 @@ import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
 
 import neu.lab.conflict.Conf;
-import neu.lab.conflict.graph.MthdPathBook;
+import neu.lab.conflict.graph.Book4MthdPath;
 import neu.lab.conflict.graph.IBook;
 import neu.lab.conflict.graph.Dog;
-import neu.lab.conflict.graph.MthdRltGraph;
-import neu.lab.conflict.graph.MthdPathNode;
-import neu.lab.conflict.graph.MthdPathRecord;
+import neu.lab.conflict.graph.Graph4MthdPath;
+import neu.lab.conflict.graph.Node4MthdPath;
+import neu.lab.conflict.graph.Record4MthdPath;
 import neu.lab.conflict.soot.SootNRiskCg;
 import neu.lab.conflict.vo.DepJar;
 import neu.lab.conflict.vo.MethodCall;
@@ -34,7 +34,7 @@ public class NodeNRisk {
 	private Set<String> risk1Mthds;// reached and thrown
 	private Set<String> risk2Mthds;// reached and thrown and called by method in other jar.
 	private DepJarNRisk jarRiskAna;
-	private MthdRltGraph graph;
+	private Graph4MthdPath graph;
 
 	private Map<String, IBook> books;// reached path of method in risk2Mthds
 
@@ -48,11 +48,11 @@ public class NodeNRisk {
 		Element pathsEle = ele.addElement("paths");
 		List<String> confuseMthds = new ArrayList<String>();
 		for (String risk2Mthd : getRisk2Mthds()) {
-			MthdPathBook book = (MthdPathBook)getBooks().get(risk2Mthd);
+			Book4MthdPath book = (Book4MthdPath)getBooks().get(risk2Mthd);
 			if (book == null) {
 				confuseMthds.add(risk2Mthd);
 			} else {
-				List<MthdPathRecord> riskPath = book.getRiskPath();
+				List<Record4MthdPath> riskPath = book.getRiskPath();
 				if (riskPath.size() == 0) {
 					// this method is reached by host on soot-call-graph,but can't find path for
 					// it.Confusion may be cause by algorithm or by call filter
@@ -60,7 +60,7 @@ public class NodeNRisk {
 				} else {
 					Element methodEle = pathsEle.addElement("method");
 					methodEle.addAttribute("name", risk2Mthd.replace("<", "").replace(">", ""));
-					for (MthdPathRecord path : riskPath) {
+					for (Record4MthdPath path : riskPath) {
 						Element pathEle = methodEle.addElement("path");
 						pathEle.addAttribute("isFromHost", ""+path.isFromHost());
 						pathEle.addAttribute("length",""+path.getPathLen());
@@ -90,7 +90,7 @@ public class NodeNRisk {
 			this.anaAncestors = ancestors;
 			rchedMthds = new HashSet<String>();
 			rchedServices = new HashSet<String>();
-			graph = new MthdRltGraph(new HashSet<MthdPathNode>(), new ArrayList<MethodCall>());
+			graph = new Graph4MthdPath(new HashSet<Node4MthdPath>(), new ArrayList<MethodCall>());
 		} else {
 			if (Conf.ANA_FROM_HOST) {// entry class is host class.
 				this.anaAncestors = ancestors;
@@ -157,11 +157,11 @@ public class NodeNRisk {
 		return books;
 	}
 
-	public void setGraph(MthdRltGraph graph) {
+	public void setGraph(Graph4MthdPath graph) {
 		this.graph = graph;
 	}
 	
-	public MthdRltGraph getGraph() {
+	public Graph4MthdPath getGraph() {
 		return this.graph;
 	}
 

@@ -15,8 +15,8 @@ import javassist.ClassPool;
 import neu.lab.conflict.Conf;
 import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.container.NodeAdapters;
-import neu.lab.conflict.graph.ClsRefGraph;
-import neu.lab.conflict.graph.ClsRefNode;
+import neu.lab.conflict.graph.Graph4ClsRef;
+import neu.lab.conflict.graph.Node4ClsRef;
 import neu.lab.conflict.risk.node.ConflictNRisk;
 import neu.lab.conflict.risk.node.DepJarNRisk;
 import neu.lab.conflict.risk.ref.tb.NoLimitRefTb;
@@ -390,8 +390,8 @@ public class DepJar {
 	 * 
 	 * @return
 	 */
-	public ClsRefGraph getWholeClsRefG() {
-		ClsRefGraph graph = new ClsRefGraph();
+	public Graph4ClsRef getWholeClsRefG() {
+		Graph4ClsRef graph = new Graph4ClsRef();
 		try {
 			ClassPool pool = new ClassPool();
 			Set<String> allSysCls = new HashSet<String>();
@@ -409,7 +409,7 @@ public class DepJar {
 			for (String sysCls : allSysCls) {// each er
 				for (Object ee : pool.get(sysCls).getRefClasses()) {
 					if (!sysCls.equals(ee)) {// don't add relation of self.
-						ClsRefNode node = (ClsRefNode) graph.getNode((String) ee);
+						Node4ClsRef node = (Node4ClsRef) graph.getNode((String) ee);
 						if (node != null)
 							node.addInCls(sysCls);
 					}

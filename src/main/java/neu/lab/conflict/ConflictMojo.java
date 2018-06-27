@@ -20,6 +20,7 @@ import org.apache.maven.shared.dependency.tree.DependencyTreeBuilderException;
 import neu.lab.conflict.container.AllCls;
 import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.container.NodeAdapters;
+import neu.lab.conflict.graph.Dog;
 import neu.lab.conflict.container.Conflicts;
 import neu.lab.conflict.util.MavenUtil;
 
@@ -55,20 +56,20 @@ public abstract class ConflictMojo extends AbstractMojo {
 	DependencyNode root;
 
 	@Parameter(defaultValue = "${project.compileSourceRoots}", readonly = true, required = true)
-	public List<String> compileSourceRoots;	
-	
-	@Parameter( property = "ignoreTestScope", defaultValue = "false" )
+	public List<String> compileSourceRoots;
+
+	@Parameter(property = "ignoreTestScope", defaultValue = "false")
 	public boolean ignoreTestScope;
 
-	@Parameter( property = "ignoreProvidedScope", defaultValue = "false" )
+	@Parameter(property = "ignoreProvidedScope", defaultValue = "false")
 	public boolean ignoreProvidedScope;
-	
-	@Parameter( property = "ignoreRuntimeScope", defaultValue = "false" )
+
+	@Parameter(property = "ignoreRuntimeScope", defaultValue = "false")
 	public boolean ignoreRuntimeScope;
-	
-	@Parameter( property = "append", defaultValue = "false" )
+
+	@Parameter(property = "append", defaultValue = "false")
 	public boolean append;
-	
+
 	protected void initGlobalVar() {
 		MavenUtil.i().setMojo(this);
 		NodeAdapters.init(root);
@@ -79,22 +80,25 @@ public abstract class ConflictMojo extends AbstractMojo {
 
 	public void execute() throws MojoExecutionException {
 		this.getLog().info("method detect start:");
-		if ("jar".equals(project.getPackaging())||"war".equals(project.getPackaging())) {
+		if ("jar".equals(project.getPackaging()) || "war".equals(project.getPackaging())) {
 			try {
-//				project.
+				// project.
 				root = dependencyTreeBuilder.buildDependencyTree(project, localRepository, null);
 			} catch (DependencyTreeBuilderException e) {
 				throw new MojoExecutionException(e.getMessage());
 			}
 			initGlobalVar();
 			run();
+			this.getLog().info("dog-run-time:" + Dog.runtime);
 		} else {
-			this.getLog().info("this project fail because package type is neither jar nor war:" + project.getGroupId() + ":"
-					+ project.getArtifactId() + ":" + project.getVersion() + "@" + project.getFile().getAbsolutePath());
+			this.getLog()
+					.info("this project fail because package type is neither jar nor war:" + project.getGroupId() + ":"
+							+ project.getArtifactId() + ":" + project.getVersion() + "@"
+							+ project.getFile().getAbsolutePath());
 		}
 
 		this.getLog().debug("method detect end");
-		
+
 	}
 
 	public abstract void run();

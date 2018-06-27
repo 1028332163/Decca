@@ -11,7 +11,7 @@ public class ConflictJRisk {
 	private Conflict conflict;
 	private List<DepJarJRisk> jarRisks;
 
-	private ConflictJRisk(Conflict conflict) {
+	public ConflictJRisk(Conflict conflict) {
 		this.conflict = conflict;
 		jarRisks = new ArrayList<DepJarJRisk>();
 		for (DepJar jar : conflict.getDepJars()) {
@@ -27,5 +27,8 @@ public class ConflictJRisk {
 		return conflict;
 	}
 
-	
+	public List<DepJarJRisk> getJarRisks() {
+		return jarRisks;
+	}
+
 }

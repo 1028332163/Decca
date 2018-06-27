@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.Set;
 
 import neu.lab.conflict.Conf;
-import neu.lab.conflict.graph.MthdRltGraph;
+import neu.lab.conflict.graph.Graph4MthdPath;
 import neu.lab.conflict.risk.node.NodeNRisk;
-import neu.lab.conflict.graph.MthdPathNode;
+import neu.lab.conflict.graph.Node4MthdPath;
 import neu.lab.conflict.util.SootUtil;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.DepJar;
@@ -67,7 +67,7 @@ public class SootNRiskCg extends SootAna {
 			MavenUtil.i().getLog().info("don't have entry for:" + nodeAnaUnit.toString());
 			nodeAnaUnit.setRchedMthds(new HashSet<String>());
 
-			nodeAnaUnit.setGraph(new MthdRltGraph(new HashSet<MthdPathNode>(), new ArrayList<MethodCall>()));
+			nodeAnaUnit.setGraph(new Graph4MthdPath(new HashSet<Node4MthdPath>(), new ArrayList<MethodCall>()));
 
 			nodeAnaUnit.setRchedServices(new HashSet<String>());
 			soot.G.reset();
@@ -169,8 +169,8 @@ class NRiskCgTf extends SceneTransformer {
 		MavenUtil.i().getLog().info("NRiskCgTf end.");
 	}
 
-	public MthdRltGraph getGraph() {
-		Set<MthdPathNode> nds = new HashSet<MthdPathNode>();
+	public Graph4MthdPath getGraph() {
+		Set<Node4MthdPath> nds = new HashSet<Node4MthdPath>();
 		List<MethodCall> calls = new ArrayList<MethodCall>();
 
 		// form calls and nds
@@ -192,12 +192,12 @@ class NRiskCgTf extends SceneTransformer {
 //			MavenUtil.i().getLog().info(srcMthdName+"->"+tgtMthdName);
 
 			calls.add(new MethodCall(srcMthdName, tgtMthdName));
-			nds.add(new MthdPathNode(srcMthdName, entryClses.contains(srcClsName), conflictJarClses.contains(srcClsName)));
-			nds.add(new MthdPathNode(tgtMthdName, entryClses.contains(tgtClsName), conflictJarClses.contains(tgtClsName)));
+			nds.add(new Node4MthdPath(srcMthdName, entryClses.contains(srcClsName), conflictJarClses.contains(srcClsName)));
+			nds.add(new Node4MthdPath(tgtMthdName, entryClses.contains(tgtClsName), conflictJarClses.contains(tgtClsName)));
 
 		}
 
-		return new MthdRltGraph(nds, calls);
+		return new Graph4MthdPath(nds, calls);
 	}
 
 	private boolean isInConflictJar(SootMethod method) {

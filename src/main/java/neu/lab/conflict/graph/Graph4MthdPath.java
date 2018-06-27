@@ -19,7 +19,7 @@ public class Graph4MthdPath implements IGraph{
 
 	public Graph4MthdPath(Set<Node4MthdPath> nodes, List<MethodCall> calls) {
 
-		// filter
+		
 		MavenUtil.i().getLog().debug("graph-before-filter nodes size:" + nodes.size() + " calls size:" + calls.size());
 		if (Conf.FLT_CALL)
 			filtCalls(calls);

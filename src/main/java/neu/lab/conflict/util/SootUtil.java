@@ -37,9 +37,9 @@ public class SootUtil {
 
 	/**
 	 * @param mthdSig
-	 *            eg.:<org.slf4j.event.SubstituteLoggingEvent: org.slf4j.event.Level
+	 *            e.g.:<org.slf4j.event.SubstituteLoggingEvent: org.slf4j.event.Level
 	 *            getLevel()>
-	 * @return eg.: org.slf4j.event.Level getLevel();
+	 * @return e.g.: org.slf4j.event.Level getLevel();
 	 */
 	public static String mthdSig2name(String mthdSig) {
 		return mthdSig.substring(mthdSig.indexOf(":") + 1, mthdSig.indexOf(")") + 1);
@@ -47,9 +47,9 @@ public class SootUtil {
 
 	/**
 	 * @param mthdSig
-	 *            eg.:<org.slf4j.event.SubstituteLoggingEvent: org.slf4j.event.Level
+	 *            e.g.:<org.slf4j.event.SubstituteLoggingEvent: org.slf4j.event.Level
 	 *            getLevel()>
-	 * @return eg.:org.slf4j.event.SubstituteLoggingEvent
+	 * @return e.g.:org.slf4j.event.SubstituteLoggingEvent
 	 */
 	public static String mthdSig2cls(String mthdSig) {
 		return mthdSig.substring(1, mthdSig.indexOf(":"));
