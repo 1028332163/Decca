@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import neu.lab.conflict.container.Conflicts;
-import neu.lab.conflict.distance.MethodProDistances;
+import neu.lab.conflict.distance.MethodProbDistances;
 import neu.lab.conflict.risk.jar.DepJarJRisk;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.Conflict;
@@ -38,7 +38,7 @@ public class JarRiskWriter {
 	 * @param append
 	 */
 	public void writeJarRisk(DepJarJRisk jarRisk,String outPath, boolean append) {
-		MethodProDistances distances = jarRisk.getMethodProDistances();
+		MethodProbDistances distances = jarRisk.getMethodProDistances();
 		if(!distances.isEmpty()) {
 			PrintWriter printer;
 			try {

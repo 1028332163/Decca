@@ -70,7 +70,7 @@ public class Node4MthdProb implements INode {
 
 	@Override
 	public IRecord formNewRecord() {
-		return new Record4MthdProb(name,1.0);
+		return new Record4MthdProb(name,1.0,0.0);
 	}
 	
 	@Override

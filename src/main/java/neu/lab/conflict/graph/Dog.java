@@ -32,6 +32,7 @@ public class Dog {
 	}
 
 	public Map<String, IBook> findRlt(Set<String> entrys) {
+		MavenUtil.i().getLog().info("dog starts running...");
 		long start = System.currentTimeMillis();
 		for (String mthd : entrys) {
 			route = new ArrayList<String>();
@@ -50,6 +51,7 @@ public class Dog {
 			}
 		}
 		long runtime = (System.currentTimeMillis() - start) / 1000;
+		MavenUtil.i().getLog().info("dog finishes running.");
 		MavenUtil.i().getLog().info("dog run time:" + runtime);
 		Dog.runtime = Dog.runtime + runtime;
 		return this.books;

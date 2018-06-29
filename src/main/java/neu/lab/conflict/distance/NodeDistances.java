@@ -3,11 +3,14 @@ package neu.lab.conflict.distance;
 import java.util.HashMap;
 import java.util.Map;
 
+import neu.lab.conflict.util.MavenUtil;
+
 public abstract class NodeDistances {
 
 	protected Map<String, Map<String, Double>> b2t2d;// <bottom,<top,distance>>
 
 	public NodeDistances() {
+		MavenUtil.i().getLog().info("form a NodeDistances.");
 		b2t2d = new HashMap<String, Map<String, Double>>();
 	}
 
@@ -17,6 +20,7 @@ public abstract class NodeDistances {
 	// }
 	// return instance;
 	// }
+	
 	public boolean isEmpty() {
 		return b2t2d.isEmpty();
 	}

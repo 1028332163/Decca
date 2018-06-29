@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import neu.lab.conflict.container.DepJars;
-import neu.lab.conflict.distance.MethodProDistances;
+import neu.lab.conflict.distance.MethodProbDistances;
 import neu.lab.conflict.graph.Dog;
 import neu.lab.conflict.graph.Graph4MthdProb;
 import neu.lab.conflict.graph.IBook;
@@ -32,7 +32,7 @@ public class DepJarJRisk {
 		this.depJar = depJar;
 		this.conflictRisk = conflictRisk;
 		// calculate thrownMthd
-
+		
 		// calculate call-graph
 		if (getThrownMthds().size() > 0) {
 			SootJRiskCg.i().cmpCg(this);
@@ -57,18 +57,20 @@ public class DepJarJRisk {
 		return thrownMthds;
 	}
 
-	public Map<String, IBook> getBooks() {
+	private Map<String, IBook> getBooks() {
 		return books;
 	}
 
-	public MethodProDistances getMethodProDistances() {
-		MethodProDistances distances = new MethodProDistances();
+	public MethodProbDistances getMethodProDistances() {
+		MethodProbDistances distances = new MethodProbDistances();
 		Map<String, IBook> books = getBooks();
 		for (IBook book : books.values()) {
 			for (IRecord iRecord : book.getRecords()) {
 				Record4MthdProb record = (Record4MthdProb) iRecord;
-				if (getThrownMthds().contains(record.getTgtMthd()))
-					distances.addDistance(record.getTgtMthd(), book.getNodeName(), record.getProb());
+				if (getThrownMthds().contains(record.getTgtMthd())) {
+					distances.addDistance(record.getTgtMthd(), book.getNodeName(), record.getDistance());
+					distances.addProb(record.getTgtMthd(), book.getNodeName(), record.getProb());
+				}
 			}
 		}
 		return distances;
