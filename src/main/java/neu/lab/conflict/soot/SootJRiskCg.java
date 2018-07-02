@@ -55,18 +55,18 @@ public class SootJRiskCg extends SootAna {
 			PackManager.v().getPack("wjtp").add(new Transform("wjtp.myTrans", transformer));
 
 			soot.Main.main(getArgs(depJarJRisk.getPrcDirPaths().toArray(new String[0])).toArray(new String[0]));
-			
+
 			depJarJRisk.setRchedMthds(transformer.getRchMthds());
-			
+
 			depJarJRisk.setGraph(transformer.getGraph());
 
 			runtime = runtime + (System.currentTimeMillis() - startTime) / 1000;
 		} catch (Exception e) {
 			MavenUtil.i().getLog().warn("cg error: ", e);
-			
+
 			depJarJRisk.setRchedMthds(new HashSet<String>());
 
-			depJarJRisk.setGraph(new Graph4branch(new HashMap<String,Node4branch>(), new ArrayList<MethodCall>()));
+			depJarJRisk.setGraph(new Graph4branch(new HashMap<String, Node4branch>(), new ArrayList<MethodCall>()));
 		}
 		soot.G.reset();
 	}
@@ -99,7 +99,7 @@ class JRiskCgTf extends SceneTransformer {
 		conflictJarClses = depJarJRisk.getConflictJar().getAllCls(true);
 		riskMthds = depJarJRisk.getThrownMthds();
 		rchMthds = new HashSet<String>();
-		
+
 	}
 
 	@Override
@@ -129,35 +129,38 @@ class JRiskCgTf extends SceneTransformer {
 				rchMthds.add(method.getSignature());
 			}
 		}
-		if(graph==null) {
+		if (graph == null) {
 			MavenUtil.i().getLog().info("start form graph...");
 			// get call-graph.
-			Map<String,Node4branch> name2node = new HashMap<String,Node4branch>();
+			Map<String, Node4branch> name2node = new HashMap<String, Node4branch>();
 			List<MethodCall> mthdRlts = new ArrayList<MethodCall>();
 			CallGraph cg = Scene.v().getCallGraph();
 			Iterator<Edge> ite = cg.iterator();
 			while (ite.hasNext()) {
 				Edge edge = ite.next();
-				
+
 				String srcMthdName = edge.src().getSignature();
 				String tgtMthdName = edge.tgt().getSignature();
 				String srcClsName = edge.src().getDeclaringClass().getName();
 				String tgtClsName = edge.tgt().getDeclaringClass().getName();
-
-				if (conflictJarClses.contains(SootUtil.mthdSig2cls(srcMthdName))
+				if (edge.src().isJavaLibraryMethod() || edge.tgt().isJavaLibraryMethod()) {
+					//filter relation contains javaLibClass
+				} else if (conflictJarClses.contains(SootUtil.mthdSig2cls(srcMthdName))
 						&& conflictJarClses.contains(SootUtil.mthdSig2cls(tgtMthdName))) {
 					// filter relation inside conflictJar
-				}else {
-					if(!name2node.containsKey(srcMthdName)) {
-						name2node.put(srcMthdName, new Node4branch(srcMthdName,entryClses.contains(srcClsName),riskMthds.contains(srcMthdName),getBranchNum(edge.src())));
+				} else {
+					if (!name2node.containsKey(srcMthdName)) {
+						name2node.put(srcMthdName, new Node4branch(srcMthdName, entryClses.contains(srcClsName),
+								riskMthds.contains(srcMthdName), getBranchNum(edge.src())));
 					}
-					if(!name2node.containsKey(tgtMthdName)) {
-						name2node.put(tgtMthdName, new Node4branch(tgtMthdName,entryClses.contains(tgtClsName),riskMthds.contains(tgtMthdName),getBranchNum(edge.tgt())));
+					if (!name2node.containsKey(tgtMthdName)) {
+						name2node.put(tgtMthdName, new Node4branch(tgtMthdName, entryClses.contains(tgtClsName),
+								riskMthds.contains(tgtMthdName), getBranchNum(edge.tgt())));
 					}
 					mthdRlts.add(new MethodCall(srcMthdName, tgtMthdName));
 				}
 			}
-			graph =  new Graph4branch(name2node, mthdRlts); 
+			graph = new Graph4branch(name2node, mthdRlts);
 			MavenUtil.i().getLog().info("end form graph.");
 		}
 		MavenUtil.i().getLog().info("JRiskCgTf end..");
@@ -173,11 +176,11 @@ class JRiskCgTf extends SceneTransformer {
 	}
 
 	private int getBranchNum(SootMethod sootMethod) {
-		if(sootMethod.isPhantom()) {
-			MavenUtil.i().getLog().info("ghost method:"+sootMethod.getSignature());
+		if (sootMethod.isPhantom()) {
+			MavenUtil.i().getLog().info("ghost method:" + sootMethod.getSignature());
 			return 0;
 		}
-		if(sootMethod.isAbstract())
+		if (sootMethod.isAbstract())
 			return 0;
 		int cnt = 0;
 		Body body = sootMethod.retrieveActiveBody();
@@ -201,6 +204,5 @@ class JRiskCgTf extends SceneTransformer {
 		}
 		return false;
 	}
-	
 
 }
