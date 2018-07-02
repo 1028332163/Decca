@@ -1,12 +1,11 @@
 package neu.lab.conflict.graph;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import neu.lab.conflict.Conf;
 import neu.lab.conflict.util.MavenUtil;
 
 public class Dog {
@@ -31,7 +30,7 @@ public class Dog {
 		return graph.getNode(nodeName).getBook();
 	}
 
-	public Map<String, IBook> findRlt(Set<String> entrys) {
+	public Map<String, IBook> findRlt(Collection<String> entrys,int maxDep) {
 		MavenUtil.i().getLog().info("dog starts running...");
 		long start = System.currentTimeMillis();
 		for (String mthd : entrys) {
@@ -41,7 +40,7 @@ public class Dog {
 			else {
 				forward(mthd);
 				while (pos != null) {
-					if (needChildBook()) {
+					if (needChildBook(maxDep)) {
 						String frontNode = graphMap.get(pos).getBranch();
 						getChildBook(frontNode);
 					} else {
@@ -57,8 +56,8 @@ public class Dog {
 		return this.books;
 	}
 
-	public boolean needChildBook() {
-		return graphMap.get(pos).hasBranch() && route.size() < Conf.DOG_FIND_DEP;
+	public boolean needChildBook(int maxDep) {
+		return graphMap.get(pos).hasBranch() && route.size() < maxDep;
 		// return graphMap.get(pos).hasBranch();
 	}
 
@@ -104,7 +103,7 @@ public class Dog {
 		graphMap.remove(donePos);
 
 		IBook book = this.tempBooks.get(donePos);
-		book.addSelfNode();
+		book.afterAddAllChildren();
 
 		this.tempBooks.remove(donePos);
 		this.books.put(donePos, book);

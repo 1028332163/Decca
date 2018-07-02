@@ -1,4 +1,6 @@
-package neu.lab.conflict.graph;
+package neu.lab.conflict.graph.mthdprob;
+
+import neu.lab.conflict.graph.IRecord;
 
 public class Record4MthdProb extends IRecord {
 	private String tgtMthd;

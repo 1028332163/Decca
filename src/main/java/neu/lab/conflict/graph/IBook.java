@@ -6,10 +6,14 @@ public abstract class IBook {
 
 	protected INode node;
 	protected Collection<IRecord> records;
+	
+	public IBook(INode node) {
+		this.node = node;
+	}
 
-	public abstract void addSelfNode();// when dog is back,add self information to book.
+	public abstract void afterAddAllChildren();// when dog is back,add self information to book.
 
-	public abstract void addChild(IBook doneBook);// add child book path to self.
+	public abstract void addChild(IBook doneChildBook);// add child book path to self.
 
 	public String getNodeName() {
 		return node.getName();

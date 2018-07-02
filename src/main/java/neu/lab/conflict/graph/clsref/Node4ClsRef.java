@@ -1,10 +1,14 @@
-package neu.lab.conflict.graph;
+package neu.lab.conflict.graph.clsref;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import neu.lab.conflict.graph.IBook;
+import neu.lab.conflict.graph.IRecord;
+import neu.lab.conflict.graph.Node4Path;
 
 public class Node4ClsRef extends Node4Path {
 

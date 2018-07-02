@@ -1,4 +1,4 @@
-package neu.lab.conflict.graph;
+package neu.lab.conflict.graph.mthdprob;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -6,6 +6,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import neu.lab.conflict.graph.IBook;
+import neu.lab.conflict.graph.INode;
+import neu.lab.conflict.graph.IRecord;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.util.SootUtil;
 

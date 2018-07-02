@@ -16,7 +16,7 @@ public class Conf {
 	public static final boolean PRINT_CONFUSED_METHOD = true;
 	public static final int MIN_PATH_DEP = 3;
 	public static final int MAX_PATH_DEP = 8;
-	public static final int DOG_FIND_DEP = 15;//final path may be larger than PATH_DEP when child book is existed.
+	public static final int DOG_FIND_DEP = 10;//final path may be larger than PATH_DEP when child book is existed.
 	
 	
 	public static boolean ONLY_GET_SIMPLE = false;

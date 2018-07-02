@@ -1,10 +1,12 @@
-package neu.lab.conflict.graph;
+package neu.lab.conflict.graph.clsref;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import neu.lab.conflict.graph.IGraph;
+import neu.lab.conflict.graph.INode;
 import neu.lab.conflict.risk.ref.tb.RefTb;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.NodeAdapter;

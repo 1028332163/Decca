@@ -1,13 +1,15 @@
-package neu.lab.conflict.graph;
+package neu.lab.conflict.graph.cfg;
 
 import java.util.ArrayList;
 
-public abstract class Book4Path extends IBook{
-	public Book4Path(Node4Path node) {
+import neu.lab.conflict.graph.IBook;
+import neu.lab.conflict.graph.IRecord;
+
+public class Book4CFG extends IBook{
+	public Book4CFG(Node4CFG node) {
 		super(node);
 		this.records = new ArrayList<IRecord>();
 	}
-	
 	@Override
 	public void afterAddAllChildren() {
 		if (records.isEmpty()) {
@@ -17,7 +19,15 @@ public abstract class Book4Path extends IBook{
 			addNdToAllPath(node.getName());
 		}
 	}
-	
+
+	private void addNdToAllPath(String name) {
+		for (IRecord recordI : records) {
+			Record4CFG record = (Record4CFG) recordI;
+			record.addPathNode((Node4CFG)node);
+		}
+	}
+
+
 	@Override
 	public void addChild(IBook doneChildBook) {
 		for (IRecord recordI : doneChildBook.getRecords()) {
@@ -25,10 +35,4 @@ public abstract class Book4Path extends IBook{
 		}
 	}
 
-	private void addNdToAllPath(String node) {
-		for (IRecord recordI : records) {
-			Record4Path mthdPathRecord = (Record4Path) recordI;
-			mthdPathRecord.addTail(node);
-		}
-	}
 }

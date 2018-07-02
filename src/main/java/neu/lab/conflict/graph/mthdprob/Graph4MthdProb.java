@@ -1,4 +1,4 @@
-package neu.lab.conflict.graph;
+package neu.lab.conflict.graph.mthdprob;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import neu.lab.conflict.graph.IGraph;
+import neu.lab.conflict.graph.INode;
 import neu.lab.conflict.vo.MethodCall;
 
 public class Graph4MthdProb implements IGraph{

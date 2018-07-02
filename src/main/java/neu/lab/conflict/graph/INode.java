@@ -11,6 +11,7 @@ public interface INode {
 	public IBook getBook();
 	
 	//if this node is a end node,node should form a new record.Else nodes change the copy of end node.
+	//call by afterAddAllChildren.
 	public IRecord formNewRecord();
 	
 	

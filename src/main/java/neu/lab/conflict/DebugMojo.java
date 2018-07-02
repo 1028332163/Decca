@@ -69,7 +69,7 @@ public class DebugMojo extends ConflictMojo {
 	}
 	
 	public void printMthdProb() {
-		String outDir ="D:\\ws_testcase\\image\\distance_mthdProb\\";
+		String outDir ="D:\\ws_testcase\\image\\distance_mthdBranch\\";
 		java.io.File f = new java.io.File(outDir);
 		if (!f.exists()) {
 			f.mkdirs();

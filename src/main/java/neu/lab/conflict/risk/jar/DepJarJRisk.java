@@ -7,14 +7,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import neu.lab.conflict.Conf;
 import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.distance.MethodProbDistances;
 import neu.lab.conflict.graph.Dog;
-import neu.lab.conflict.graph.Graph4MthdProb;
+import neu.lab.conflict.graph.Graph4branch;
 import neu.lab.conflict.graph.IBook;
 import neu.lab.conflict.graph.IRecord;
-import neu.lab.conflict.graph.Node4MthdProb;
-import neu.lab.conflict.graph.Record4MthdProb;
+import neu.lab.conflict.graph.Node4branch;
+import neu.lab.conflict.graph.Record4branch;
+import neu.lab.conflict.graph.mthdprob.Graph4MthdProb;
+import neu.lab.conflict.graph.mthdprob.Node4MthdProb;
+import neu.lab.conflict.graph.mthdprob.Record4MthdProb;
 import neu.lab.conflict.soot.SootJRiskCg;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.DepJar;
@@ -25,7 +29,7 @@ public class DepJarJRisk {
 	private ConflictJRisk conflictRisk;
 	private Set<String> thrownMthds;
 	private Set<String> rchedMthds;
-	private Graph4MthdProb graph;
+	private Graph4branch graph;
 	private Map<String, IBook> books;
 
 	public DepJarJRisk(DepJar depJar, ConflictJRisk conflictRisk) {
@@ -37,10 +41,10 @@ public class DepJarJRisk {
 		if (getThrownMthds().size() > 0) {
 			SootJRiskCg.i().cmpCg(this);
 			// calculate distance
-			books = new Dog(graph).findRlt(graph.getHostNds());
+			books = new Dog(graph).findRlt(graph.getHostNds(), Conf.DOG_FIND_DEP);
 		} else {
 			this.setRchedMthds(new HashSet<String>());
-			this.setGraph(new Graph4MthdProb(new HashSet<Node4MthdProb>(), new ArrayList<MethodCall>()));
+			this.setGraph(new Graph4branch(new HashMap<String, Node4branch>(), new ArrayList<MethodCall>()));
 			this.books = new HashMap<String, IBook>();
 		}
 
@@ -53,6 +57,8 @@ public class DepJarJRisk {
 	public Set<String> getThrownMthds() {
 		if (thrownMthds == null) {
 			thrownMthds = conflictRisk.getUsedDepJar().getRiskMthds(depJar.getAllMthd());
+//			thrownMthds.add("<neu.lab.plug.testcase.homemade.host.prob.ProbBottom: void m()>");
+			MavenUtil.i().getLog().info("thrownMthds size:" + thrownMthds.size());
 		}
 		return thrownMthds;
 	}
@@ -65,12 +71,13 @@ public class DepJarJRisk {
 		MethodProbDistances distances = new MethodProbDistances();
 		Map<String, IBook> books = getBooks();
 		for (IBook book : books.values()) {
+//			MavenUtil.i().getLog().info("book:"+book.getNodeName());
 			for (IRecord iRecord : book.getRecords()) {
-				Record4MthdProb record = (Record4MthdProb) iRecord;
-				if (getThrownMthds().contains(record.getTgtMthd())) {
-					distances.addDistance(record.getTgtMthd(), book.getNodeName(), record.getDistance());
-					distances.addProb(record.getTgtMthd(), book.getNodeName(), record.getProb());
-				}
+				
+				Record4branch record = (Record4branch) iRecord;
+//				MavenUtil.i().getLog().info("record:"+record.getName());
+				distances.addDistance(record.getName(), book.getNodeName(), record.getDistance());
+				distances.addProb(record.getName(), book.getNodeName(), record.getBranch());
 			}
 		}
 		return distances;
@@ -110,7 +117,7 @@ public class DepJarJRisk {
 		this.rchedMthds = rchedMthds;
 	}
 
-	public void setGraph(Graph4MthdProb graph) {
+	public void setGraph(Graph4branch graph) {
 		this.graph = graph;
 	}
 

@@ -11,7 +11,6 @@ public class MethodProbDistances extends NodeDistances {
 	protected Map<String, Map<String, Double>> b2t2prob;// <bottom,<top,probability>>
 
 	public MethodProbDistances() {
-		super();
 		MavenUtil.i().getLog().info("form a MethodProDistances.");
 		b2t2prob =  new HashMap<String, Map<String, Double>>();
 	}

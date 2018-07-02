@@ -7,12 +7,13 @@ import java.util.Set;
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
 
+import neu.lab.conflict.Conf;
 import neu.lab.conflict.container.AllCls;
-import neu.lab.conflict.graph.Graph4ClsRef;
-import neu.lab.conflict.graph.Record4ClsRefPath;
 import neu.lab.conflict.graph.Dog;
 import neu.lab.conflict.graph.IBook;
 import neu.lab.conflict.graph.IRecord;
+import neu.lab.conflict.graph.clsref.Graph4ClsRef;
+import neu.lab.conflict.graph.clsref.Record4ClsRefPath;
 import neu.lab.conflict.risk.ref.tb.LimitRefTb;
 import neu.lab.conflict.vo.NodeAdapter;
 
@@ -55,7 +56,7 @@ public class NodeRRisk {
 		ele.addAttribute("id", node.getWholePath());
 		Element clsesEle = ele.addElement("riskClasses");
 		if(getlimitRefTb().eeSize()>0) {
-			Map<String, IBook> books = new Dog(getClsRefGraph()).findRlt(getlimitRefTb().getRefedEes());
+			Map<String, IBook> books = new Dog(getClsRefGraph()).findRlt(getlimitRefTb().getRefedEes(),Conf.DOG_FIND_DEP);
 			for (String riskCls : getlimitRefTb()) {
 				Set<String> ers = limitRefTb.getErs(riskCls);
 				if (ers.size() > 0) {

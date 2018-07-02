@@ -153,7 +153,7 @@ public class NodeNRisk {
 
 	public Map<String, IBook> getBooks() {
 		if (books == null)
-			books = new Dog(graph).findRlt(getRisk2Mthds());
+			books = new Dog(graph).findRlt(getRisk2Mthds(),Conf.DOG_FIND_DEP);
 		return books;
 	}
 

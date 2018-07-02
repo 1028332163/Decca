@@ -1,7 +1,10 @@
-package neu.lab.conflict.graph;
+package neu.lab.conflict.graph.clsref;
 
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
+
+import neu.lab.conflict.graph.IRecord;
+import neu.lab.conflict.graph.Record4Path;
 
 public class Record4ClsRefPath extends Record4Path {
 	private boolean isFromHost;
