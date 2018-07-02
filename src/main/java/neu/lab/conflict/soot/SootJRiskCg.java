@@ -176,12 +176,10 @@ class JRiskCgTf extends SceneTransformer {
 	}
 
 	private int getBranchNum(SootMethod sootMethod) {
-		if (sootMethod.isPhantom()) {
-			MavenUtil.i().getLog().info("ghost method:" + sootMethod.getSignature());
+
+		if(sootMethod.getSource()==null) {
 			return 0;
 		}
-		if (sootMethod.isAbstract())
-			return 0;
 		int cnt = 0;
 		Body body = sootMethod.retrieveActiveBody();
 		for (Unit unit : body.getUnits()) {
