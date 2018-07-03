@@ -316,7 +316,7 @@ public class DepJar {
 					riskMthds.add(testMthd);
 				} else if (!AllCls.i().contains(SootUtil.mthdSig2cls(testMthd))) {
 					// This jar don't have class,and all jar don't have class.
-					riskMthds.add(testMthd);
+//					riskMthds.add(testMthd);
 				}
 			}
 		}
