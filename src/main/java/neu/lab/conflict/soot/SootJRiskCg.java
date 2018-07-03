@@ -11,8 +11,6 @@ import java.util.Set;
 
 import neu.lab.conflict.graph.Graph4branch;
 import neu.lab.conflict.graph.Node4branch;
-import neu.lab.conflict.graph.mthdprob.Graph4MthdProb;
-import neu.lab.conflict.graph.mthdprob.Node4MthdProb;
 import neu.lab.conflict.risk.jar.DepJarJRisk;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.util.SootUtil;
@@ -25,6 +23,7 @@ import soot.SceneTransformer;
 import soot.SootClass;
 import soot.SootMethod;
 import soot.Transform;
+import soot.Type;
 import soot.Unit;
 import soot.jimple.internal.JIfStmt;
 import soot.jimple.toolkits.callgraph.CHATransformer;
@@ -105,6 +104,10 @@ class JRiskCgTf extends SceneTransformer {
 	@Override
 	protected void internalTransform(String arg0, Map<String, String> arg1) {
 		filterRiskMthds();
+		MavenUtil.i().getLog().info("riskMethod size after filter:"+riskMthds.size());
+		if(riskMthds.size()==0) {
+			return ;
+		}
 		MavenUtil.i().getLog().info("JRiskCgTf start..");
 		Map<String, String> cgMap = new HashMap<String, String>();
 		cgMap.put("enabled", "true");
@@ -168,22 +171,35 @@ class JRiskCgTf extends SceneTransformer {
 	}
 
 	private void filterRiskMthds() {
-//		Iterator<String> ite = riskMthds.iterator();
-//		while(ite.hasNext()) {
-//			String testMthd = ite.next();
-//			if(hasFatherImpl(testMthd)) {
-//				MavenUtil.i().getLog().info("remove method:"+testMthd);
-//				ite.remove();
-//			}
-//				
-//		}
+		Iterator<String> ite = riskMthds.iterator();
+		while(ite.hasNext()) {
+			String testMthd = ite.next();
+			if(!Scene.v().containsMethod(testMthd)||hasFatherImpl(testMthd)) {
+				MavenUtil.i().getLog().info("remove method:"+testMthd);
+				ite.remove();
+			}
+		}
 	}
 
-//	private boolean hasFatherImpl(String testMthd) {
-//		SootMethod sootMthd = Scene.v().getMethod(testMthd);
-//		String name = sootMthd.getName();
-//		String 
-//	}
+	private boolean hasFatherImpl(String testMthd) {
+		SootMethod sootMthd = Scene.v().getMethod(testMthd);
+		String name = sootMthd.getName();
+		List<Type> params = sootMthd.getParameterTypes(); 
+		Type returnType = sootMthd.getReturnType();
+		SootClass sootCls = sootMthd.getDeclaringClass();
+		while(sootCls.hasSuperclass()) {
+			sootCls = sootCls.getSuperclass();
+			String fathMthdSig = SootMethod.getSignature(sootCls, name, params, returnType);
+			if( Scene.v().containsMethod(fathMthdSig)) {
+				SootMethod fatherMthd =  Scene.v().getMethod(fathMthdSig);
+				if(fatherMthd.isConcrete()) {
+					MavenUtil.i().getLog().info(testMthd+" has super-method:"+fathMthdSig);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	public Set<String> getRchMthds() {
 		return rchMthds;

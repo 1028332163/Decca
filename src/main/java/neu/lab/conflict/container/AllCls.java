@@ -32,6 +32,10 @@ public class AllCls {
 		}
 	}
 	
+	public Set<String> getAllCls() {
+		return clses;
+	}
+	
 	public boolean contains(String cls) {
 		return clses.contains(cls);
 	}

@@ -14,6 +14,7 @@ import org.dom4j.tree.DefaultElement;
 import javassist.ClassPool;
 import neu.lab.conflict.Conf;
 import neu.lab.conflict.container.AllCls;
+import neu.lab.conflict.container.AllRefedCls;
 import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.container.NodeAdapters;
 import neu.lab.conflict.graph.clsref.Graph4ClsRef;
@@ -298,33 +299,28 @@ public class DepJar {
 		return innerMthds;
 	}
 
-	/**note:from the view of usedJar. e.g. getReplaceJar().getRiskMthds(getRchedMthds());
+	/**
+	 * note:from the view of usedJar. e.g.
+	 * getReplaceJar().getRiskMthds(getRchedMthds());
+	 * 
 	 * @param testMthds
 	 * @return
 	 */
 	public Set<String> getRiskMthds(Collection<String> testMthds) {
-		Set<String> diffMthds;
-		if (Conf.CNT_RISK_CLASS_METHOD) {
-			diffMthds =  this.getOutMthds(testMthds);
-		} else {
-			Set<String> riskMthds = new HashSet<String>();
-			for (String testMthd : testMthds) {
-				if (!this.containsMthd(testMthd) && this.containsCls(SootUtil.mthdSig2cls(testMthd))) {
-					// System.out.println("jar class size"+this.getClsTb().size()+"jar
-					// contains:"+SootUtil.mthdSig2cls(testMthd));
+		Set<String> riskMthds = new HashSet<String>();
+		for (String testMthd : testMthds) {
+			if (!this.containsMthd(testMthd) && AllRefedCls.i().contains(SootUtil.mthdSig2cls(testMthd))) {
+				//don't have method,and class is used.
+				if (this.containsCls(SootUtil.mthdSig2cls(testMthd))) {
+					// has class.don't have method.
+					riskMthds.add(testMthd);
+				} else if (!AllCls.i().contains(SootUtil.mthdSig2cls(testMthd))) {
+					// This jar don't have class,and all jar don't have class.
 					riskMthds.add(testMthd);
 				}
 			}
-			diffMthds = riskMthds;
 		}
-		Set<String> riskMthds = new HashSet<String>();
-		for(String diffMthd:diffMthds) {
-			if(diffMthd.contains("<init>")||diffMthd.contains("<clinit>")) {
-				if(!AllCls.i().contains(SootUtil.mthdSig2cls(diffMthd))) {
-					riskMthds.add(diffMthd);
-				}
-			}
-		}
+		// if (diffMthd.contains("<init>") || diffMthd.contains("<clinit>")) {
 		return riskMthds;
 	}
 
