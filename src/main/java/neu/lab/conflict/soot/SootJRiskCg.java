@@ -192,7 +192,7 @@ class JRiskCgTf extends SceneTransformer {
 			String fathMthdSig = SootMethod.getSignature(sootCls, name, params, returnType);
 			if( Scene.v().containsMethod(fathMthdSig)) {
 				SootMethod fatherMthd =  Scene.v().getMethod(fathMthdSig);
-				if(fatherMthd.isConcrete()) {
+				if(fatherMthd.isConcrete()||fatherMthd.isNative()) {
 					MavenUtil.i().getLog().info(testMthd+" has super-method:"+fathMthdSig);
 					return true;
 				}
