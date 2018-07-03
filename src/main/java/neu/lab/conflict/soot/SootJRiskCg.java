@@ -104,6 +104,7 @@ class JRiskCgTf extends SceneTransformer {
 
 	@Override
 	protected void internalTransform(String arg0, Map<String, String> arg1) {
+		filterRiskMthds();
 		MavenUtil.i().getLog().info("JRiskCgTf start..");
 		Map<String, String> cgMap = new HashMap<String, String>();
 		cgMap.put("enabled", "true");
@@ -165,6 +166,24 @@ class JRiskCgTf extends SceneTransformer {
 		}
 		MavenUtil.i().getLog().info("JRiskCgTf end..");
 	}
+
+	private void filterRiskMthds() {
+//		Iterator<String> ite = riskMthds.iterator();
+//		while(ite.hasNext()) {
+//			String testMthd = ite.next();
+//			if(hasFatherImpl(testMthd)) {
+//				MavenUtil.i().getLog().info("remove method:"+testMthd);
+//				ite.remove();
+//			}
+//				
+//		}
+	}
+
+//	private boolean hasFatherImpl(String testMthd) {
+//		SootMethod sootMthd = Scene.v().getMethod(testMthd);
+//		String name = sootMthd.getName();
+//		String 
+//	}
 
 	public Set<String> getRchMthds() {
 		return rchMthds;

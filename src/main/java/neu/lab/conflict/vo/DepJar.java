@@ -13,6 +13,7 @@ import org.dom4j.tree.DefaultElement;
 
 import javassist.ClassPool;
 import neu.lab.conflict.Conf;
+import neu.lab.conflict.container.AllCls;
 import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.container.NodeAdapters;
 import neu.lab.conflict.graph.clsref.Graph4ClsRef;
@@ -302,8 +303,9 @@ public class DepJar {
 	 * @return
 	 */
 	public Set<String> getRiskMthds(Collection<String> testMthds) {
+		Set<String> diffMthds;
 		if (Conf.CNT_RISK_CLASS_METHOD) {
-			return this.getOutMthds(testMthds);
+			diffMthds =  this.getOutMthds(testMthds);
 		} else {
 			Set<String> riskMthds = new HashSet<String>();
 			for (String testMthd : testMthds) {
@@ -313,8 +315,17 @@ public class DepJar {
 					riskMthds.add(testMthd);
 				}
 			}
-			return riskMthds;
+			diffMthds = riskMthds;
 		}
+		Set<String> riskMthds = new HashSet<String>();
+		for(String diffMthd:diffMthds) {
+			if(diffMthd.contains("<init>")||diffMthd.contains("<clinit>")) {
+				if(!AllCls.i().contains(SootUtil.mthdSig2cls(diffMthd))) {
+					riskMthds.add(diffMthd);
+				}
+			}
+		}
+		return riskMthds;
 	}
 
 	/**
