@@ -103,11 +103,7 @@ class JRiskCgTf extends SceneTransformer {
 
 	@Override
 	protected void internalTransform(String arg0, Map<String, String> arg1) {
-		filterRiskMthds();
-		MavenUtil.i().getLog().info("riskMethod size after filter:"+riskMthds.size());
-		if(riskMthds.size()==0) {
-			return ;
-		}
+		
 		MavenUtil.i().getLog().info("JRiskCgTf start..");
 		Map<String, String> cgMap = new HashMap<String, String>();
 		cgMap.put("enabled", "true");
@@ -170,36 +166,7 @@ class JRiskCgTf extends SceneTransformer {
 		MavenUtil.i().getLog().info("JRiskCgTf end..");
 	}
 
-	private void filterRiskMthds() {
-		Iterator<String> ite = riskMthds.iterator();
-		while(ite.hasNext()) {
-			String testMthd = ite.next();
-			if(!Scene.v().containsMethod(testMthd)||hasFatherImpl(testMthd)) {
-				MavenUtil.i().getLog().info("remove method:"+testMthd);
-				ite.remove();
-			}
-		}
-	}
 
-	private boolean hasFatherImpl(String testMthd) {
-		SootMethod sootMthd = Scene.v().getMethod(testMthd);
-		String name = sootMthd.getName();
-		List<Type> params = sootMthd.getParameterTypes(); 
-		Type returnType = sootMthd.getReturnType();
-		SootClass sootCls = sootMthd.getDeclaringClass();
-		while(sootCls.hasSuperclass()) {
-			sootCls = sootCls.getSuperclass();
-			String fathMthdSig = SootMethod.getSignature(sootCls, name, params, returnType);
-			if( Scene.v().containsMethod(fathMthdSig)) {
-				SootMethod fatherMthd =  Scene.v().getMethod(fathMthdSig);
-				if(fatherMthd.isConcrete()||fatherMthd.isNative()) {
-					MavenUtil.i().getLog().info(testMthd+" has super-method:"+fathMthdSig);
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 
 	public Set<String> getRchMthds() {
 		return rchMthds;

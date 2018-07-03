@@ -16,15 +16,15 @@ public class AllRefedCls {
 		refedClses = new HashSet<String>();
 		try {
 			ClassPool pool = new ClassPool();
-			for (DepJar depJar : DepJars.i().getAllDepJar()) {
-				for (String path : depJar.getJarFilePaths(true)) {
-					pool.appendClassPath(path);
-				}
+			for (String path : DepJars.i().getUsedJarPaths()) {
+				pool.appendClassPath(path);
 			}
 			for (String cls : AllCls.i().getAllCls()) {
 				refedClses.add(cls);
 				if (pool.getOrNull(cls) != null) {
 					refedClses.addAll(pool.get(cls).getRefClasses());
+				} else {
+					MavenUtil.i().getLog().warn("can't find " + cls + " in pool when form reference.");
 				}
 			}
 		} catch (Exception e) {
@@ -40,7 +40,7 @@ public class AllRefedCls {
 		}
 		return instance;
 	}
-	
+
 	public boolean contains(String cls) {
 		return refedClses.contains(cls);
 	}

@@ -17,6 +17,7 @@ import neu.lab.conflict.graph.IRecord;
 import neu.lab.conflict.graph.Node4branch;
 import neu.lab.conflict.graph.Record4branch;
 import neu.lab.conflict.soot.SootJRiskCg;
+import neu.lab.conflict.soot.SootRiskMthdFilter;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.DepJar;
 import neu.lab.conflict.vo.MethodCall;
@@ -57,6 +58,7 @@ public class DepJarJRisk {
 			thrownMthds = conflictRisk.getUsedDepJar().getRiskMthds(depJar.getAllMthd());
 //			thrownMthds.add("<neu.lab.plug.testcase.homemade.host.prob.ProbBottom: void m()>");
 			MavenUtil.i().getLog().info("riskMethod size before filter" + thrownMthds.size());
+			new SootRiskMthdFilter().filterRiskMthds(thrownMthds);
 		}
 		return thrownMthds;
 	}

@@ -1,7 +1,8 @@
 package neu.lab.conflict.container;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import neu.lab.conflict.util.MavenUtil;
@@ -76,6 +77,16 @@ public class DepJars {
 	public DepJar getDep(NodeAdapter nodeAdapter) {
 		return getDep(nodeAdapter.getGroupId(), nodeAdapter.getArtifactId(), nodeAdapter.getVersion(),
 				nodeAdapter.getClassifier());
+	}
+	
+	public List<String> getUsedJarPaths(){
+		List<String> usedJarPaths = new ArrayList<String>();
+		for (DepJar depJar : DepJars.i().getAllDepJar()) {
+			for (String path : depJar.getJarFilePaths(true)) {
+				usedJarPaths.add(path);
+			}
+		}
+		return usedJarPaths;
 	}
 
 }
