@@ -36,6 +36,7 @@ public class DepJarJRisk {
 		
 		// calculate call-graph
 		if (getThrownMthds().size() > 0) {
+			MavenUtil.i().getLog().info("first riskmthd:"+getThrownMthds().iterator().next());
 			SootJRiskCg.i().cmpCg(this);
 			// calculate distance
 			books = new Dog(graph).findRlt(graph.getHostNds(), Conf.DOG_FIND_DEP);
