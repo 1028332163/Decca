@@ -55,8 +55,8 @@ public class DepJarJRisk {
 	public Set<String> getThrownMthds() {
 		if (thrownMthds == null) {
 			thrownMthds = conflictRisk.getUsedDepJar().getRiskMthds(depJar.getAllMthd());
-			thrownMthds.add("<neu.lab.plug.testcase.homemade.host.prob.ProbBottom: void m()>");
-			MavenUtil.i().getLog().info("thrownMthds size:" + thrownMthds.size());
+//			thrownMthds.add("<neu.lab.plug.testcase.homemade.host.prob.ProbBottom: void m()>");
+			MavenUtil.i().getLog().info("riskMethod size before filter" + thrownMthds.size());
 		}
 		return thrownMthds;
 	}
