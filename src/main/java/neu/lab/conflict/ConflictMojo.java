@@ -23,6 +23,7 @@ import neu.lab.conflict.container.NodeAdapters;
 import neu.lab.conflict.graph.Dog;
 import neu.lab.conflict.container.Conflicts;
 import neu.lab.conflict.util.MavenUtil;
+import neu.lab.conflict.vo.DepJar;
 
 public abstract class ConflictMojo extends AbstractMojo {
 	@Parameter(defaultValue = "${session}", readonly = true, required = true)
@@ -74,8 +75,31 @@ public abstract class ConflictMojo extends AbstractMojo {
 		MavenUtil.i().setMojo(this);
 		NodeAdapters.init(root);
 		DepJars.init(NodeAdapters.i());// occur jar in tree
+
+		validateSysSize();
+
 		AllCls.init(DepJars.i());
 		Conflicts.init(NodeAdapters.i());// version conflict in tree
+	}
+	
+	private void validateSysSize() throws Exception{
+		int systemSize = 0;
+		long systemFileSize = 0;
+		for (DepJar depJar : DepJars.i().getAllDepJar()) {
+			if (depJar.isSelected()) {
+				systemSize++;
+				for (String filePath : depJar.getJarFilePaths(true)) {
+					systemFileSize = systemFileSize + new File(filePath).length();
+				}
+			}
+		}
+
+		MavenUtil.i().getLog().warn("tree size:" + DepJars.i().getAllDepJar().size() + ", used size:" + systemSize
+				+ ", usedFile size" + systemFileSize / 1000);
+
+		if (DepJars.i().getAllDepJar().size() > 50) {
+			throw new Exception("too large project.");
+		}
 	}
 
 	public void execute() throws MojoExecutionException {
@@ -90,6 +114,7 @@ public abstract class ConflictMojo extends AbstractMojo {
 			try {
 				initGlobalVar();
 			} catch (Exception e) {
+				MavenUtil.i().getLog().error(e);
 				throw new MojoExecutionException("too large project!");
 			}
 			run();

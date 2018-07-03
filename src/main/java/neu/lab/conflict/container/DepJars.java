@@ -30,21 +30,7 @@ public class DepJars {
 			container.add(new DepJar(nodeAdapter.getGroupId(), nodeAdapter.getArtifactId(), nodeAdapter.getVersion(),
 					nodeAdapter.getClassifier(), nodeAdapter.getFilePath()));
 		}
-		int systemSize = 0;
-		long systemFileSize = 0;
-		for (DepJar depJar : getAllDepJar()) {
-			if (depJar.isSelected()) {
-				systemSize++;
-				for (String filePath : depJar.getJarFilePaths(true)) {
-					systemFileSize = systemFileSize + new File(filePath).length();
-				}
-			}
-		}
-		MavenUtil.i().getLog().warn("tree size:" + container.size() + ", used size:" + systemSize + ", usedFile size"
-				+ systemFileSize / 1000);
-		if (container.size() > 50) {
-			throw new Exception("too large project.");
-		}
+
 
 	}
 
