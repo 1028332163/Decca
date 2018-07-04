@@ -83,6 +83,7 @@ class RiskMthdFilter2Tf extends SceneTransformer {
 	
 	private boolean hasSuperDefine(String className, String mthdSuffix) {
 		Set<SootClass> allSuper = new HashSet<SootClass>();
+		getSuper(Scene.v().getSootClass(className),allSuper);
 		for(SootClass superClass:allSuper) {
 			String fathMthdSig = "<" + superClass.getName() + ":" + mthdSuffix;
 			if (Scene.v().containsMethod(fathMthdSig)) 
