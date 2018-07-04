@@ -32,7 +32,6 @@ public class DepJars {
 					nodeAdapter.getClassifier(), nodeAdapter.getFilePath()));
 		}
 
-
 	}
 
 	public Set<DepJar> getUsedDepJars() {
@@ -78,12 +77,14 @@ public class DepJars {
 		return getDep(nodeAdapter.getGroupId(), nodeAdapter.getArtifactId(), nodeAdapter.getVersion(),
 				nodeAdapter.getClassifier());
 	}
-	
-	public List<String> getUsedJarPaths(){
+
+	public List<String> getUsedJarPaths() {
 		List<String> usedJarPaths = new ArrayList<String>();
 		for (DepJar depJar : DepJars.i().getAllDepJar()) {
-			for (String path : depJar.getJarFilePaths(true)) {
-				usedJarPaths.add(path);
+			if (depJar.isSelected()) {
+				for (String path : depJar.getJarFilePaths(true)) {
+					usedJarPaths.add(path);
+				}
 			}
 		}
 		return usedJarPaths;

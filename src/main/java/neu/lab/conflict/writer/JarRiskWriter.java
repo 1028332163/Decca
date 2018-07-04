@@ -19,14 +19,16 @@ import neu.lab.conflict.vo.Conflict;
  */
 public class JarRiskWriter {
 
-	public void write(String outDir, boolean append)  {
+	public void write(String outDir, boolean append) {
 		String projectSig = (MavenUtil.i().getProjectCor()).replace(":", "+");
 		for (Conflict conflict : Conflicts.i().getConflicts()) {
+
 			String conflictSig = conflict.getSig().replace(":", "+");
 			for (DepJarJRisk jarRisk : conflict.getJRisk().getJarRisks()) {
-				String outPath = outDir + projectSig + "@" + conflictSig + "@" + jarRisk.getVersion()+".txt";
-				writeJarRisk(jarRisk,outPath,append);
+				String outPath = outDir + projectSig + "@" + conflictSig + "@" + jarRisk.getVersion() + ".txt";
+				writeJarRisk(jarRisk, outPath, append);
 			}
+
 		}
 
 	}
@@ -37,18 +39,18 @@ public class JarRiskWriter {
 	 * @param outPath
 	 * @param append
 	 */
-	public void writeJarRisk(DepJarJRisk jarRisk,String outPath, boolean append) {
+	public void writeJarRisk(DepJarJRisk jarRisk, String outPath, boolean append) {
 		MethodProbDistances distances = jarRisk.getMethodProDistances();
-		if(!distances.isEmpty()) {
+		if (!distances.isEmpty()) {
 			PrintWriter printer;
 			try {
 				printer = new PrintWriter(new BufferedWriter(new FileWriter(outPath)));
 				printer.println(distances);
 				printer.close();
 			} catch (IOException e) {
-				MavenUtil.i().getLog().error("can't write jarRisk ",e);
+				MavenUtil.i().getLog().error("can't write jarRisk ", e);
 			}
 		}
 	}
-	
+
 }

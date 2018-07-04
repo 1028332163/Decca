@@ -28,13 +28,15 @@ public class Conflicts {
 	private Conflicts(NodeAdapters nodeAdapters) {
 		container = new ArrayList<Conflict>();
 		for (NodeAdapter node : nodeAdapters.getAllNodeAdapter()) {
-			addNodeAdapter(node);
+//			if (node.getGroupId().equals("com.google.guava") && node.getArtifactId().equals("guava"))
+				addNodeAdapter(node);
 		}
-		
+
+		// delete conflict if there is only one version
 		Iterator<Conflict> ite = container.iterator();
 		while (ite.hasNext()) {
 			Conflict conflict = ite.next();
-			if (!conflict.isConflict()) {// delete conflict if there is only one version
+			if (!conflict.isConflict()) {
 				ite.remove();
 			}
 		}

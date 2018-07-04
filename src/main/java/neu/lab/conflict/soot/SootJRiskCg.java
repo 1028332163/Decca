@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import neu.lab.conflict.GlobalVar;
 import neu.lab.conflict.graph.Graph4branch;
 import neu.lab.conflict.graph.Node4branch;
 import neu.lab.conflict.risk.jar.DepJarJRisk;
@@ -32,7 +33,6 @@ import soot.jimple.toolkits.callgraph.Edge;
 import soot.util.queue.QueueReader;
 
 public class SootJRiskCg extends SootAna {
-	public static long runtime = 0;
 	private static SootJRiskCg instance = new SootJRiskCg();
 
 	private SootJRiskCg() {
@@ -45,9 +45,9 @@ public class SootJRiskCg extends SootAna {
 
 	public void cmpCg(DepJarJRisk depJarJRisk) {
 		MavenUtil.i().getLog().info("use soot to compute reach methods for " + depJarJRisk.toString());
-
+		long start = System.currentTimeMillis();
 		try {
-			long startTime = System.currentTimeMillis();
+
 			SootUtil.modifyLogOut();
 
 			JRiskCgTf transformer = new JRiskCgTf(depJarJRisk);
@@ -59,7 +59,6 @@ public class SootJRiskCg extends SootAna {
 
 			depJarJRisk.setGraph(transformer.getGraph());
 
-			runtime = runtime + (System.currentTimeMillis() - startTime) / 1000;
 		} catch (Exception e) {
 			MavenUtil.i().getLog().warn("cg error: ", e);
 
@@ -68,6 +67,8 @@ public class SootJRiskCg extends SootAna {
 			depJarJRisk.setGraph(new Graph4branch(new HashMap<String, Node4branch>(), new ArrayList<MethodCall>()));
 		}
 		soot.G.reset();
+		long runtime = (System.currentTimeMillis() - start) / 1000;
+		GlobalVar.time2cg += runtime;
 	}
 
 	@Override
@@ -103,7 +104,7 @@ class JRiskCgTf extends SceneTransformer {
 
 	@Override
 	protected void internalTransform(String arg0, Map<String, String> arg1) {
-		
+
 		MavenUtil.i().getLog().info("JRiskCgTf start..");
 		Map<String, String> cgMap = new HashMap<String, String>();
 		cgMap.put("enabled", "true");
@@ -144,7 +145,7 @@ class JRiskCgTf extends SceneTransformer {
 				String srcClsName = edge.src().getDeclaringClass().getName();
 				String tgtClsName = edge.tgt().getDeclaringClass().getName();
 				if (edge.src().isJavaLibraryMethod() || edge.tgt().isJavaLibraryMethod()) {
-					//filter relation contains javaLibClass
+					// filter relation contains javaLibClass
 				} else if (conflictJarClses.contains(SootUtil.mthdSig2cls(srcMthdName))
 						&& conflictJarClses.contains(SootUtil.mthdSig2cls(tgtMthdName))) {
 					// filter relation inside conflictJar
@@ -166,8 +167,6 @@ class JRiskCgTf extends SceneTransformer {
 		MavenUtil.i().getLog().info("JRiskCgTf end..");
 	}
 
-
-
 	public Set<String> getRchMthds() {
 		return rchMthds;
 	}
@@ -178,8 +177,8 @@ class JRiskCgTf extends SceneTransformer {
 	}
 
 	private int getBranchNum(SootMethod sootMethod) {
-
-		if(sootMethod.getSource()==null) {
+		long startTime = System.currentTimeMillis();
+		if (sootMethod.getSource() == null) {
 			return 0;
 		}
 		int cnt = 0;
@@ -189,6 +188,8 @@ class JRiskCgTf extends SceneTransformer {
 				cnt++;
 			}
 		}
+		long runtime = (System.currentTimeMillis() - startTime) / 1000;
+		GlobalVar.branchTime += runtime;
 		return cnt;
 	}
 

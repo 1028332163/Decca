@@ -34,13 +34,13 @@ public class DepJarJRisk {
 		this.depJar = depJar;
 		this.conflictRisk = conflictRisk;
 		// calculate thrownMthd
-		
+
 		// calculate call-graph
 		if (getThrownMthds().size() > 0) {
-			MavenUtil.i().getLog().info("first riskmthd:"+getThrownMthds().iterator().next());
-			SootJRiskCg.i().cmpCg(this);
-			// calculate distance
-			books = new Dog(graph).findRlt(graph.getHostNds(), Conf.DOG_FIND_DEP);
+			 MavenUtil.i().getLog().info("first riskmthd:"+getThrownMthds().iterator().next());
+			 SootJRiskCg.i().cmpCg(this);
+			 // calculate distance
+			 books = new Dog(graph).findRlt(graph.getHostNds(), Conf.DOG_FIND_DEP);
 		} else {
 			this.setRchedMthds(new HashSet<String>());
 			this.setGraph(new Graph4branch(new HashMap<String, Node4branch>(), new ArrayList<MethodCall>()));
@@ -56,9 +56,11 @@ public class DepJarJRisk {
 	public Set<String> getThrownMthds() {
 		if (thrownMthds == null) {
 			thrownMthds = conflictRisk.getUsedDepJar().getRiskMthds(depJar.getAllMthd());
-//			thrownMthds.add("<neu.lab.plug.testcase.homemade.host.prob.ProbBottom: void m()>");
+			// thrownMthds.add("<neu.lab.plug.testcase.homemade.host.prob.ProbBottom: void
+			// m()>");
 			MavenUtil.i().getLog().info("riskMethod size before filter" + thrownMthds.size());
-			new SootRiskMthdFilter().filterRiskMthds(thrownMthds);
+			if (thrownMthds.size() > 0)
+				new SootRiskMthdFilter().filterRiskMthds(thrownMthds);
 		}
 		return thrownMthds;
 	}
@@ -71,11 +73,11 @@ public class DepJarJRisk {
 		MethodProbDistances distances = new MethodProbDistances();
 		Map<String, IBook> books = getBooks();
 		for (IBook book : books.values()) {
-//			MavenUtil.i().getLog().info("book:"+book.getNodeName());
+			// MavenUtil.i().getLog().info("book:"+book.getNodeName());
 			for (IRecord iRecord : book.getRecords()) {
-				
+
 				Record4branch record = (Record4branch) iRecord;
-//				MavenUtil.i().getLog().info("record:"+record.getName());
+				// MavenUtil.i().getLog().info("record:"+record.getName());
 				distances.addDistance(record.getName(), book.getNodeName(), record.getDistance());
 				distances.addProb(record.getName(), book.getNodeName(), record.getBranch());
 			}

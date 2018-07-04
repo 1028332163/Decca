@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import neu.lab.conflict.GlobalVar;
 import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.util.SootUtil;
@@ -18,8 +19,9 @@ import soot.SootMethod;
 import soot.Transform;
 
 public class SootRiskMthdFilter extends SootAna {
-	
+
 	public void filterRiskMthds(Collection<String> mthds2test) {
+		long start = System.currentTimeMillis();
 		try {
 			SootUtil.modifyLogOut();
 
@@ -33,6 +35,8 @@ public class SootRiskMthdFilter extends SootAna {
 
 		}
 		soot.G.reset();
+		long runtime = (System.currentTimeMillis() - start) / 1000;
+		GlobalVar.time2filterRiskMthd += runtime;
 	}
 
 	@Override
@@ -58,6 +62,7 @@ class RiskMthdFilterTf extends SceneTransformer {
 	}
 
 	private void filterRiskMthds() {
+		
 		Iterator<String> ite = mthds2test.iterator();
 		while (ite.hasNext()) {
 			String testMthd = ite.next();
@@ -69,9 +74,10 @@ class RiskMthdFilterTf extends SceneTransformer {
 				MavenUtil.i().getLog().info("remove weird method:" + testMthd);
 				ite.remove();
 			} else if (hasFatherImpl(className, mthdSuffix)) {
-				MavenUtil.i().getLog().info("remove father-implement-method:" + testMthd);
+//				MavenUtil.i().getLog().info("remove father-implement-method:" + testMthd);
 				ite.remove();
 			}
+//			MavenUtil.i().getLog().info(hasFatherImpl(className, mthdSuffix)+"");
 		}
 	}
 
@@ -80,7 +86,9 @@ class RiskMthdFilterTf extends SceneTransformer {
 		while (sootCls.hasSuperclass()) {
 			sootCls = sootCls.getSuperclass();
 			String fathMthdSig = "<" + sootCls.getName() + ":" + mthdSuffix;
+//			MavenUtil.i().getLog().info("super:"+fathMthdSig);
 			if (Scene.v().containsMethod(fathMthdSig)) {
+//				MavenUtil.i().getLog().info("contains");
 				SootMethod fatherMthd = Scene.v().getMethod(fathMthdSig);
 				if (fatherMthd.isConcrete() || fatherMthd.isNative()) {
 					return true;

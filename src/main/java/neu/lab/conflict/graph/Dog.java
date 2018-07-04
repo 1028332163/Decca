@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import neu.lab.conflict.GlobalVar;
 import neu.lab.conflict.util.MavenUtil;
 
 public class Dog {
-	public static long runtime = 0;
 	private IGraph graph;
 	protected String pos;
 	protected List<String> route;
@@ -30,7 +30,7 @@ public class Dog {
 		return graph.getNode(nodeName).getBook();
 	}
 
-	public Map<String, IBook> findRlt(Collection<String> entrys,int maxDep) {
+	public Map<String, IBook> findRlt(Collection<String> entrys, int maxDep) {
 		MavenUtil.i().getLog().info("dog starts running...");
 		long start = System.currentTimeMillis();
 		for (String mthd : entrys) {
@@ -52,7 +52,7 @@ public class Dog {
 		long runtime = (System.currentTimeMillis() - start) / 1000;
 		MavenUtil.i().getLog().info("dog finishes running.");
 		MavenUtil.i().getLog().info("dog run time:" + runtime);
-		Dog.runtime = Dog.runtime + runtime;
+		GlobalVar.time2runDog += runtime;
 		return this.books;
 	}
 

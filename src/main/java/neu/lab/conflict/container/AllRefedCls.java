@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javassist.ClassPool;
+import neu.lab.conflict.GlobalVar;
 import neu.lab.conflict.util.MavenUtil;
-import neu.lab.conflict.vo.DepJar;
 
 public class AllRefedCls {
 	private static AllRefedCls instance;
@@ -31,7 +31,7 @@ public class AllRefedCls {
 			MavenUtil.i().getLog().error("get refedCls error:", e);
 		}
 		long runtime = (System.currentTimeMillis() - start) / 1000;
-		MavenUtil.i().getLog().info("time to get all refedClass:" + runtime);
+		GlobalVar.time2calRef+=runtime;
 	}
 
 	public static AllRefedCls i() {
