@@ -316,7 +316,7 @@ public class DepJar {
 					riskMthds.add(testMthd);
 				} else if (!AllCls.i().contains(SootUtil.mthdSig2cls(testMthd))) {
 					// This jar don't have class,and all jar don't have class.
-//					riskMthds.add(testMthd);
+					riskMthds.add(testMthd);
 				}
 			}
 		}
@@ -427,5 +427,18 @@ public class DepJar {
 			MavenUtil.i().getLog().error("get refedCls error:", e);
 		}
 		return graph;
+	}
+	
+	/**use this jar replace version of used-version ,then return path of all-used-jar
+	 * @return
+	 */
+	public List<String> getRepalceCp(){
+		List<String> allCp = new ArrayList<String>();
+		for (DepJar jar : DepJars.i().getAllDepJar()) {
+			if (jar == this || (jar.isSelected() && !jar.isSameLib(this))) {
+				allCp.addAll(jar.getJarFilePaths(true));
+			}
+		}
+		return allCp;
 	}
 }

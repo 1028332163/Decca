@@ -3,6 +3,7 @@ package neu.lab.conflict.risk.jar;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,6 +19,7 @@ import neu.lab.conflict.graph.Node4branch;
 import neu.lab.conflict.graph.Record4branch;
 import neu.lab.conflict.soot.SootJRiskCg;
 import neu.lab.conflict.soot.SootRiskMthdFilter;
+import neu.lab.conflict.soot.SootRiskMthdFilter2;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.DepJar;
 import neu.lab.conflict.vo.MethodCall;
@@ -38,6 +40,10 @@ public class DepJarJRisk {
 		// calculate call-graph
 		if (getThrownMthds().size() > 0) {
 			 MavenUtil.i().getLog().info("first riskmthd:"+getThrownMthds().iterator().next());
+//			 Iterator<String> ite = getThrownMthds().iterator();
+//			 while(ite.hasNext()) {
+//				 MavenUtil.i().getLog().info("first riskmthd:"+ite.next());
+//			 }
 			 SootJRiskCg.i().cmpCg(this);
 			 // calculate distance
 			 books = new Dog(graph).findRlt(graph.getHostNds(), Conf.DOG_FIND_DEP);
@@ -60,7 +66,7 @@ public class DepJarJRisk {
 			// m()>");
 			MavenUtil.i().getLog().info("riskMethod size before filter" + thrownMthds.size());
 			if (thrownMthds.size() > 0)
-				new SootRiskMthdFilter().filterRiskMthds(thrownMthds);
+				new SootRiskMthdFilter2().filterRiskMthds(depJar,thrownMthds);
 		}
 		return thrownMthds;
 	}
