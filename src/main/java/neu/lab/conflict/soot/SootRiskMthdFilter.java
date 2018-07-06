@@ -58,7 +58,6 @@ class RiskMthdFilterTf extends SceneTransformer {
 	@Override
 	protected void internalTransform(String arg0, Map<String, String> arg1) {
 		filterRiskMthds();
-		MavenUtil.i().getLog().info("riskMethod size after filter:" + mthds2test.size());
 	}
 
 	private void filterRiskMthds() {

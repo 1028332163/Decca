@@ -60,12 +60,26 @@ public class DepJarJRisk {
 	}
 
 	public Set<String> getThrownMthds() {
+//		"<neu.lab.plug.testcase.homemade.host.prob.ProbBottom: void m()>"
 		if (thrownMthds == null) {
+			
+//			//TODO1
+//			thrownMthds = new HashSet<String>();
+//			thrownMthds.add("<com.fasterxml.jackson.core.JsonFactory: boolean requiresPropertyOrdering()>");
+			
 			thrownMthds = conflictRisk.getUsedDepJar().getRiskMthds(depJar.getAllMthd());
-//			 thrownMthds.add("<neu.lab.plug.testcase.homemade.host.prob.ProbBottom: void m()>");
+			
 			MavenUtil.i().getLog().info("riskMethod size before filter" + thrownMthds.size());
 			if (thrownMthds.size() > 0)
 				new SootRiskMthdFilter2().filterRiskMthds(depJar,thrownMthds);
+			MavenUtil.i().getLog().info("riskMethod size after filter" + thrownMthds.size());
+			
+//			//TODO1
+//			if(thrownMthds.contains("<com.fasterxml.jackson.core.JsonFactory: boolean requiresPropertyOrdering()>")) {
+//				MavenUtil.i().getLog().info("thronMethods has <com.fasterxml.jackson.core.JsonFactory: boolean requiresPropertyOrdering()>");
+//			}
+			
+
 		}
 		return thrownMthds;
 	}

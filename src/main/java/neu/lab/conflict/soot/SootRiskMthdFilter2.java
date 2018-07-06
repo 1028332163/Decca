@@ -57,8 +57,10 @@ class RiskMthdFilter2Tf extends SceneTransformer {
 
 	@Override
 	protected void internalTransform(String arg0, Map<String, String> arg1) {
+		
+		MavenUtil.i().getLog().info("filter methods that have super define.");
 		filterRiskMthds();
-		MavenUtil.i().getLog().info("riskMethod size after filter:" + mthds2test.size());
+		
 	}
 
 	private void filterRiskMthds() {
@@ -70,6 +72,10 @@ class RiskMthdFilter2Tf extends SceneTransformer {
 			String[] pre_suf = testMthd.split(":");
 			String className = pre_suf[0].substring(1);// neu.lab.plug.testcase.homemade.b.B2
 			String mthdSuffix = pre_suf[1];// void m1()>
+			if(testMthd.contains("<init>")||testMthd.contains("<clinit>")) {
+				//keep construct method 
+				continue;
+			}
 			if (!Scene.v().containsClass(className)) {// weird class
 				MavenUtil.i().getLog().info("remove weird method:" + testMthd);
 				ite.remove();

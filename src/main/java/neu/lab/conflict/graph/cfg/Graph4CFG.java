@@ -53,10 +53,7 @@ public class Graph4CFG implements IGraph {
 		}
 		//get probability
 		Map<String,Double> mthd2prob = new HashMap<String,Double>();
-		//TODO
-//		for(String mthd:) {
-//			
-//		}
+
 		return mthd2prob;
 	}
 

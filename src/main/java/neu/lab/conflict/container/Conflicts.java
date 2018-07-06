@@ -28,7 +28,6 @@ public class Conflicts {
 	private Conflicts(NodeAdapters nodeAdapters) {
 		container = new ArrayList<Conflict>();
 		for (NodeAdapter node : nodeAdapters.getAllNodeAdapter()) {
-//			if (node.getGroupId().equals("com.google.guava") && node.getArtifactId().equals("guava"))
 				addNodeAdapter(node);
 		}
 
@@ -36,10 +35,25 @@ public class Conflicts {
 		Iterator<Conflict> ite = container.iterator();
 		while (ite.hasNext()) {
 			Conflict conflict = ite.next();
-			if (!conflict.isConflict()) {
+			if (!conflict.isConflict()||!wantCal( conflict)) {
 				ite.remove();
 			}
 		}
+	}
+	
+	/**this method use to debug.
+	 * @param conflict
+	 * @return
+	 */
+	private boolean wantCal(Conflict conflict) {
+		//TODO
+//		org.codehaus.jackson:jackson-core-asl
+		
+//		if(conflict.getSig().equals("commons-collections:commons-collections")) 
+//			return true;
+//		return false;
+		
+		return true;
 	}
 
 	public List<Conflict> getConflicts() {

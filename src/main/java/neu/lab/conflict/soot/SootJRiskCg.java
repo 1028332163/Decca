@@ -21,10 +21,8 @@ import soot.MethodOrMethodContext;
 import soot.PackManager;
 import soot.Scene;
 import soot.SceneTransformer;
-import soot.SootClass;
 import soot.SootMethod;
 import soot.Transform;
-import soot.Type;
 import soot.Unit;
 import soot.jimple.internal.JIfStmt;
 import soot.jimple.toolkits.callgraph.CHATransformer;
@@ -109,17 +107,18 @@ class JRiskCgTf extends SceneTransformer {
 		Map<String, String> cgMap = new HashMap<String, String>();
 		cgMap.put("enabled", "true");
 		cgMap.put("apponly", "true");
-		// set entry
-		List<SootMethod> entryMthds = new ArrayList<SootMethod>();
-		for (SootClass sootClass : Scene.v().getApplicationClasses()) {
-			if (entryClses.contains(sootClass.getName())) {// entry class
-				for (SootMethod method : sootClass.getMethods()) {
-					entryMthds.add(method);
-				}
-			}
-		}
-
-		Scene.v().setEntryPoints(entryMthds);
+		cgMap.put("all-reachable", "true");
+//		// set entry
+//		List<SootMethod> entryMthds = new ArrayList<SootMethod>();
+//		for (SootClass sootClass : Scene.v().getApplicationClasses()) {
+//			if (entryClses.contains(sootClass.getName())) {// entry class
+//				for (SootMethod method : sootClass.getMethods()) {
+//					entryMthds.add(method);
+//				}
+//			}
+//		}
+//		Scene.v().setEntryPoints(entryMthds);
+		
 		CHATransformer.v().transform("wjtp", cgMap);
 
 		// get reachedMthds.
@@ -142,6 +141,10 @@ class JRiskCgTf extends SceneTransformer {
 
 				String srcMthdName = edge.src().getSignature();
 				String tgtMthdName = edge.tgt().getSignature();
+//				//TODO1
+//				if("<com.fasterxml.jackson.core.JsonFactory: boolean requiresPropertyOrdering()>".equals(tgtMthdName)) {
+//					MavenUtil.i().getLog().info("srcMthdName:"+srcMthdName);
+//				}
 				String srcClsName = edge.src().getDeclaringClass().getName();
 				String tgtClsName = edge.tgt().getDeclaringClass().getName();
 				if (edge.src().isJavaLibraryMethod() || edge.tgt().isJavaLibraryMethod()) {
