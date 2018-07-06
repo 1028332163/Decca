@@ -81,8 +81,8 @@ public abstract class ConflictMojo extends AbstractMojo {
 		AllCls.init(DepJars.i());
 		Conflicts.init(NodeAdapters.i());// version conflict in tree
 	}
-	
-	private void validateSysSize() throws Exception{
+
+	private void validateSysSize() throws Exception {
 		int systemSize = 0;
 		long systemFileSize = 0;
 		for (DepJar depJar : DepJars.i().getAllDepJar()) {
@@ -97,7 +97,7 @@ public abstract class ConflictMojo extends AbstractMojo {
 		MavenUtil.i().getLog().warn("tree size:" + DepJars.i().getAllDepJar().size() + ", used size:" + systemSize
 				+ ", usedFile size:" + systemFileSize / 1000);
 
-		//TODO
+		// TODO
 		if (DepJars.i().getAllDepJar().size() > 50) {
 			throw new Exception("too large project.");
 		}
@@ -106,7 +106,9 @@ public abstract class ConflictMojo extends AbstractMojo {
 	public void execute() throws MojoExecutionException {
 		this.getLog().info("method detect start:");
 		long startTime = System.currentTimeMillis();
-		if ("jar".equals(project.getPackaging()) || "war".equals(project.getPackaging())) {
+		String pckType = project.getPackaging();
+		if ("jar".equals(pckType) || "war".equals(pckType) || "maven-plugin".equals(pckType)
+				|| "bundle".equals(pckType)) {
 			try {
 				// project.
 				root = dependencyTreeBuilder.buildDependencyTree(project, localRepository, null);
@@ -120,7 +122,7 @@ public abstract class ConflictMojo extends AbstractMojo {
 				throw new MojoExecutionException("too large project!");
 			}
 			run();
-			
+
 		} else {
 			this.getLog()
 					.info("this project fail because package type is neither jar nor war:" + project.getGroupId() + ":"
@@ -135,12 +137,12 @@ public abstract class ConflictMojo extends AbstractMojo {
 	}
 
 	private void printRunTime() {
-		this.getLog().info("time to run:"+GlobalVar.runTime);
-		this.getLog().info("time to call graph:"+GlobalVar.time2cg);
-		this.getLog().info("time to run dog:"+GlobalVar.time2runDog);
-		this.getLog().info("time to calculate branch:"+GlobalVar.branchTime);
-		this.getLog().info("time to calculate reference:"+GlobalVar.time2calRef);
-		this.getLog().info("time to filter riskMethod:"+GlobalVar.time2filterRiskMthd);
+		this.getLog().info("time to run:" + GlobalVar.runTime);
+		this.getLog().info("time to call graph:" + GlobalVar.time2cg);
+		this.getLog().info("time to run dog:" + GlobalVar.time2runDog);
+		this.getLog().info("time to calculate branch:" + GlobalVar.branchTime);
+		this.getLog().info("time to calculate reference:" + GlobalVar.time2calRef);
+		this.getLog().info("time to filter riskMethod:" + GlobalVar.time2filterRiskMthd);
 	}
 
 	public abstract void run();
