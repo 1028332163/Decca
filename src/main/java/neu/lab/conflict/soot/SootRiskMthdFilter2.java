@@ -83,7 +83,10 @@ class RiskMthdFilter2Tf extends SceneTransformer {
 //				MavenUtil.i().getLog().info("remove father-implement-method:" + testMthd);
 				ite.remove();
 			}
-//			MavenUtil.i().getLog().info(hasFatherImpl(className, mthdSuffix)+"");
+//			//TODO1
+//			if("<org.sonatype.aether.util.graph.PreorderNodeListGenerator: java.lang.String getClassPath()>".equals(testMthd)) {
+//				MavenUtil.i().getLog().info("<org.sonatype.aether.util.graph.PreorderNodeListGenerator: java.lang.String getClassPath()>:"+hasSuperDefine(className, mthdSuffix)+Scene.v().containsClass(className));
+//			}
 		}
 	}
 	

@@ -26,7 +26,7 @@ public class Book4branch extends IBook {
 		}
 	}
 	
-	public Node4branch getNode() {
+	private Node4branch getNode() {
 		return (Node4branch)this.node;
 	}
 

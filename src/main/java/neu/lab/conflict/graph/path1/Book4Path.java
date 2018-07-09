@@ -1,6 +1,9 @@
-package neu.lab.conflict.graph;
+package neu.lab.conflict.graph.path1;
 
 import java.util.ArrayList;
+
+import neu.lab.conflict.graph.IBook;
+import neu.lab.conflict.graph.IRecord;
 
 public abstract class Book4Path extends IBook{
 	public Book4Path(Node4Path node) {

@@ -8,7 +8,7 @@ import java.util.Map;
 
 import neu.lab.conflict.graph.IBook;
 import neu.lab.conflict.graph.IRecord;
-import neu.lab.conflict.graph.Node4Path;
+import neu.lab.conflict.graph.path1.Node4Path;
 
 public class Node4ClsRef extends Node4Path {
 

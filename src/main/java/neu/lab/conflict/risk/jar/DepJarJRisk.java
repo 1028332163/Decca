@@ -1,10 +1,8 @@
 package neu.lab.conflict.risk.jar;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,13 +11,17 @@ import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.distance.MethodProbDistances;
 import neu.lab.conflict.graph.Dog;
 import neu.lab.conflict.graph.Graph4branch;
+import neu.lab.conflict.graph.Graph4mthdPath;
 import neu.lab.conflict.graph.IBook;
+import neu.lab.conflict.graph.IGraph;
 import neu.lab.conflict.graph.IRecord;
 import neu.lab.conflict.graph.Node4branch;
+import neu.lab.conflict.graph.Node4mthdPath;
 import neu.lab.conflict.graph.Record4branch;
 import neu.lab.conflict.soot.SootJRiskCg;
-import neu.lab.conflict.soot.SootRiskMthdFilter;
 import neu.lab.conflict.soot.SootRiskMthdFilter2;
+import neu.lab.conflict.soot.tf.JRiskBranchCgTf;
+import neu.lab.conflict.soot.tf.JRiskMthdPathCgTf;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.DepJar;
 import neu.lab.conflict.vo.MethodCall;
@@ -28,8 +30,8 @@ public class DepJarJRisk {
 	private DepJar depJar;
 	private ConflictJRisk conflictRisk;
 	private Set<String> thrownMthds;
-	private Set<String> rchedMthds;
-	private Graph4branch graph;
+	// private Set<String> rchedMthds;
+	private Graph4branch graph4branch;
 	private Map<String, IBook> books;
 
 	public DepJarJRisk(DepJar depJar, ConflictJRisk conflictRisk) {
@@ -38,20 +40,6 @@ public class DepJarJRisk {
 		// calculate thrownMthd
 
 		// calculate call-graph
-		if (getThrownMthds().size() > 0) {
-			 MavenUtil.i().getLog().info("first riskmthd:"+getThrownMthds().iterator().next());
-//			 Iterator<String> ite = getThrownMthds().iterator();
-//			 while(ite.hasNext()) {
-//				 MavenUtil.i().getLog().info("first riskmthd:"+ite.next());
-//			 }
-			 SootJRiskCg.i().cmpCg(this);
-			 // calculate distance
-			 books = new Dog(graph).findRlt(graph.getHostNds(), Conf.DOG_FIND_DEP);
-		} else {
-			this.setRchedMthds(new HashSet<String>());
-			this.setGraph(new Graph4branch(new HashMap<String, Node4branch>(), new ArrayList<MethodCall>()));
-			this.books = new HashMap<String, IBook>();
-		}
 
 	}
 
@@ -60,32 +48,31 @@ public class DepJarJRisk {
 	}
 
 	public Set<String> getThrownMthds() {
-//		"<neu.lab.plug.testcase.homemade.host.prob.ProbBottom: void m()>"
+		// "<neu.lab.plug.testcase.homemade.host.prob.ProbBottom: void m()>"
 		if (thrownMthds == null) {
-			
-//			//TODO1
-//			thrownMthds = new HashSet<String>();
-//			thrownMthds.add("<com.fasterxml.jackson.core.JsonFactory: boolean requiresPropertyOrdering()>");
-			
+
+			// //TODO1
+			// thrownMthds = new HashSet<String>();
+			// thrownMthds.add("<com.fasterxml.jackson.core.JsonFactory: boolean
+			// requiresPropertyOrdering()>");
+
 			thrownMthds = conflictRisk.getUsedDepJar().getRiskMthds(depJar.getAllMthd());
-			
+
 			MavenUtil.i().getLog().info("riskMethod size before filter" + thrownMthds.size());
 			if (thrownMthds.size() > 0)
-				new SootRiskMthdFilter2().filterRiskMthds(depJar,thrownMthds);
+				new SootRiskMthdFilter2().filterRiskMthds(depJar, thrownMthds);
 			MavenUtil.i().getLog().info("riskMethod size after filter" + thrownMthds.size());
-			
-//			//TODO1
-//			if(thrownMthds.contains("<com.fasterxml.jackson.core.JsonFactory: boolean requiresPropertyOrdering()>")) {
-//				MavenUtil.i().getLog().info("thronMethods has <com.fasterxml.jackson.core.JsonFactory: boolean requiresPropertyOrdering()>");
-//			}
-			
+
+			// //TODO1
+			// if(thrownMthds.contains("<com.fasterxml.jackson.core.JsonFactory: boolean
+			// requiresPropertyOrdering()>")) {
+			// MavenUtil.i().getLog().info("thronMethods has
+			// <com.fasterxml.jackson.core.JsonFactory: boolean
+			// requiresPropertyOrdering()>");
+			// }
 
 		}
 		return thrownMthds;
-	}
-
-	private Map<String, IBook> getBooks() {
-		return books;
 	}
 
 	public MethodProbDistances getMethodProDistances() {
@@ -104,26 +91,8 @@ public class DepJarJRisk {
 		return distances;
 	}
 
-	public List<String> getPrcDirPaths() throws Exception {
-		List<String> paths = new ArrayList<String>();
-		paths.addAll(depJar.getJarFilePaths(true));
-		boolean hasRepalce = false;
-		for (DepJar usedDepJar : DepJars.i().getUsedDepJars()) {
-			if (depJar.isSameLib(usedDepJar)) {// used depJar instead of usedDepJar.
-				if (hasRepalce) {
-					MavenUtil.i().getLog().warn("when cg, find multiple usedLib for " + depJar);
-					throw new Exception("when cg, find multiple usedLib for " + depJar);
-				}
-				hasRepalce = true;
-			} else {
-				paths.addAll(usedDepJar.getJarFilePaths(true));
-			}
-		}
-		if (!hasRepalce) {
-			MavenUtil.i().getLog().warn("when cg,can't find mutiple usedLib for " + depJar);
-			throw new Exception("when cg,can't find mutiple usedLib for " + depJar);
-		}
-		return paths;
+	public Collection<String> getPrcDirPaths() throws Exception {
+		return depJar.getRepalceCp();
 	}
 
 	public DepJar getEntryJar() {
@@ -134,12 +103,42 @@ public class DepJarJRisk {
 		return depJar;
 	}
 
-	public void setRchedMthds(Set<String> rchedMthds) {
-		this.rchedMthds = rchedMthds;
+	public Graph4branch getGraph4branch() {
+		if (graph4branch == null) {
+			if (getThrownMthds().size() > 0) {
+				MavenUtil.i().getLog().info("first riskmthd:" + getThrownMthds().iterator().next());
+				IGraph iGraph = SootJRiskCg.i().getGraph4branch(this,new JRiskBranchCgTf(this));
+				if (iGraph != null) {
+					graph4branch = (Graph4branch) iGraph;
+				} else {
+					graph4branch = new Graph4branch(new HashMap<String, Node4branch>(), new ArrayList<MethodCall>());
+				}
+			} else {
+				graph4branch = new Graph4branch(new HashMap<String, Node4branch>(), new ArrayList<MethodCall>());
+			}
+		}
+		return graph4branch;
 	}
 
-	public void setGraph(Graph4branch graph) {
-		this.graph = graph;
+	public Graph4mthdPath getGraph4mthdPath() {
+		if (getThrownMthds().size() > 0) {
+			IGraph iGraph = SootJRiskCg.i().getGraph4branch(this,new JRiskMthdPathCgTf(this));
+			if(iGraph!=null)
+				return (Graph4mthdPath)iGraph;
+		}
+		return new Graph4mthdPath(new HashMap<String, Node4mthdPath>(), new ArrayList<MethodCall>());
+	}
+
+	private Map<String, IBook> getBooks() {
+		if (this.books == null) {
+			if (getThrownMthds().size() > 0) {
+				// calculate distance
+				books = new Dog(getGraph4branch()).findRlt(getGraph4branch().getHostNds(), Conf.DOG_FIND_DEP);
+			} else {
+				books = new HashMap<String, IBook>();
+			}
+		}
+		return books;
 	}
 
 	@Override

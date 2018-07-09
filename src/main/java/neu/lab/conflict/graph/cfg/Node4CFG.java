@@ -6,7 +6,7 @@ import java.util.List;
 
 import neu.lab.conflict.graph.IBook;
 import neu.lab.conflict.graph.IRecord;
-import neu.lab.conflict.graph.Node4Path;
+import neu.lab.conflict.graph.path1.Node4Path;
 import soot.Unit;
 
 public class Node4CFG extends Node4Path {

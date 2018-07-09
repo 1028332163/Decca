@@ -1,0 +1,86 @@
+package neu.lab.conflict;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+
+import neu.lab.conflict.container.Conflicts;
+import neu.lab.conflict.graph.Book4mthdPath;
+import neu.lab.conflict.graph.Dog;
+import neu.lab.conflict.graph.Graph4mthdPath;
+import neu.lab.conflict.graph.IBook;
+import neu.lab.conflict.graph.IRecord;
+import neu.lab.conflict.graph.Record4mthdPath;
+import neu.lab.conflict.risk.jar.DepJarJRisk;
+import neu.lab.conflict.util.MavenUtil;
+import neu.lab.conflict.util.MySortedMap;
+import neu.lab.conflict.vo.Conflict;
+
+@Mojo(name = "debug2", defaultPhase = LifecyclePhase.VALIDATE)
+public class Debug2Mojo extends ConflictMojo {
+
+	@Override
+	public void run() {
+		writePath();
+	}
+
+	public void writePath() {
+		String outDir = "D:\\ws_testcase\\image\\path\\";
+		java.io.File f = new java.io.File(outDir);
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+
+		String projectSig = (MavenUtil.i().getProjectCor()).replace(":", "+");
+		for (Conflict conflict : Conflicts.i().getConflicts()) {
+
+			String conflictSig = conflict.getSig().replace(":", "+");
+			for (DepJarJRisk jarRisk : conflict.getJRisk().getJarRisks()) {
+				String outPath = outDir + projectSig + "@" + conflictSig + "@" + jarRisk.getVersion() + ".txt";
+				writeJarRisk(jarRisk, outPath, append);
+			}
+
+		}
+	}
+
+	private void writeJarRisk(DepJarJRisk jarRisk, String outPath, boolean append) {
+		try {
+			Graph4mthdPath graph = jarRisk.getGraph4mthdPath();
+			Set<String> hostNds = graph.getHostNds();
+			Map<String, IBook> books = new Dog(graph).findRlt(hostNds, 10);
+
+			MySortedMap<Integer, Record4mthdPath> dis2records = new MySortedMap<Integer, Record4mthdPath>();
+			// List<Record4mthdPath> records = new ArrayList<Record4mthdPath>();
+
+			for (String topMthd : books.keySet()) {
+				if (hostNds.contains(topMthd)) {
+					Book4mthdPath book = (Book4mthdPath) (books.get(topMthd));
+					for (IRecord iRecord : book.getRecords()) {
+						Record4mthdPath record = (Record4mthdPath) iRecord;
+						dis2records.add(record.getPathlen(), record);
+					}
+				}
+			}
+			if (dis2records.size() > 0) {
+				PrintWriter printer = new PrintWriter(new BufferedWriter(new FileWriter(outPath)));
+				for (Record4mthdPath record : dis2records.flat()) {
+					printer.println(record.getPathStr() + "\n" + record.getPathlen());
+				}
+				printer.close();
+			}
+			// printer.println(distances);
+
+		} catch (IOException e) {
+			MavenUtil.i().getLog().error("can't write jarRisk ", e);
+		}
+	}
+
+}

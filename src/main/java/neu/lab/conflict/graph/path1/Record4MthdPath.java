@@ -1,4 +1,4 @@
-package neu.lab.conflict.graph;
+package neu.lab.conflict.graph.path1;
 
 public class Record4MthdPath extends Record4Path {
 

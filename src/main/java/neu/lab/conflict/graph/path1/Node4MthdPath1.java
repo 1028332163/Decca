@@ -1,4 +1,4 @@
-package neu.lab.conflict.graph;
+package neu.lab.conflict.graph.path1;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -6,15 +6,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import neu.lab.conflict.graph.IBook;
+import neu.lab.conflict.graph.IRecord;
 import neu.lab.conflict.util.SootUtil;
 
-public class Node4MthdPath extends Node4Path{
+public class Node4MthdPath1 extends Node4Path{
 	private String name;
 	private boolean isHostNode;
 	private boolean isConflictNode;
 	private Set<String> inNds;
 	private Set<String> outNds;
-	public Node4MthdPath(String name,boolean isHostNode,boolean isConflictNode) {
+	public Node4MthdPath1(String name,boolean isHostNode,boolean isConflictNode) {
 		this.name = name;
 		this.isHostNode = isHostNode;
 		this.isConflictNode = isConflictNode;
@@ -57,8 +59,8 @@ public class Node4MthdPath extends Node4Path{
 	}
 	@Override
 	public boolean equals(Object other) {
-		if(other instanceof Node4MthdPath) {
-			Node4MthdPath otherNode = (Node4MthdPath)other;
+		if(other instanceof Node4MthdPath1) {
+			Node4MthdPath1 otherNode = (Node4MthdPath1)other;
 			return name.equals(otherNode.getName());
 		}
 		return false;

@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import neu.lab.conflict.graph.IGraph;
-import neu.lab.conflict.graph.Graph4MthdPath;
+import neu.lab.conflict.graph.path1.Graph4MthdPath;
 
 import java.util.Set;
 

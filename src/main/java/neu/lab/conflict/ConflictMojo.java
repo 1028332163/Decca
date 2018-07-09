@@ -97,7 +97,7 @@ public abstract class ConflictMojo extends AbstractMojo {
 		MavenUtil.i().getLog().warn("tree size:" + DepJars.i().getAllDepJar().size() + ", used size:" + systemSize
 				+ ", usedFile size:" + systemFileSize / 1000);
 
-		// TODO
+//		// TODO
 		if (DepJars.i().getAllDepJar().size() > 50) {
 			throw new Exception("too large project.");
 		}

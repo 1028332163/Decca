@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import neu.lab.conflict.graph.INode;
-import neu.lab.conflict.graph.Node4MthdPath;
+import neu.lab.conflict.graph.path1.Node4MthdPath1;
 
 public class DijkstraNode {
 	

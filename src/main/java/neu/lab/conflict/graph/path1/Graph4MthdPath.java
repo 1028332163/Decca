@@ -1,4 +1,4 @@
-package neu.lab.conflict.graph;
+package neu.lab.conflict.graph.path1;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,22 +9,24 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import neu.lab.conflict.Conf;
+import neu.lab.conflict.graph.IGraph;
+import neu.lab.conflict.graph.INode;
 import neu.lab.conflict.graph.filter.FilterInvoker;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.vo.MethodCall;
 
 public class Graph4MthdPath implements IGraph{
 	
-	private Map<String, Node4MthdPath> name2node;
+	private Map<String, Node4MthdPath1> name2node;
 
-	public Graph4MthdPath(Set<Node4MthdPath> nodes, List<MethodCall> calls) {
+	public Graph4MthdPath(Set<Node4MthdPath1> nodes, List<MethodCall> calls) {
 
 		
 		MavenUtil.i().getLog().debug("graph-before-filter nodes size:" + nodes.size() + " calls size:" + calls.size());
 		if (Conf.FLT_CALL)
 			filtCalls(calls);
-		name2node = new HashMap<String, Node4MthdPath>();
-		for (Node4MthdPath node : nodes) {
+		name2node = new HashMap<String, Node4MthdPath1>();
+		for (Node4MthdPath1 node : nodes) {
 			name2node.put(node.getName(), node);
 		}
 		for (MethodCall call : calls) {
@@ -41,7 +43,7 @@ public class Graph4MthdPath implements IGraph{
 
 	private void filterDangerImpl() {
 		for (String ndName : name2node.keySet()) {
-			Node4MthdPath node = name2node.get(ndName);
+			Node4MthdPath1 node = name2node.get(ndName);
 			Map<String, Integer> name2cnt = node.calNameCnt();
 			for (String outName : name2cnt.keySet()) {
 				if (name2cnt.get(outName) >= Conf.DANGER_IMPL_T) {// delete out-method contains this name
@@ -74,9 +76,9 @@ public class Graph4MthdPath implements IGraph{
 		int delNum;
 		do {
 			delNum = 0;
-			Iterator<Entry<String, Node4MthdPath>> ite = name2node.entrySet().iterator();
+			Iterator<Entry<String, Node4MthdPath1>> ite = name2node.entrySet().iterator();
 			while (ite.hasNext()) {
-				Node4MthdPath node = ite.next().getValue();
+				Node4MthdPath1 node = ite.next().getValue();
 				if (node.isHostNode()) {// host method
 
 				} else if (risk2mthds.contains(node.getName())) {// risk2method

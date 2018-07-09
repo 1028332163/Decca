@@ -11,12 +11,12 @@ import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
 
 import neu.lab.conflict.Conf;
-import neu.lab.conflict.graph.Book4MthdPath;
 import neu.lab.conflict.graph.IBook;
+import neu.lab.conflict.graph.path1.Book4MthdPath;
+import neu.lab.conflict.graph.path1.Graph4MthdPath;
+import neu.lab.conflict.graph.path1.Node4MthdPath1;
+import neu.lab.conflict.graph.path1.Record4MthdPath;
 import neu.lab.conflict.graph.Dog;
-import neu.lab.conflict.graph.Graph4MthdPath;
-import neu.lab.conflict.graph.Node4MthdPath;
-import neu.lab.conflict.graph.Record4MthdPath;
 import neu.lab.conflict.soot.SootNRiskCg;
 import neu.lab.conflict.vo.DepJar;
 import neu.lab.conflict.vo.MethodCall;
@@ -90,7 +90,7 @@ public class NodeNRisk {
 			this.anaAncestors = ancestors;
 			rchedMthds = new HashSet<String>();
 			rchedServices = new HashSet<String>();
-			graph = new Graph4MthdPath(new HashSet<Node4MthdPath>(), new ArrayList<MethodCall>());
+			graph = new Graph4MthdPath(new HashSet<Node4MthdPath1>(), new ArrayList<MethodCall>());
 		} else {
 			if (Conf.ANA_FROM_HOST) {// entry class is host class.
 				this.anaAncestors = ancestors;

@@ -1,4 +1,6 @@
-package neu.lab.conflict.graph;
+package neu.lab.conflict.graph.path1;
+
+import neu.lab.conflict.graph.IRecord;
 
 public abstract class Record4Path extends IRecord{
 	protected String pathStr;

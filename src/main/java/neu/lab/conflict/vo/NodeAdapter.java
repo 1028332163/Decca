@@ -1,6 +1,7 @@
 package neu.lab.conflict.vo;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -141,6 +142,18 @@ public class NodeAdapter {
 			father = father.getParent();
 		}
 		return ancestors;
+	}
+	
+	public Collection<String> getAncestorJarCps(boolean includeSelf){
+		List<String> jarCps = new ArrayList<String>();
+		if (includeSelf)
+			jarCps.addAll(this.getFilePath());
+		NodeAdapter father = getParent();
+		while (null != father) {
+			jarCps.addAll(father.getFilePath());
+			father = father.getParent();
+		}
+		return jarCps;
 	}
 
 	public NodeAdapter getParent() {

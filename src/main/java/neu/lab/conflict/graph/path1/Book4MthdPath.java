@@ -1,9 +1,9 @@
-package neu.lab.conflict.graph;
+package neu.lab.conflict.graph.path1;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import neu.lab.conflict.Conf;
+import neu.lab.conflict.graph.IRecord;
 
 public class Book4MthdPath extends Book4Path {
 
@@ -19,10 +19,7 @@ public class Book4MthdPath extends Book4Path {
 		for (IRecord recordI : getRecords()) {
 			Record4MthdPath path = (Record4MthdPath) recordI;
 			if (path.isFromHost())
-				// if (path.getPathLen() >= Conf.MIN_PATH_DEP)// path whose depth is 2 is
-				// unreasonable.
-				if (path.getPathLen() <= Conf.MAX_PATH_DEP)
-					riskPaths.add(path);
+				riskPaths.add(path);
 		}
 		return riskPaths;
 	}

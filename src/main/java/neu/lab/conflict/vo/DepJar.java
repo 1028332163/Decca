@@ -12,7 +12,6 @@ import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
 
 import javassist.ClassPool;
-import neu.lab.conflict.Conf;
 import neu.lab.conflict.container.AllCls;
 import neu.lab.conflict.container.AllRefedCls;
 import neu.lab.conflict.container.DepJars;
@@ -310,7 +309,7 @@ public class DepJar {
 		Set<String> riskMthds = new HashSet<String>();
 		for (String testMthd : testMthds) {
 			if (!this.containsMthd(testMthd) && AllRefedCls.i().contains(SootUtil.mthdSig2cls(testMthd))) {
-				//don't have method,and class is used.
+				// don't have method,and class is used.
 				if (this.containsCls(SootUtil.mthdSig2cls(testMthd))) {
 					// has class.don't have method.
 					riskMthds.add(testMthd);
@@ -428,17 +427,59 @@ public class DepJar {
 		}
 		return graph;
 	}
-	
-	/**use this jar replace version of used-version ,then return path of all-used-jar
+
+	/**
+	 * use this jar replace version of used-version ,then return path of
+	 * all-used-jar
+	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public List<String> getRepalceCp(){
-		List<String> allCp = new ArrayList<String>();
-		for (DepJar jar : DepJars.i().getAllDepJar()) {
-			if (jar == this || (jar.isSelected() && !jar.isSameLib(this))) {
-				allCp.addAll(jar.getJarFilePaths(true));
+	public List<String> getRepalceCp() throws Exception {
+		List<String> paths = new ArrayList<String>();
+		paths.addAll(this.getJarFilePaths(true));
+		boolean hasRepalce = false;
+		for (DepJar usedDepJar : DepJars.i().getUsedDepJars()) {
+			if (this.isSameLib(usedDepJar)) {// used depJar instead of usedDepJar.
+				if (hasRepalce) {
+					MavenUtil.i().getLog().warn("when cg, find multiple usedLib for " + toString());
+					throw new Exception("when cg, find multiple usedLib for " + toString());
+				}
+				hasRepalce = true;
+			} else {
+				paths.addAll(usedDepJar.getJarFilePaths(true));
 			}
 		}
-		return allCp;
+		if (!hasRepalce) {
+			MavenUtil.i().getLog().warn("when cg,can't find mutiple usedLib for " + toString());
+			throw new Exception("when cg,can't find mutiple usedLib for " + toString());
+		}
+		return paths;
+		
+//		List<String> allCp = new ArrayList<String>();
+//		//TODO1
+//		allCp.addAll(this.getJarFilePaths(true));
+//		for (DepJar jar : DepJars.i().getAllDepJar()) {
+//			if (jar.isSelected() && !jar.isSameLib(this)) {
+//				for (String path : jar.getJarFilePaths(true)) {
+////					//TODO
+////					 MavenUtil.i().getLog().info("argsList.add(\"" + path.replace("\\", "\\\\") +
+////					 "\");");
+//					allCp.add(path);
+//				}
+//			}
+//		}
+//		return allCp;
+	}
+	
+	/**
+	 * @return include self
+	 */
+	public Set<String> getFatherJarCps(boolean includeSelf){
+		Set<String> fatherJarCps = new HashSet<String>();
+		for(NodeAdapter node:this.nodeAdapters) {
+			fatherJarCps.addAll(node.getAncestorJarCps(includeSelf));
+		}
+		return fatherJarCps;
 	}
 }
