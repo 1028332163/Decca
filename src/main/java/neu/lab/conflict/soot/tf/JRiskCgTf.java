@@ -1,19 +1,21 @@
 package neu.lab.conflict.soot.tf;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import neu.lab.conflict.graph.IGraph;
 import neu.lab.conflict.risk.jar.DepJarJRisk;
 import neu.lab.conflict.util.MavenUtil;
-import soot.MethodOrMethodContext;
+import soot.MethodSource;
 import soot.Scene;
 import soot.SceneTransformer;
+import soot.SootClass;
 import soot.SootMethod;
 import soot.jimple.toolkits.callgraph.CHATransformer;
-import soot.util.queue.QueueReader;
 
 /**
  * to get call-graph.
@@ -29,6 +31,7 @@ public abstract class JRiskCgTf extends SceneTransformer {
 	protected Set<String> riskMthds;
 	protected Set<String> rchMthds;
 	protected IGraph graph;
+	protected Map<String, Integer> mthd2branch;
 
 	public JRiskCgTf(DepJarJRisk depJarJRisk) {
 		super();
@@ -50,34 +53,27 @@ public abstract class JRiskCgTf extends SceneTransformer {
 		cgMap.put("all-reachable", "true");
 		// // set entry
 		// List<SootMethod> entryMthds = new ArrayList<SootMethod>();
-		// for (SootClass sootClass : Scene.v().getApplicationClasses()) {
-		// if (entryClses.contains(sootClass.getName())) {// entry class
-		// for (SootMethod method : sootClass.getMethods()) {
-		// entryMthds.add(method);
-		// }
-		// }
-		// }
+//		List<MethodSource> mthds = new ArrayList<MethodSource>();
+//		for (SootClass sootClass : Scene.v().getApplicationClasses()) {
+//			if (entryClses.contains(sootClass.getName())) {// entry class
+//				for (SootMethod method : sootClass.getMethods()) {
+//					mthds.add(method.getSource());
+//					// entryMthds.add(method);
+//				}
+//			}
+//		}
 		// Scene.v().setEntryPoints(entryMthds);
-
+		initMthd2branch();
+		
 		CHATransformer.v().transform("wjtp", cgMap);
 
-		// get reachedMthds.
-		QueueReader<MethodOrMethodContext> entryRchMthds = Scene.v().getReachableMethods().listener();
-		while (entryRchMthds.hasNext()) {
-			SootMethod method = entryRchMthds.next().method();
-			if (conflictJarClses.contains(method.getDeclaringClass().getName())) {// is method in duplicate jar
-				rchMthds.add(method.getSignature());
-			}
-		}
 		formGraph();
 		MavenUtil.i().getLog().info("JRiskCgTf end..");
 	}
 
-	protected abstract void formGraph();
+	protected abstract void initMthd2branch();
 
-	public Set<String> getRchMthds() {
-		return rchMthds;
-	}
+	protected abstract void formGraph();
 
 	public IGraph getGraph() {
 		return graph;

@@ -3,10 +3,12 @@ package neu.lab.conflict.risk.jar;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import neu.lab.conflict.Conf;
+import neu.lab.conflict.GlobalVar;
 import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.distance.MethodProbDistances;
 import neu.lab.conflict.graph.Dog;
@@ -19,6 +21,7 @@ import neu.lab.conflict.graph.Node4branch;
 import neu.lab.conflict.graph.Node4mthdPath;
 import neu.lab.conflict.graph.Record4branch;
 import neu.lab.conflict.soot.SootJRiskCg;
+import neu.lab.conflict.soot.SootRiskMthdFilter;
 import neu.lab.conflict.soot.SootRiskMthdFilter2;
 import neu.lab.conflict.soot.tf.JRiskBranchCgTf;
 import neu.lab.conflict.soot.tf.JRiskMthdPathCgTf;
@@ -58,11 +61,16 @@ public class DepJarJRisk {
 
 			thrownMthds = conflictRisk.getUsedDepJar().getRiskMthds(depJar.getAllMthd());
 
-			MavenUtil.i().getLog().info("riskMethod size before filter" + thrownMthds.size());
+			MavenUtil.i().getLog().info("riskMethod size before filter: " + thrownMthds.size());
+			MavenUtil.i().getLog().info("contains : " + thrownMthds.contains("<com.fasterxml.jackson.databind.node.JsonNodeFactory: com.fasterxml.jackson.databind.node.NumericNode numberNode(java.math.BigInteger)>"));
 			if (thrownMthds.size() > 0)
-				new SootRiskMthdFilter2().filterRiskMthds(depJar, thrownMthds);
-			MavenUtil.i().getLog().info("riskMethod size after filter" + thrownMthds.size());
-
+				new SootRiskMthdFilter().filterRiskMthds(thrownMthds);
+			MavenUtil.i().getLog().info("riskMethod size after filter1: " + thrownMthds.size());
+			MavenUtil.i().getLog().info("contains : " + thrownMthds.contains("<com.fasterxml.jackson.databind.node.JsonNodeFactory: com.fasterxml.jackson.databind.node.NumericNode numberNode(java.math.BigInteger)>"));
+			if (thrownMthds.size() > 0)
+				new SootRiskMthdFilter2().filterRiskMthds(this, thrownMthds);
+			MavenUtil.i().getLog().info("riskMethod size after filter2: " + thrownMthds.size());
+			MavenUtil.i().getLog().info("contains : " + thrownMthds.contains("<com.fasterxml.jackson.databind.node.JsonNodeFactory: com.fasterxml.jackson.databind.node.NumericNode numberNode(java.math.BigInteger)>"));
 			// //TODO1
 			// if(thrownMthds.contains("<com.fasterxml.jackson.core.JsonFactory: boolean
 			// requiresPropertyOrdering()>")) {
@@ -92,7 +100,25 @@ public class DepJarJRisk {
 	}
 
 	public Collection<String> getPrcDirPaths() throws Exception {
-		return depJar.getRepalceCp();
+		List<String> classpaths ;
+		if(GlobalVar.useAllJar) {
+			classpaths =  depJar.getRepalceCp();
+		}else {
+			classpaths = new ArrayList<String>();
+			//keep first is self
+			classpaths.addAll(this.depJar.getJarFilePaths(true));
+			classpaths.addAll(this.depJar.getFatherJarCps(false));
+			
+		}
+		// TODO printCp
+//		MavenUtil.i().getLog().info("classpath for "+this.toString());
+//		for(String path:classpaths) {
+//			System.out.println("argsList.add(\"-process-dir\");");
+//			System.out.println("argsList.add(\"" + path.replace("\\", "\\\\") + "\");");
+//		}
+		
+		return classpaths;
+		
 	}
 
 	public DepJar getEntryJar() {
@@ -133,7 +159,7 @@ public class DepJarJRisk {
 		if (this.books == null) {
 			if (getThrownMthds().size() > 0) {
 				// calculate distance
-				books = new Dog(getGraph4branch()).findRlt(getGraph4branch().getHostNds(), Conf.DOG_FIND_DEP);
+				books = new Dog(getGraph4branch()).findRlt(getGraph4branch().getHostNds(),15);
 			} else {
 				books = new HashMap<String, IBook>();
 			}

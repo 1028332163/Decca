@@ -433,7 +433,7 @@ public class DepJar {
 	 * all-used-jar
 	 * 
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public List<String> getRepalceCp() throws Exception {
 		List<String> paths = new ArrayList<String>();
@@ -447,7 +447,10 @@ public class DepJar {
 				}
 				hasRepalce = true;
 			} else {
-				paths.addAll(usedDepJar.getJarFilePaths(true));
+				for (String path : usedDepJar.getJarFilePaths(true)) {
+					paths.add(path);
+				}
+				// paths.addAll(usedDepJar.getJarFilePaths(true));
 			}
 		}
 		if (!hasRepalce) {
@@ -455,29 +458,14 @@ public class DepJar {
 			throw new Exception("when cg,can't find mutiple usedLib for " + toString());
 		}
 		return paths;
-		
-//		List<String> allCp = new ArrayList<String>();
-//		//TODO1
-//		allCp.addAll(this.getJarFilePaths(true));
-//		for (DepJar jar : DepJars.i().getAllDepJar()) {
-//			if (jar.isSelected() && !jar.isSameLib(this)) {
-//				for (String path : jar.getJarFilePaths(true)) {
-////					//TODO
-////					 MavenUtil.i().getLog().info("argsList.add(\"" + path.replace("\\", "\\\\") +
-////					 "\");");
-//					allCp.add(path);
-//				}
-//			}
-//		}
-//		return allCp;
 	}
-	
+
 	/**
 	 * @return include self
 	 */
-	public Set<String> getFatherJarCps(boolean includeSelf){
+	public Set<String> getFatherJarCps(boolean includeSelf) {
 		Set<String> fatherJarCps = new HashSet<String>();
-		for(NodeAdapter node:this.nodeAdapters) {
+		for (NodeAdapter node : this.nodeAdapters) {
 			fatherJarCps.addAll(node.getAncestorJarCps(includeSelf));
 		}
 		return fatherJarCps;

@@ -15,6 +15,7 @@ import neu.lab.conflict.util.SootUtil;
 import neu.lab.conflict.vo.MethodCall;
 import soot.Body;
 import soot.Scene;
+import soot.SootClass;
 import soot.SootMethod;
 import soot.Unit;
 import soot.jimple.internal.JIfStmt;
@@ -22,7 +23,7 @@ import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 
 public class JRiskBranchCgTf extends JRiskCgTf {
-	
+
 	public JRiskBranchCgTf(DepJarJRisk depJarJRisk) {
 		super(depJarJRisk);
 	}
@@ -55,11 +56,11 @@ public class JRiskBranchCgTf extends JRiskCgTf {
 				} else {
 					if (!name2node.containsKey(srcMthdName)) {
 						name2node.put(srcMthdName, new Node4branch(srcMthdName, entryClses.contains(srcClsName),
-								riskMthds.contains(srcMthdName), getBranchNum(edge.src())));
+								riskMthds.contains(srcMthdName), getBranchNum(edge.src().getSignature())));
 					}
 					if (!name2node.containsKey(tgtMthdName)) {
 						name2node.put(tgtMthdName, new Node4branch(tgtMthdName, entryClses.contains(tgtClsName),
-								riskMthds.contains(tgtMthdName), getBranchNum(edge.tgt())));
+								riskMthds.contains(tgtMthdName), getBranchNum(edge.tgt().getSignature())));
 					}
 					mthdRlts.add(new MethodCall(srcMthdName, tgtMthdName));
 				}
@@ -69,16 +70,24 @@ public class JRiskBranchCgTf extends JRiskCgTf {
 		}
 	}
 
-	private int getBranchNum(SootMethod sootMethod) {
+	private int getBranchNum(String mthd) {
+		Integer branchNum = mthd2branch.get(mthd);
+		if (null != branchNum)
+			return branchNum;
+		return 0;
+	}
+
+	private int calBranchNum(SootMethod sootMethod) {
 		long startTime = System.currentTimeMillis();
-		if (sootMethod.getSource() == null) {
-			return 0;
-		}
 		int cnt = 0;
-		Body body = sootMethod.retrieveActiveBody();
-		for (Unit unit : body.getUnits()) {
-			if (isBranchNode(unit)) {
-				cnt++;
+		if (sootMethod.getSource() == null) {
+
+		} else {
+			Body body = sootMethod.retrieveActiveBody();
+			for (Unit unit : body.getUnits()) {
+				if (isBranchNode(unit)) {
+					cnt++;
+				}
 			}
 		}
 		long runtime = (System.currentTimeMillis() - startTime) / 1000;
@@ -97,5 +106,17 @@ public class JRiskBranchCgTf extends JRiskCgTf {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	protected void initMthd2branch() {
+		mthd2branch = new HashMap<String, Integer>();
+		for (SootClass sootClass : Scene.v().getApplicationClasses()) {
+			List<SootMethod> mthds = new ArrayList<SootMethod>();
+			mthds.addAll(sootClass.getMethods());
+			for (SootMethod method : mthds) {
+				mthd2branch.put(method.getSignature(), calBranchNum(method));
+			}
+		}
 	}
 }

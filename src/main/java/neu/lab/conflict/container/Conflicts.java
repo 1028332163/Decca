@@ -46,13 +46,13 @@ public class Conflicts {
 	 * @return
 	 */
 	private boolean wantCal(Conflict conflict) {
-		//TODO
+		//TODO wantCal
 //		org.codehaus.jackson:jackson-core-asl
 		
-//		if(conflict.getSig().equals("commons-collections:commons-collections")) 
+//		if(conflict.getSig().equals("com.fasterxml.jackson.core:jackson-core")) 
 //			return true;
 //		return false;
-		
+//		
 		return true;
 	}
 

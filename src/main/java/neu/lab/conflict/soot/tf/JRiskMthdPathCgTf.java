@@ -65,4 +65,9 @@ public class JRiskMthdPathCgTf extends JRiskCgTf{
 		}
 	}
 
+	@Override
+	protected void initMthd2branch() {
+		
+	}
+
 }

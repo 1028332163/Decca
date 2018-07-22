@@ -4,8 +4,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,6 +11,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
 import neu.lab.conflict.container.Conflicts;
+import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.graph.Book4mthdPath;
 import neu.lab.conflict.graph.Dog;
 import neu.lab.conflict.graph.Graph4mthdPath;
@@ -22,7 +21,9 @@ import neu.lab.conflict.graph.Record4mthdPath;
 import neu.lab.conflict.risk.jar.DepJarJRisk;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.util.MySortedMap;
+import neu.lab.conflict.util.SootUtil;
 import neu.lab.conflict.vo.Conflict;
+import neu.lab.conflict.vo.DepJar;
 
 @Mojo(name = "debug2", defaultPhase = LifecyclePhase.VALIDATE)
 public class Debug2Mojo extends ConflictMojo {
@@ -55,7 +56,7 @@ public class Debug2Mojo extends ConflictMojo {
 		try {
 			Graph4mthdPath graph = jarRisk.getGraph4mthdPath();
 			Set<String> hostNds = graph.getHostNds();
-			Map<String, IBook> books = new Dog(graph).findRlt(hostNds, 10);
+			Map<String, IBook> books = new Dog(graph).findRlt(hostNds, Conf.DOG_FIND_DEP);
 
 			MySortedMap<Integer, Record4mthdPath> dis2records = new MySortedMap<Integer, Record4mthdPath>();
 			// List<Record4mthdPath> records = new ArrayList<Record4mthdPath>();
@@ -71,8 +72,10 @@ public class Debug2Mojo extends ConflictMojo {
 			}
 			if (dis2records.size() > 0) {
 				PrintWriter printer = new PrintWriter(new BufferedWriter(new FileWriter(outPath)));
+				printer.println("classPath:"+DepJars.i().getUsedJarPathsStr());
+				printer.println("pomPath:"+MavenUtil.i().getBaseDir());
 				for (Record4mthdPath record : dis2records.flat()) {
-					printer.println(record.getPathStr() + "\n" + record.getPathlen());
+					printer.println("pathLen:" + record.getPathlen() + "\n" + addJarPath(record.getPathStr()));
 				}
 				printer.close();
 			}
@@ -81,6 +84,20 @@ public class Debug2Mojo extends ConflictMojo {
 		} catch (IOException e) {
 			MavenUtil.i().getLog().error("can't write jarRisk ", e);
 		}
+	}
+
+	private String addJarPath(String mthdCallPath) {
+		StringBuilder sb = new StringBuilder();
+		String[] mthds = mthdCallPath.split("\\n");
+		for (int i = 0; i < mthds.length - 1; i++) {
+			// last method is risk method,don't need calculate.
+			String mthd = mthds[i];
+			String cls = SootUtil.mthdSig2cls(mthd);
+			DepJar depJar = DepJars.i().getClassJar(cls);
+			sb.append(mthd + " " + depJar.getJarFilePaths(true).get(0) + "\n");
+		}
+		sb.append(mthds[mthds.length-1]);
+		return sb.toString();
 	}
 
 }

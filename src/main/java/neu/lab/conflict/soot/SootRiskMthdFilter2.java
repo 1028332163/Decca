@@ -9,20 +9,22 @@ import java.util.Map;
 import java.util.Set;
 
 import neu.lab.conflict.GlobalVar;
-import neu.lab.conflict.container.DepJars;
+import neu.lab.conflict.risk.jar.DepJarJRisk;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.util.SootUtil;
-import neu.lab.conflict.vo.DepJar;
 import soot.PackManager;
 import soot.Scene;
 import soot.SceneTransformer;
 import soot.SootClass;
-import soot.SootMethod;
 import soot.Transform;
 import soot.util.Chain;
 
+/**has superDefine
+ * @author asus
+ *
+ */
 public class SootRiskMthdFilter2 extends SootAna{
-	public void filterRiskMthds(DepJar depjar,Collection<String> mthds2test) {
+	public void filterRiskMthds(DepJarJRisk depJarJRisk,Collection<String> mthds2test) {
 		long start = System.currentTimeMillis();
 		try {
 			SootUtil.modifyLogOut();
@@ -30,7 +32,7 @@ public class SootRiskMthdFilter2 extends SootAna{
 			RiskMthdFilter2Tf transformer = new RiskMthdFilter2Tf(mthds2test);
 			PackManager.v().getPack("wjtp").add(new Transform("wjtp.myTrans", transformer));
 
-			soot.Main.main(getArgs(depjar.getRepalceCp().toArray(new String[0])).toArray(new String[0]));
+			soot.Main.main(getArgs(depJarJRisk.getPrcDirPaths().toArray(new String[0])).toArray(new String[0]));
 
 		} catch (Exception e) {
 			MavenUtil.i().getLog().warn("error when filter risk methods: ", e);

@@ -2,6 +2,8 @@ package neu.lab.conflict.graph;
 
 import java.util.ArrayList;
 
+import neu.lab.conflict.util.MavenUtil;
+
 
 public class Book4branch extends IBook {
 

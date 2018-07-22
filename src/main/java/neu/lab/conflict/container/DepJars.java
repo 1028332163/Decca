@@ -1,5 +1,6 @@
 package neu.lab.conflict.container;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -88,6 +89,33 @@ public class DepJars {
 			}
 		}
 		return usedJarPaths;
+	}
+	
+	/**
+	 * @return path1;path2;path3
+	 */
+	public String getUsedJarPathsStr() {
+		StringBuilder sb = new StringBuilder();
+		for(String path:getUsedJarPaths()) {
+			sb.append(path+File.pathSeparator);
+		}
+		String paths = sb.toString();
+		paths = paths.substring(0,paths.length()-1);//delete last ;
+		return paths;
+	}
+	
+	/**
+	 * @param cls
+	 * @return usedDepJar that has class.
+	 */
+	public DepJar getClassJar(String cls) {
+		for (DepJar depJar : DepJars.i().getAllDepJar()) {
+			if (depJar.isSelected()) {
+				if(depJar.containsCls(cls))
+					return depJar;
+			}
+		}
+		return null;
 	}
 
 }
