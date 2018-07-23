@@ -159,7 +159,7 @@ public class DepJarJRisk {
 		if (this.books == null) {
 			if (getThrownMthds().size() > 0) {
 				// calculate distance
-				books = new Dog(getGraph4branch()).findRlt(getGraph4branch().getHostNds(),15);
+				books = new Dog(getGraph4branch()).findRlt(getGraph4branch().getHostNds(),Conf.DOG_FIND_DEP);
 			} else {
 				books = new HashMap<String, IBook>();
 			}

@@ -101,9 +101,9 @@ public abstract class ConflictMojo extends AbstractMojo {
 				+ ", usedFile size:" + systemFileSize / 1000);
 
 //		// TODO system size
-//		if (DepJars.i().getAllDepJar().size() > 50) {
-//			throw new Exception("too large project.");
-//		}
+		if (DepJars.i().getAllDepJar().size() <= 50||systemFileSize / 1000>20000) {
+			throw new Exception("project size error.");
+		}
 	}
 
 	public void execute() throws MojoExecutionException {
@@ -122,7 +122,7 @@ public abstract class ConflictMojo extends AbstractMojo {
 				initGlobalVar();
 			} catch (Exception e) {
 				MavenUtil.i().getLog().error(e);
-				throw new MojoExecutionException("too large project!");
+				throw new MojoExecutionException("project size error!");
 			}
 			run();
 
