@@ -88,9 +88,6 @@ public class MavenUtil {
 		}
 	}
 
-	public File getBuildDir() {
-		return mojo.buildDir;
-	}
 
 	public List<String> getSrcPaths() {
 		List<String> srcPaths = new ArrayList<String>();
@@ -134,5 +131,9 @@ public class MavenUtil {
 	 */
 	public File getBaseDir() {
 		return mojo.project.getBasedir();
+	}
+
+	public File getBuildDir() {
+		return mojo.buildDir;
 	}
 }

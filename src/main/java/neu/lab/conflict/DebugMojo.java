@@ -1,6 +1,9 @@
 package neu.lab.conflict;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +36,23 @@ public class DebugMojo extends ConflictMojo {
 		// neu.lab.conflict.writer.ClassDupRiskWriter().writeByJar(UserConf.getOutDir()
 		// +
 		// "classDupByJar.txt");
-//		printClsDistance();
-		// printMthdDistance();
-//		printNeibor();
-			
-		 printMthdProb();
+
+		// TODO what's debug?
+		// printMthdProb();
+		printSize();
+	}
+
+	private void printSize() {
+		
+		try {
+			PrintWriter printer = new PrintWriter(new BufferedWriter(new FileWriter("D:\\ws_testcase\\image\\projectSize.txt",true)));
+			printer.println(MavenUtil.i().getBaseDir()+" "+systemSize+" "+(systemFileSize / 1000));
+			printer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	
 	}
 
 	private void printNeibor() {
@@ -60,22 +75,24 @@ public class DebugMojo extends ConflictMojo {
 	}
 
 	public void printMthdDistance() {
-		String outPath = "D:\\ws_testcase\\image\\distance_mthd\\" + (MavenUtil.i().getProjectCor() + ".txt").replace(":", "+");
+		String outPath = "D:\\ws_testcase\\image\\distance_mthd\\"
+				+ (MavenUtil.i().getProjectCor() + ".txt").replace(":", "+");
 		java.io.File f = new java.io.File(outPath);
 		if (!f.getParentFile().exists()) {
 			f.getParentFile().mkdirs();
 		}
 		new DistanceWriter().writeMthdDistance(outPath, false);
 	}
-	
+
 	public void printMthdProb() {
-		String outDir ="D:\\ws_testcase\\image\\distance_mthdBranch\\";
+		String outDir = "D:\\ws_testcase\\image\\distance_mthdBranch\\";
 		java.io.File f = new java.io.File(outDir);
 		if (!f.exists()) {
 			f.mkdirs();
 		}
 		new JarRiskWriter().write(outDir, false);
 	}
+
 	public void printPath() {
 		// new RiskPathWriter().writePath("D:\\cWS\\notepad++\\riskPath.xml", false);
 		new RiskPathWriter().writeRefRisk("D:\\cWS\\notepad++\\riskPath.xml", true);

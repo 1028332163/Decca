@@ -72,6 +72,10 @@ public abstract class ConflictMojo extends AbstractMojo {
 	
 	@Parameter(property = "useAllJar", defaultValue = "true")
 	public boolean useAllJar;
+	
+	public int systemSize = 0;
+	
+	public long systemFileSize = 0;//byte
 
 	protected void initGlobalVar() throws Exception {
 		GlobalVar.useAllJar = useAllJar;
@@ -86,8 +90,7 @@ public abstract class ConflictMojo extends AbstractMojo {
 	}
 
 	private void validateSysSize() throws Exception {
-		int systemSize = 0;
-		long systemFileSize = 0;
+		
 		for (DepJar depJar : DepJars.i().getAllDepJar()) {
 			if (depJar.isSelected()) {
 				systemSize++;
@@ -101,9 +104,9 @@ public abstract class ConflictMojo extends AbstractMojo {
 				+ ", usedFile size:" + systemFileSize / 1000);
 
 //		// TODO system size
-		if (DepJars.i().getAllDepJar().size() <= 50||systemFileSize / 1000>20000) {
-			throw new Exception("project size error.");
-		}
+//		if (DepJars.i().getAllDepJar().size() <= 50||systemFileSize / 1000>20000) {
+//			throw new Exception("project size error.");
+//		}
 	}
 
 	public void execute() throws MojoExecutionException {
