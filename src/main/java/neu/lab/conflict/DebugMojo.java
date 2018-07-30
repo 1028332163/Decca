@@ -39,10 +39,7 @@ public class DebugMojo extends ConflictMojo {
 
 		// TODO what's debug?
 		 printMthdProb();
-//		printSize();
 	}
-
-
 
 	private void printNeibor() {
 		String outPath = "D:\\ws_testcase\\image\\neibor.txt";
