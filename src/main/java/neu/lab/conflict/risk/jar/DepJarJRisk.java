@@ -62,15 +62,16 @@ public class DepJarJRisk {
 			thrownMthds = conflictRisk.getUsedDepJar().getRiskMthds(depJar.getAllMthd());
 
 			MavenUtil.i().getLog().info("riskMethod size before filter: " + thrownMthds.size());
-			MavenUtil.i().getLog().info("contains : " + thrownMthds.contains("<com.fasterxml.jackson.databind.node.JsonNodeFactory: com.fasterxml.jackson.databind.node.NumericNode numberNode(java.math.BigInteger)>"));
+//			MavenUtil.i().getLog().info("contains : " + thrownMthds.contains("<com.fasterxml.jackson.databind.node.JsonNodeFactory: com.fasterxml.jackson.databind.node.NumericNode numberNode(java.math.BigInteger)>"));
 			if (thrownMthds.size() > 0)
 				new SootRiskMthdFilter().filterRiskMthds(thrownMthds);
 			MavenUtil.i().getLog().info("riskMethod size after filter1: " + thrownMthds.size());
-			MavenUtil.i().getLog().info("contains : " + thrownMthds.contains("<com.fasterxml.jackson.databind.node.JsonNodeFactory: com.fasterxml.jackson.databind.node.NumericNode numberNode(java.math.BigInteger)>"));
+//			MavenUtil.i().getLog().info("contains : " + thrownMthds.contains("<com.fasterxml.jackson.databind.node.JsonNodeFactory: com.fasterxml.jackson.databind.node.NumericNode numberNode(java.math.BigInteger)>"));
 			if (thrownMthds.size() > 0)
 				new SootRiskMthdFilter2().filterRiskMthds(this, thrownMthds);
 			MavenUtil.i().getLog().info("riskMethod size after filter2: " + thrownMthds.size());
-			MavenUtil.i().getLog().info("contains : " + thrownMthds.contains("<com.fasterxml.jackson.databind.node.JsonNodeFactory: com.fasterxml.jackson.databind.node.NumericNode numberNode(java.math.BigInteger)>"));
+			MavenUtil.i().getLog().info("contains : " + thrownMthds.contains("<org.apache.http.impl.client.CloseableHttpClient: org.apache.http.client.methods.CloseableHttpResponse execute(org.apache.http.HttpHost,org.apache.http.HttpRequest,org.apache.http.protocol.HttpContext)>"));
+			MavenUtil.i().getLog().info("contains : " + thrownMthds.contains("<org.apache.http.impl.client.HttpClientBuilder: org.apache.http.impl.client.CloseableHttpClient build()>"));
 			// //TODO1
 			// if(thrownMthds.contains("<com.fasterxml.jackson.core.JsonFactory: boolean
 			// requiresPropertyOrdering()>")) {

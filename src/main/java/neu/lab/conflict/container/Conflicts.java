@@ -49,7 +49,7 @@ public class Conflicts {
 		//TODO wantCal
 //		org.codehaus.jackson:jackson-core-asl
 		
-//		if(conflict.getSig().equals("com.fasterxml.jackson.core:jackson-core")) 
+//		if(conflict.getSig().equals("org.apache.httpcomponents:httpclient")) 
 //			return true;
 //		return false;
 //		

@@ -131,7 +131,6 @@ public class Dog {
 	}
 
 	protected void dealLoopNd(String donePos) {
-		// TODO
 	}
 
 }
