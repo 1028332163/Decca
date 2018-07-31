@@ -57,7 +57,7 @@ public class Debug2Mojo extends ConflictMojo {
 			Graph4mthdPath graph = jarRisk.getGraph4mthdPath();
 			Set<String> hostNds = graph.getHostNds();
 			//TODO path depth
-			Map<String, IBook> books = new Dog(graph).findRlt(hostNds, 20);
+			Map<String, IBook> books = new Dog(graph).findRlt(hostNds, 15);
 
 			MySortedMap<Integer, Record4mthdPath> dis2records = new MySortedMap<Integer, Record4mthdPath>();
 			// List<Record4mthdPath> records = new ArrayList<Record4mthdPath>();

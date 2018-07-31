@@ -74,7 +74,8 @@ class RiskMthdFilter2Tf extends SceneTransformer {
 			String[] pre_suf = testMthd.split(":");
 			String className = pre_suf[0].substring(1);// neu.lab.plug.testcase.homemade.b.B2
 			String mthdSuffix = pre_suf[1];// void m1()>
-			if(testMthd.contains("<init>")||testMthd.contains("<clinit>")) {
+			if(testMthd.contains("<init>")) {
+//				||testMthd.contains("<clinit>")
 				//keep construct method 
 				continue;
 			}

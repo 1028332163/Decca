@@ -37,7 +37,6 @@ public class DebugMojo extends ConflictMojo {
 		// +
 		// "classDupByJar.txt");
 
-		// TODO what's debug?
 		 printMthdProb();
 	}
 
