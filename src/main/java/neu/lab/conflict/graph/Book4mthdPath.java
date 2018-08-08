@@ -12,9 +12,9 @@ public class Book4mthdPath extends IBook {
 	@Override
 	public void afterAddAllChildren() {
 		//TODO print for what
-//		if ("<org.apache.http.impl.client.HttpClientBuilder: org.apache.http.impl.client.CloseableHttpClient build()>"
+//		if ("<org.apache.lucene.analysis.BaseCharFilter: void addOffCorrectMap(int,int)>"
 //				.equals(getNode().getName())
-//				|| "<org.apache.http.impl.client.CloseableHttpClient: org.apache.http.client.methods.CloseableHttpResponse execute(org.apache.http.HttpHost,org.apache.http.HttpRequest,org.apache.http.protocol.HttpContext)>"
+//				|| "<com.google.common.base.Objects: com.google.common.base.Objects$ToStringHelper toStringHelper(java.lang.Class)>"
 //						.equals(getNode().getName()))
 			if (getNode().isRisk()) {
 				this.records.add(getNode().formNewRecord());

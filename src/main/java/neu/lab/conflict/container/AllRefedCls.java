@@ -22,6 +22,7 @@ public class AllRefedCls {
 			for (String cls : AllCls.i().getAllCls()) {
 				refedClses.add(cls);
 				if (pool.getOrNull(cls) != null) {
+//					System.out.println();
 					refedClses.addAll(pool.get(cls).getRefClasses());
 				} else {
 					MavenUtil.i().getLog().warn("can't find " + cls + " in pool when form reference.");

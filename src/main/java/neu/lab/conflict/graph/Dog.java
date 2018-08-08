@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import neu.lab.conflict.GlobalVar;
+import neu.lab.conflict.util.DebugUtil;
 import neu.lab.conflict.util.MavenUtil;
 
 public class Dog {
@@ -76,6 +77,8 @@ public class Dog {
 	 * @param frontNode
 	 */
 	private void forward(String frontNode) {
+		//TODO debug dog
+//		DebugUtil.print("d:\\dogTrace.txt", frontNode + " "+route.size());
 		// System.out.println("forward to " + frontNode);
 		INode node = graph.getNode(frontNode);
 		if (node != null) {

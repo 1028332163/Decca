@@ -14,6 +14,7 @@ import neu.lab.conflict.distance.MethodProbDistances;
 import neu.lab.conflict.graph.Dog;
 import neu.lab.conflict.graph.Graph4branch;
 import neu.lab.conflict.graph.Graph4mthdPath;
+import neu.lab.conflict.graph.GraphPrinter;
 import neu.lab.conflict.graph.IBook;
 import neu.lab.conflict.graph.IGraph;
 import neu.lab.conflict.graph.IRecord;
@@ -111,7 +112,7 @@ public class DepJarJRisk {
 			classpaths.addAll(this.depJar.getFatherJarCps(false));
 			
 		}
-		// TODO printCp
+		
 //		MavenUtil.i().getLog().info("classpath for "+this.toString());
 //		for(String path:classpaths) {
 //			System.out.println("argsList.add(\"-process-dir\");");
@@ -143,6 +144,8 @@ public class DepJarJRisk {
 			} else {
 				graph4branch = new Graph4branch(new HashMap<String, Node4branch>(), new ArrayList<MethodCall>());
 			}
+		
+			
 		}
 		return graph4branch;
 	}
@@ -160,7 +163,10 @@ public class DepJarJRisk {
 		if (this.books == null) {
 			if (getThrownMthds().size() > 0) {
 				// calculate distance
+				
 				books = new Dog(getGraph4branch()).findRlt(getGraph4branch().getHostNds(),Conf.DOG_FIND_DEP);
+				//TODO printGraph
+//				GraphPrinter.printGraph(graph4branch, "d:\\graph_distance.txt",getGraph4branch().getHostNds());
 			} else {
 				books = new HashMap<String, IBook>();
 			}

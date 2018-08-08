@@ -15,6 +15,7 @@ import neu.lab.conflict.container.DepJars;
 import neu.lab.conflict.graph.Book4mthdPath;
 import neu.lab.conflict.graph.Dog;
 import neu.lab.conflict.graph.Graph4mthdPath;
+import neu.lab.conflict.graph.GraphPrinter;
 import neu.lab.conflict.graph.IBook;
 import neu.lab.conflict.graph.IRecord;
 import neu.lab.conflict.graph.Record4mthdPath;
@@ -56,8 +57,10 @@ public class Debug2Mojo extends ConflictMojo {
 		try {
 			Graph4mthdPath graph = jarRisk.getGraph4mthdPath();
 			Set<String> hostNds = graph.getHostNds();
+			//TODO printGraph_path
+//			GraphPrinter.printGraph(graph, "d:\\graph_mthdPath.txt",hostNds);
 			//TODO path depth
-			Map<String, IBook> books = new Dog(graph).findRlt(hostNds, 15);
+			Map<String, IBook> books = new Dog(graph).findRlt(hostNds,30);
 
 			MySortedMap<Integer, Record4mthdPath> dis2records = new MySortedMap<Integer, Record4mthdPath>();
 			// List<Record4mthdPath> records = new ArrayList<Record4mthdPath>();
