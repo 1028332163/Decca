@@ -3,14 +3,20 @@ package neu.lab.conflict.graph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import neu.lab.conflict.GlobalVar;
 import neu.lab.conflict.util.DebugUtil;
 import neu.lab.conflict.util.MavenUtil;
 
 public class Dog {
+	public enum Strategy{
+		RESET_BOOK,NOT_RESET_BOOK
+	}
 	private IGraph graph;
 	protected String pos;
 	protected List<String> route;
@@ -19,9 +25,11 @@ public class Dog {
 
 	protected Map<String, List<String>> circleMap = new HashMap<String, List<String>>();
 
-	protected Map<String, IBook> books = new HashMap<String, IBook>();
+	protected Map<String, IBook> entryBooks;
 
-	protected Map<String, IBook> tempBooks = new HashMap<String, IBook>();
+	protected Map<String, IBook> books;
+
+	protected Map<String, IBook> tempBooks = new HashMap<String, IBook>();//books for nodes in current route.
 
 	public Dog(IGraph graph) {
 		this.graph = graph;
@@ -31,8 +39,34 @@ public class Dog {
 		return graph.getNode(nodeName).getBook();
 	}
 
-	public Map<String, IBook> findRlt(Collection<String> entrys, int maxDep) {
-		MavenUtil.i().getLog().info("dog starts running...");
+	public Map<String, IBook> findRlt(Collection<String> entrys, int maxDep, Dog.Strategy strategyType) {
+//		maxDep = Integer.MAX_VALUE;
+		MavenUtil.i().getLog().info("dog starts running with depth " + maxDep);
+		Set<String> sortedEntrys = new TreeSet<String>();
+		//TODO 
+		for (String entry : entrys) {//filter entry that don't exist in graph.
+			if (graph.getAllNode().contains(entry))
+				sortedEntrys.add(entry);
+		}
+		LinkedHashSet<String> linkedEntrys = new LinkedHashSet<String>();
+		if(entrys.contains("<com.rackspacecloud.blueflood.service.ZKShardLockManager: void shutdownUnsafe()>")) {
+			linkedEntrys.add("<com.rackspacecloud.blueflood.service.ZKShardLockManager: void shutdownUnsafe()>");
+		}else {
+			linkedEntrys.addAll(sortedEntrys);
+		}
+//		linkedEntrys.add("<org.apache.curator.ConnectionState: void close()>");
+//		linkedEntrys.add("<org.apache.curator.CuratorZookeeperClient: void close()>");
+//		linkedEntrys.add("<org.apache.curator.framework.imps.CuratorFrameworkImpl: void close()>");
+//		linkedEntrys.add("<com.rackspacecloud.blueflood.service.ZKShardLockManager: void shutdownUnsafe()>");
+		if (Strategy.NOT_RESET_BOOK.equals(strategyType) )
+			return findRlt1(linkedEntrys, maxDep);
+		else
+			return findRlt2(linkedEntrys, maxDep);
+	}
+
+	private Map<String, IBook> findRlt1(Collection<String> entrys, int maxDep) {
+		MavenUtil.i().getLog().info("dog won't reset doneBook.");
+		books = new HashMap<String, IBook>();
 		long start = System.currentTimeMillis();
 		for (String mthd : entrys) {
 			route = new ArrayList<String>();
@@ -57,6 +91,40 @@ public class Dog {
 		return this.books;
 	}
 
+	/**reset doneBook for each entry to guarantee depth.
+	 * depth may short than configuration because of doneBook in each search.
+	 * @param entrys
+	 * @param maxDep
+	 * @return
+	 */
+	private Map<String, IBook> findRlt2(Collection<String> entrys, int maxDep) {
+		MavenUtil.i().getLog().info("dog will reset doneBook.");
+		entryBooks = new HashMap<String, IBook>();
+		long start = System.currentTimeMillis();
+		for (String mthd : entrys) {
+//			MavenUtil.i().getLog().info("entry:"+mthd);
+			route = new ArrayList<String>();
+			books = new HashMap<String, IBook>();
+			forward(mthd);
+			while (pos != null) {
+				if (needChildBook(maxDep)) {
+					String frontNode = graphMap.get(pos).getBranch();
+					getChildBook(frontNode);
+				} else {
+					back();
+				}
+			}
+//			MavenUtil.i().getLog().info(books.get(mthd).toString());
+			entryBooks.put(mthd, books.get(mthd));
+		}
+		long runtime = (System.currentTimeMillis() - start) / 1000;
+		MavenUtil.i().getLog().info("dog finishes running.");
+		MavenUtil.i().getLog().info("dog run time:" + runtime);
+		GlobalVar.time2runDog += runtime;
+		MavenUtil.i().getLog().info("this.entryBooks:" + this.entryBooks.size());
+		return this.entryBooks;
+	}
+
 	public boolean needChildBook(int maxDep) {
 		return graphMap.get(pos).hasBranch() && route.size() < maxDep;
 		// return graphMap.get(pos).hasBranch();
@@ -78,7 +146,7 @@ public class Dog {
 	 */
 	private void forward(String frontNode) {
 		//TODO debug dog
-//		DebugUtil.print("d:\\dogTrace.txt", frontNode + " "+route.size());
+		//		DebugUtil.print("d:\\dogTrace.txt", frontNode + " " + route.size());
 		// System.out.println("forward to " + frontNode);
 		INode node = graph.getNode(frontNode);
 		if (node != null) {

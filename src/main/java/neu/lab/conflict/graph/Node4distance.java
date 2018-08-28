@@ -5,25 +5,31 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
+import neu.lab.conflict.GlobalVar;
 import neu.lab.conflict.util.SootUtil;
 
-public class Node4branch implements INode {
+public class Node4distance implements INode {
 	private String name;
-	private boolean isHost;
+	private boolean isAccessHost;//not private
 	private boolean isRisk;
 	private int cfgBranch;
 
 	private Integer branch;// cfgBranch + polyBranch
 	private Set<String> outs;
 
-	public Node4branch(String name, boolean isHost, boolean isRisk, int cfgBranch) {
+	public Node4distance(String name, boolean isAccessHost, boolean isRisk, int cfgBranch) {
 		super();
 		this.name = name;
-		this.isHost = isHost;
+		this.isAccessHost = isAccessHost;
 		this.isRisk = isRisk;
 		this.cfgBranch = cfgBranch;
-		outs = new HashSet<String>();
+		if (GlobalVar.useTreeSet)
+			outs = new TreeSet<String>();
+		else
+			outs = new HashSet<String>();
+
 	}
 
 	public Integer getBranch() {
@@ -67,12 +73,12 @@ public class Node4branch implements INode {
 
 	@Override
 	public IBook getBook() {
-		return new Book4branch(this);
+		return new Book4distance(this);
 	}
 
 	@Override
 	public IRecord formNewRecord() {
-		return new Record4branch(name, 0, 0);
+		return new Record4distance(name, 0, 0);
 	}
 
 	@Override
@@ -94,7 +100,7 @@ public class Node4branch implements INode {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		Node4branch other = (Node4branch) obj;
+		Node4distance other = (Node4distance) obj;
 		if (name == null) {
 			if (other.name != null) {
 				return false;
@@ -106,10 +112,11 @@ public class Node4branch implements INode {
 	}
 
 	public boolean isHostNode() {
-		return isHost;
+		return isAccessHost;
 	}
 
 	public void addOutNd(String tgt) {
-		outs.add(tgt);		
+		outs.add(tgt);
 	}
+
 }

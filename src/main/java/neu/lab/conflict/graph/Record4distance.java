@@ -1,13 +1,13 @@
 package neu.lab.conflict.graph;
 
-public class Record4branch extends IRecord {
-	private String name;
+public class Record4distance extends IRecord {
+	private String riskMthd;//riskMethod name
 	private double branch;
 	private double distance;
 
-	public Record4branch(String name, double branch, double distance) {
+	public Record4distance(String name, double branch, double distance) {
 		super();
-		this.name = name;
+		this.riskMthd = name;
 		this.branch = branch;
 		this.distance = distance;
 	}
@@ -22,12 +22,12 @@ public class Record4branch extends IRecord {
 	}
 
 	public String getName() {
-		return name;
+		return riskMthd;
 	}
 
 	@Override
 	public IRecord clone() {
-		return new Record4branch(name, branch, distance);
+		return new Record4distance(riskMthd, branch, distance);
 	}
 
 	public void updateBranch(double branch2) {

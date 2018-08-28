@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import neu.lab.conflict.graph.Graph4mthdPath;
-import neu.lab.conflict.graph.Node4mthdPath;
+import neu.lab.conflict.graph.Graph4path;
+import neu.lab.conflict.graph.Node4path;
 import neu.lab.conflict.risk.jar.DepJarJRisk;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.util.SootUtil;
@@ -27,7 +27,7 @@ public class JRiskMthdPathCgTf extends JRiskCgTf{
 		if (graph == null) {
 			MavenUtil.i().getLog().info("start form graph...");
 			// get call-graph.
-			Map<String, Node4mthdPath> name2node = new HashMap<String, Node4mthdPath>();
+			Map<String, Node4path> name2node = new HashMap<String, Node4path>();
 			List<MethodCall> mthdRlts = new ArrayList<MethodCall>();
 			CallGraph cg = Scene.v().getCallGraph();
 			Iterator<Edge> ite = cg.iterator();
@@ -50,17 +50,17 @@ public class JRiskMthdPathCgTf extends JRiskCgTf{
 					// filter relation inside conflictJar
 				} else {
 					if (!name2node.containsKey(srcMthdName)) {
-						name2node.put(srcMthdName, new Node4mthdPath(srcMthdName, entryClses.contains(srcClsName),
+						name2node.put(srcMthdName, new Node4path(srcMthdName, isHostClass(srcClsName)&&!edge.src().isPrivate(),
 								riskMthds.contains(srcMthdName)));
 					}
 					if (!name2node.containsKey(tgtMthdName)) {
-						name2node.put(tgtMthdName, new Node4mthdPath(tgtMthdName, entryClses.contains(tgtClsName),
+						name2node.put(tgtMthdName, new Node4path(tgtMthdName, isHostClass(tgtClsName)&&!edge.tgt().isPrivate(),
 								riskMthds.contains(tgtMthdName)));
 					}
 					mthdRlts.add(new MethodCall(srcMthdName, tgtMthdName));
 				}
 			}
-			graph = new Graph4mthdPath(name2node, mthdRlts);
+			graph = new Graph4path(name2node, mthdRlts);
 			MavenUtil.i().getLog().info("end form graph.");
 		}
 	}

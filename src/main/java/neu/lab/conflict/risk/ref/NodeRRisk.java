@@ -56,7 +56,7 @@ public class NodeRRisk {
 		ele.addAttribute("id", node.getWholePath());
 		Element clsesEle = ele.addElement("riskClasses");
 		if(getlimitRefTb().eeSize()>0) {
-			Map<String, IBook> books = new Dog(getClsRefGraph()).findRlt(getlimitRefTb().getRefedEes(),Conf.DOG_FIND_DEP);
+			Map<String, IBook> books = new Dog(getClsRefGraph()).findRlt(getlimitRefTb().getRefedEes(),Conf.DOG_DEP_FOR_DIS,Dog.Strategy.NOT_RESET_BOOK);
 			for (String riskCls : getlimitRefTb()) {
 				Set<String> ers = limitRefTb.getErs(riskCls);
 				if (ers.size() > 0) {

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import neu.lab.conflict.graph.Dog;
+import neu.lab.conflict.graph.Dog.Strategy;
 import neu.lab.conflict.graph.IBook;
 import neu.lab.conflict.graph.IGraph;
 import neu.lab.conflict.graph.INode;
@@ -32,7 +33,7 @@ public class Graph4CFG implements IGraph {
 	}
 
 	public Map<String,Double> getMthd2Prob(){
-		Map<String,IBook> books = new Dog(this).findRlt(entries, Integer.MAX_VALUE);
+		Map<String,IBook> books = new Dog(this).findRlt(entries, Integer.MAX_VALUE,Strategy.NOT_RESET_BOOK );
 		Map<String,Integer> mthd2cnt = new HashMap<String,Integer>();//key:method;value:counter of method existing in path.
 		double pathCnt = 0.0;
 		//get count.

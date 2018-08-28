@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import neu.lab.conflict.vo.NodeAdapter;
+import neu.lab.conflict.Conf;
 import neu.lab.conflict.vo.Conflict;
 
 public class Conflicts {
@@ -46,19 +47,17 @@ public class Conflicts {
 	 * @return
 	 */
 	private boolean wantCal(Conflict conflict) {
-		//TODO wantCal
-//		org.codehaus.jackson:jackson-core-asl
-//		org.apache.httpcomponents:httpclient
-//		ch.qos.logback:logback-core
-//		org.hamcrest:hamcrest-core
-//		io.netty:netty-codec-http2
-//		com.google.guava:guava
+
+		if(Conf.callConflict==null||"".equals(Conf.callConflict)) {
+			return true;
+		}else {
+			if(conflict.getSig().equals(Conf.callConflict.replace("+", ":"))) 
+				return true;
+			return false;
+		}
 		
-//		if(conflict.getSig().equals("org.apache.httpcomponents:httpclient")) 
-//			return true;
-//		return false;
 //		
-		return true;
+//		return true;
 	}
 
 	public List<Conflict> getConflicts() {

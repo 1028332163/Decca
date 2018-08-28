@@ -89,18 +89,6 @@ public class MavenUtil {
 	}
 
 
-	public List<String> getSrcPaths() {
-		List<String> srcPaths = new ArrayList<String>();
-		if(this.mojo==null) {
-			return null;
-		}
-		for (String srcPath : this.mojo.compileSourceRoots) {
-			if (new File(srcPath).exists())
-				srcPaths.add(srcPath);
-		}
-		return srcPaths;
-	}
-
 	public String getProjectInfo() {
 		return mojo.project.getGroupId() + ":" + mojo.project.getArtifactId() + ":" + mojo.project.getVersion() + "@"
 				+ mojo.project.getFile().getAbsolutePath();
@@ -135,5 +123,17 @@ public class MavenUtil {
 
 	public File getBuildDir() {
 		return mojo.buildDir;
+	}
+	
+	public List<String> getSrcPaths() {
+		List<String> srcPaths = new ArrayList<String>();
+		if(this.mojo==null) {
+			return null;
+		}
+		for (String srcPath : this.mojo.compileSourceRoots) {
+			if (new File(srcPath).exists())
+				srcPaths.add(srcPath);
+		}
+		return srcPaths;
 	}
 }

@@ -3,6 +3,7 @@ package neu.lab.conflict.container;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -95,6 +96,7 @@ public class DepJars {
 	 * @return path1;path2;path3
 	 */
 	public String getUsedJarPathsStr() {
+		Set<String> usedJarPath = new LinkedHashSet<String>();
 		StringBuilder sb = new StringBuilder();
 		for(String path:getUsedJarPaths()) {
 			sb.append(path+File.pathSeparator);

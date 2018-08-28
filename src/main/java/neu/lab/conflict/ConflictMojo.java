@@ -73,11 +73,27 @@ public abstract class ConflictMojo extends AbstractMojo {
 	@Parameter(property = "useAllJar", defaultValue = "true")
 	public boolean useAllJar;
 	
+	@Parameter(property = "disDepth", defaultValue = "100")
+	public int disDepth;
+	
+	@Parameter(property = "pathDepth", defaultValue = "100")
+	public int pathDepth;
+	
+	@Parameter(property = "callConflict")
+	public String callConflict = null;
+	
+	@Parameter(property = "findAllPath")
+	public boolean findAllPath = false;
+	
 	public int systemSize = 0;
 	
 	public long systemFileSize = 0;//byte
 
 	protected void initGlobalVar() throws Exception {
+		Conf.DOG_DEP_FOR_DIS = disDepth;
+		Conf.DOG_DEP_FOR_PATH = pathDepth;
+		Conf.callConflict  = callConflict;
+		Conf.findAllpath = findAllPath;
 		GlobalVar.useAllJar = useAllJar;
 		MavenUtil.i().setMojo(this);
 		NodeAdapters.init(root);

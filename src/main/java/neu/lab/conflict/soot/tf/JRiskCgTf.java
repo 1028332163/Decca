@@ -1,20 +1,15 @@
 package neu.lab.conflict.soot.tf;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import neu.lab.conflict.graph.IGraph;
 import neu.lab.conflict.risk.jar.DepJarJRisk;
+import neu.lab.conflict.util.LibCopyInfo;
 import neu.lab.conflict.util.MavenUtil;
-import soot.MethodSource;
-import soot.Scene;
 import soot.SceneTransformer;
-import soot.SootClass;
-import soot.SootMethod;
 import soot.jimple.toolkits.callgraph.CHATransformer;
 
 /**
@@ -53,18 +48,18 @@ public abstract class JRiskCgTf extends SceneTransformer {
 		cgMap.put("all-reachable", "true");
 		// // set entry
 		// List<SootMethod> entryMthds = new ArrayList<SootMethod>();
-//		List<MethodSource> mthds = new ArrayList<MethodSource>();
-//		for (SootClass sootClass : Scene.v().getApplicationClasses()) {
-//			if (entryClses.contains(sootClass.getName())) {// entry class
-//				for (SootMethod method : sootClass.getMethods()) {
-//					mthds.add(method.getSource());
-//					// entryMthds.add(method);
-//				}
-//			}
-//		}
+		//		List<MethodSource> mthds = new ArrayList<MethodSource>();
+		//		for (SootClass sootClass : Scene.v().getApplicationClasses()) {
+		//			if (entryClses.contains(sootClass.getName())) {// entry class
+		//				for (SootMethod method : sootClass.getMethods()) {
+		//					mthds.add(method.getSource());
+		//					// entryMthds.add(method);
+		//				}
+		//			}
+		//		}
 		// Scene.v().setEntryPoints(entryMthds);
 		initMthd2branch();
-		
+
 		CHATransformer.v().transform("wjtp", cgMap);
 
 		formGraph();
@@ -74,6 +69,10 @@ public abstract class JRiskCgTf extends SceneTransformer {
 	protected abstract void initMthd2branch();
 
 	protected abstract void formGraph();
+
+	protected boolean isHostClass(String clsName) {
+		return entryClses.contains(clsName) && !LibCopyInfo.isLibCopy(MavenUtil.i().getProjectCor(), clsName);
+	}
 
 	public IGraph getGraph() {
 		return graph;

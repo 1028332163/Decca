@@ -2,12 +2,10 @@ package neu.lab.conflict.graph;
 
 import java.util.ArrayList;
 
-import neu.lab.conflict.util.MavenUtil;
 
+public class Book4distance extends IBook {
 
-public class Book4branch extends IBook {
-
-	public Book4branch(INode node) {
+	public Book4distance(INode node) {
 		super(node);
 		this.records = new ArrayList<IRecord>();
 	}
@@ -23,25 +21,25 @@ public class Book4branch extends IBook {
 	public void addChild(IBook doneChildBook) {
 		int thisBranch = getNode().getBranch();
 		for (IRecord recordI : doneChildBook.getRecords()) {
-			Record4branch record = (Record4branch) recordI;
+			Record4distance record = (Record4distance) recordI;
 			addRecord(record.getName(), record.getBranch()+thisBranch, record.getDistance()+1);
 		}
 	}
 	
-	private Node4branch getNode() {
-		return (Node4branch)this.node;
+	private Node4distance getNode() {
+		return (Node4distance)this.node;
 	}
 
 	private void addRecord(String nodeName, double branch, double distance) {
 		for (IRecord iRecord : this.records) {
-			Record4branch record = (Record4branch) iRecord;
+			Record4distance record = (Record4distance) iRecord;
 			if (nodeName.equals(record.getName())) {
 				record.updateBranch(branch);
 				record.updateDistance(distance);
 				return;
 			}
 		}
-		this.records.add(new Record4branch(nodeName, branch, distance));
+		this.records.add(new Record4distance(nodeName, branch, distance));
 	}
 
 }

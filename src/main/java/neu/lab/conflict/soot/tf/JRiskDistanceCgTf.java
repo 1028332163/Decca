@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import neu.lab.conflict.GlobalVar;
-import neu.lab.conflict.graph.Graph4branch;
-import neu.lab.conflict.graph.Node4branch;
+import neu.lab.conflict.graph.Graph4distance;
+import neu.lab.conflict.graph.Node4distance;
 import neu.lab.conflict.risk.jar.DepJarJRisk;
 import neu.lab.conflict.util.MavenUtil;
 import neu.lab.conflict.util.SootUtil;
@@ -22,9 +22,9 @@ import soot.jimple.internal.JIfStmt;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 
-public class JRiskBranchCgTf extends JRiskCgTf {
+public class JRiskDistanceCgTf extends JRiskCgTf {
 
-	public JRiskBranchCgTf(DepJarJRisk depJarJRisk) {
+	public JRiskDistanceCgTf(DepJarJRisk depJarJRisk) {
 		super(depJarJRisk);
 	}
 
@@ -32,7 +32,7 @@ public class JRiskBranchCgTf extends JRiskCgTf {
 		if (graph == null) {
 			MavenUtil.i().getLog().info("start form graph...");
 			// get call-graph.
-			Map<String, Node4branch> name2node = new HashMap<String, Node4branch>();
+			Map<String, Node4distance> name2node = new HashMap<String, Node4distance>();
 			List<MethodCall> mthdRlts = new ArrayList<MethodCall>();
 			CallGraph cg = Scene.v().getCallGraph();
 			Iterator<Edge> ite = cg.iterator();
@@ -55,17 +55,17 @@ public class JRiskBranchCgTf extends JRiskCgTf {
 					// filter relation inside conflictJar
 				} else {
 					if (!name2node.containsKey(srcMthdName)) {
-						name2node.put(srcMthdName, new Node4branch(srcMthdName, entryClses.contains(srcClsName),
+						name2node.put(srcMthdName, new Node4distance(srcMthdName, isHostClass(srcClsName)&&!edge.src().isPrivate(),
 								riskMthds.contains(srcMthdName), getBranchNum(edge.src().getSignature())));
 					}
 					if (!name2node.containsKey(tgtMthdName)) {
-						name2node.put(tgtMthdName, new Node4branch(tgtMthdName, entryClses.contains(tgtClsName),
+						name2node.put(tgtMthdName, new Node4distance(tgtMthdName,isHostClass(tgtClsName)&&!edge.tgt().isPrivate(),
 								riskMthds.contains(tgtMthdName), getBranchNum(edge.tgt().getSignature())));
 					}
 					mthdRlts.add(new MethodCall(srcMthdName, tgtMthdName));
 				}
 			}
-			graph = new Graph4branch(name2node, mthdRlts);
+			graph = new Graph4distance(name2node, mthdRlts);
 			MavenUtil.i().getLog().info("end form graph.");
 		}
 	}

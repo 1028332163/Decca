@@ -19,13 +19,13 @@ public class GraphPrinter {
 			for(String name:graph.getAllNode()) {
 				StringBuilder sb = new StringBuilder("node:"+name);
 				INode node = graph.getNode(name);
-				if(node instanceof Node4branch) {
-					Node4branch node4branch = (Node4branch)node;
+				if(node instanceof Node4distance) {
+					Node4distance node4branch = (Node4distance)node;
 					sb.append(" isHost:"+node4branch.isHostNode());
 					sb.append(" isRisk:"+node4branch.isRisk());
 				}
-				if(node instanceof Node4mthdPath) {
-					Node4mthdPath node4mthdPath = (Node4mthdPath)node;
+				if(node instanceof Node4path) {
+					Node4path node4mthdPath = (Node4path)node;
 					sb.append(" isHost:"+node4mthdPath.isHostNode());
 					sb.append(" isRisk:"+node4mthdPath.isRisk());
 				}
